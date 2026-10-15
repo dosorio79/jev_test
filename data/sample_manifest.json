@@ -1,0 +1,44 @@
+{
+  "source_archive": "financial_sentiment_hf_v2.zip",
+  "source_archive_sha256": "d7521f24fdeb01b865e5885a2815e6ee6920fc13efd508e6ea472bd8b8e831a3",
+  "source_split": "test",
+  "sampling_seed": 20261015,
+  "selection": "stratified by language x sentiment with rotated remainder to balance language and class totals",
+  "n_rows": 600,
+  "languages": {
+    "it": 100,
+    "pt": 100,
+    "en": 100,
+    "es": 100,
+    "fr": 100,
+    "de": 100
+  },
+  "sentiments": {
+    "neutral": 200,
+    "positive": 200,
+    "negative": 200
+  },
+  "strata": {
+    "pt/negative": 34,
+    "pt/neutral": 33,
+    "pt/positive": 33,
+    "en/negative": 33,
+    "en/neutral": 34,
+    "en/positive": 33,
+    "es/negative": 33,
+    "es/neutral": 33,
+    "es/positive": 34,
+    "fr/negative": 34,
+    "fr/neutral": 33,
+    "fr/positive": 33,
+    "de/negative": 33,
+    "de/neutral": 34,
+    "de/positive": 33,
+    "it/negative": 33,
+    "it/neutral": 33,
+    "it/positive": 34
+  },
+  "validation": "No within-sample normalized exact duplicates; none overlap train/validation under casefold+whitespace normalization.",
+  "known_limitation": "Synthetic template variations from 108 seed sentences; semantic near-duplicates across splits possible. Not independent real-world CX.",
+  "do_not_use_for": "Threshold selection, prompt development, model selection, training or repeated leaderboard tuning. Use original validation.csv for threshold tuning."
+}

@@ -1,0 +1,218 @@
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from collections.abc import Sequence
+from dataclasses import asdict
+from pathlib import Path
+
+import polars as pl
+
+from cx_sentiment.budget import LiveSafety, PriceCard
+from cx_sentiment.cache import PredictionCache, RawResponseStore
+from cx_sentiment.data import audit_dataset, create_validation_sample, load_dataset
+from cx_sentiment.metrics import evaluate_predictions
+from cx_sentiment.models import Prediction
+from cx_sentiment.pricing import get_jev_price_card, get_openai_price_card
+from cx_sentiment.providers.base import SentimentProvider
+from cx_sentiment.providers.jev import DEFAULT_JEV_BASE_URL, DEFAULT_JEV_MODEL, JevProvider
+from cx_sentiment.providers.mock import MockProvider
+from cx_sentiment.providers.openai_provider import OpenAIProvider
+from cx_sentiment.reporting import write_report, write_selection_report
+from cx_sentiment.routing import select_threshold
+from cx_sentiment.runner import run_predictions
+
+
+def _records(frame: pl.DataFrame) -> list[tuple[str, str, str]]:
+    return list(frame.select("sample_id", "language", "text").iter_rows())
+
+
+def _load_predictions(path: Path) -> list[Prediction]:
+    return [
+        Prediction.model_validate_json(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _write_run(
+    frame: pl.DataFrame,
+    provider: SentimentProvider,
+    output_dir: Path,
+    safety: LiveSafety,
+    *,
+    max_cost_per_request_usd: float = 0,
+) -> None:
+    predictions = run_predictions(
+        provider,
+        _records(frame),
+        cache=PredictionCache(Path(".cache/cx_sentiment")),
+        safety=safety,
+        settings={},
+        next_request_upper_bound_usd=max_cost_per_request_usd,
+    )
+    metrics = evaluate_predictions(
+        frame["sentiment"].to_list(),
+        predictions,
+        languages=frame["language"].to_list(),
+    )
+    write_report(
+        output_dir,
+        predictions,
+        metrics,
+        title="Offline benchmark" if provider.provider_name == "mock" else "Live smoke test",
+        metadata={
+            "provider": provider.provider_name,
+            "model": provider.model_id,
+            "prompt_version": provider.prompt_version,
+            "simulated": provider.provider_name == "mock",
+        },
+    )
+
+
+def _provider_from_environment(name: str) -> SentimentProvider:
+    raw_store = RawResponseStore(Path(".cache/cx_sentiment/raw"))
+    if name == "openai":
+        if not os.getenv("OPENAI_API_KEY"):
+            raise ValueError("OPENAI_API_KEY is required")
+        model = os.getenv("OPENAI_MODEL")
+        if not model:
+            raise ValueError("OPENAI_MODEL is required")
+        rate_values = (
+            os.getenv("OPENAI_INPUT_USD_PER_MILLION"),
+            os.getenv("OPENAI_OUTPUT_USD_PER_MILLION"),
+            os.getenv("OPENAI_PRICE_AS_OF"),
+        )
+        if any(rate_values) and not all(rate_values):
+            raise ValueError("all three OPENAI rate-card variables must be supplied together")
+        input_rate, output_rate, rate_date = rate_values
+        price_card = None
+        if input_rate is not None and output_rate is not None and rate_date is not None:
+            price_card = PriceCard(
+                input_usd_per_million=float(input_rate),
+                output_usd_per_million=float(output_rate),
+                as_of=rate_date,
+            )
+        if price_card is None:
+            price_card = get_openai_price_card(model)
+        return OpenAIProvider(model=model, price_card=price_card, raw_store=raw_store)
+    api_key = os.getenv("JEV_API_KEY")
+    if not api_key:
+        raise ValueError("JEV_API_KEY is required")
+    model = os.getenv("JEV_MODEL", DEFAULT_JEV_MODEL)
+    return JevProvider(
+        api_key=api_key,
+        base_url=os.getenv("JEV_BASE_URL", DEFAULT_JEV_BASE_URL),
+        model=model,
+        raw_store=raw_store,
+        price_card=get_jev_price_card(model),
+    )
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="cx-sentiment")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    audit = subparsers.add_parser("audit")
+    audit.add_argument("--input", type=Path, required=True)
+    audit.add_argument("--split", choices=["train", "validation", "test"])
+    sample = subparsers.add_parser("sample-validation")
+    sample.add_argument("--archive", type=Path, required=True)
+    sample.add_argument("--output-dir", type=Path, default=Path("data"))
+    selection = subparsers.add_parser("select-threshold")
+    selection.add_argument("--input", type=Path, required=True)
+    selection.add_argument("--decision-predictions", type=Path, required=True)
+    selection.add_argument("--fallback-predictions", type=Path, required=True)
+    selection.add_argument("--output", type=Path, required=True)
+    selection.add_argument("--max-f1-degradation", type=float, default=0.02)
+    selection.add_argument("--decision-cost-usd", type=float)
+    selection.add_argument("--fallback-cost-usd", type=float)
+    report = subparsers.add_parser("report")
+    report.add_argument("--input", type=Path, required=True)
+    report.add_argument("--predictions", type=Path, required=True)
+    report.add_argument("--output-dir", type=Path, required=True)
+    report.add_argument("--title", default="CX sentiment benchmark")
+    demo = subparsers.add_parser("offline-demo")
+    run = subparsers.add_parser("run")
+    for command in (demo, run):
+        command.add_argument("--input", type=Path, required=True)
+        command.add_argument("--output-dir", type=Path, required=True)
+        command.add_argument("--limit", type=int, default=5)
+    run.add_argument("--provider", choices=["openai", "jev"], required=True)
+    run.add_argument("--live", action="store_true")
+    run.add_argument("--max-requests", type=int)
+    run.add_argument("--max-estimated-cost-usd", type=float)
+    run.add_argument("--max-cost-per-request-usd", type=float)
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    if args.command == "audit":
+        result = audit_dataset(load_dataset(args.input, expected_split=args.split))
+        print(json.dumps(result.__dict__, indent=2))
+        return 0
+    if args.command == "sample-validation":
+        result = create_validation_sample(args.archive, args.output_dir)
+        print(f"Created {result.frame.height} validation records")
+        return 0
+    if args.command == "select-threshold":
+        frame = load_dataset(args.input, expected_split="validation")
+        selected = select_threshold(
+            frame,
+            _load_predictions(args.decision_predictions),
+            _load_predictions(args.fallback_predictions),
+            max_f1_degradation=args.max_f1_degradation,
+            decision_cost=args.decision_cost_usd,
+            fallback_cost=args.fallback_cost_usd,
+        )
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(asdict(selected), indent=2) + "\n", encoding="utf-8")
+        write_selection_report(args.output, selected)
+        return 0
+    if args.command == "report":
+        frame = load_dataset(args.input)
+        predictions = _load_predictions(args.predictions)
+        metrics = evaluate_predictions(
+            frame["sentiment"].to_list(),
+            predictions,
+            languages=frame["language"].to_list(),
+        )
+        write_report(args.output_dir, predictions, metrics, title=args.title)
+        return 0
+    frame = load_dataset(args.input).head(args.limit)
+    if args.command == "offline-demo":
+        _write_run(frame, MockProvider(), args.output_dir, LiveSafety())
+        return 0
+    if not args.live:
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        plan = {
+            "provider": args.provider,
+            "would_process": frame.height,
+            "network_calls": 0,
+            "reason": "dry run; add --live plus request and cost caps to execute",
+        }
+        (args.output_dir / "dry_run.json").write_text(
+            json.dumps(plan, indent=2) + "\n", encoding="utf-8"
+        )
+        return 0
+    if args.max_cost_per_request_usd is None or args.max_cost_per_request_usd <= 0:
+        raise ValueError("--max-cost-per-request-usd is required and must be positive")
+    safety = LiveSafety(
+        live=True,
+        max_requests=args.max_requests,
+        max_estimated_cost_usd=args.max_estimated_cost_usd,
+    )
+    provider = _provider_from_environment(args.provider)
+    _write_run(
+        frame,
+        provider,
+        args.output_dir,
+        safety,
+        max_cost_per_request_usd=args.max_cost_per_request_usd,
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,601 @@
+sample_id,source_split,source_row_index_zero_based,language,text,sentiment,label
+cx_4be6958ca6758d77,test,480,it,"Nel complesso, il consulente ha chiamato per i documenti durante la procedura; questa è la mia opinione.",neutral,1
+cx_4eac9587c90c9d60,test,1467,pt,"Na minha experiência, gostei da transparência das condições durante o processo; é essa a minha opinião.",positive,2
+cx_e818c71d3149da44,test,2156,it,"Sinceramente, il servizio clienti non ha mai risposto durante la procedura quando ho chiesto il finanziamento.",negative,0
+cx_741460fe37dfc99f,test,2331,it,"Per esperienza personale, il servizio clienti non ha mai risposto per il mio prestito personale quando ho chiesto il finanziamento.",negative,0
+cx_1cd34f508da527d4,test,1609,en,The adviser called about the documents during the application for my personal loan!,neutral,1
+cx_536d7ec458b03ff0,test,829,en,The adviser called about the documents for my personal loan when I applied for financing; that is my feedback.,neutral,1
+cx_b34a10d0bd9f40e4,test,1776,pt,"Sinceramente, sou contra contrair empréstimos em geral!",negative,0
+cx_3f1ce50bc596075e,test,2445,es,"Sinceramente, el banco pidió un justificante de ingresos.",neutral,1
+cx_a9a0749b9ff30798,test,1040,en,"In my experience, the online application was straightforward during the application when I applied for financing; that is my feedback.",positive,2
+cx_05c7097d714fd952,test,707,es,"Sinceramente, el banco pidió un justificante de ingresos y eso influyó en mi opinión cuando solicité financiación!",neutral,1
+cx_5d3b8a98186e5381,test,1661,it,"Per esperienza personale, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio; questa è la mia opinione.",neutral,1
+cx_bdda2c656660777e,test,915,pt,O gestor ligou por causa dos documentos no meu crédito pessoal.,neutral,1
+cx_0659c1f0e3faa31c,test,2001,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier et cela a influencé mon avis pour mon crédit à la consommation; voilà mon avis.",neutral,1
+cx_915f8e121c10ff39,test,2751,en,"To be clear, the adviser called about the documents when I applied for financing; that is my feedback.",neutral,1
+cx_3c5dcae02ea8df75,test,2560,fr,Le service client était aimable et efficace par rapport à mon expérience précédente!,positive,2
+cx_91841407cabb36d3,test,1015,en,"In my experience, the adviser called about the documents during the application when I applied for financing!",neutral,1
+cx_f9e009a871a96565,test,2390,it,"Nel complesso, la richiesta online è stata semplice!",positive,2
+cx_96c8a99ce66c6e57,test,1237,es,El tipo de interés es demasiado alto cuando solicité financiación para mi préstamo personal!,negative,0
+cx_f72396f2f965a76f,test,120,it,Il consulente ha chiamato per i documenti quando ho chiesto il finanziamento per il mio prestito personale.,neutral,1
+cx_ac54a46f191840d3,test,1885,pt,"Na minha experiência, sou contra contrair empréstimos em geral no meu crédito pessoal quando pedi financiamento.",negative,0
+cx_f586c5c8107e96dd,test,561,it,"Sinceramente, il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento!",negative,0
+cx_046e807721608d5b,test,432,pt,Gostei da transparência das condições em comparação com a experiência anterior no meu crédito pessoal!,positive,2
+cx_1757cbd59ef46a5c,test,1210,es,"En mi experiencia, la atención al cliente fue amable y eficaz durante el trámite cuando solicité financiación; esa es mi opinión.",positive,2
+cx_5eb42a7e6d4f2832,test,310,it,Il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio per il mio prestito personale!,negative,0
+cx_da4b73104b38e478,test,2117,fr,"Globalement, j’ai déposé ma demande de prêt hier par rapport à mon expérience précédente pour mon crédit à la consommation; voilà mon avis.",neutral,1
+cx_a55a827fe2e5fb88,test,989,pt,"Na minha experiência, sou contra contrair empréstimos em geral durante o processo.",negative,0
+cx_ed5030befedf5b94,test,771,de,Der Onlineantrag war unkompliziert im Vergleich zu meiner früheren Erfahrung; das ist meine Meinung.,positive,2
+cx_1dc1e29958945961,test,2736,pt,"No geral, sou contra contrair empréstimos em geral e isso marcou a minha opinião no meu crédito pessoal; é essa a minha opinião.",negative,0
+cx_06cb0b1bc95008ab,test,2438,fr,Le service client était aimable et efficace par rapport à mon expérience précédente lors de ma demande de financement.,positive,2
+cx_ae7ad03727cbb4aa,test,2775,fr,"Globalement, le service client était aimable et efficace et cela a influencé mon avis pour mon crédit à la consommation!",positive,2
+cx_aad0009296e0c8fd,test,996,fr,"Globalement, j’ai déposé ma demande de prêt hier pendant la procédure pour mon crédit à la consommation!",neutral,1
+cx_c483cbd2494a2ef6,test,497,en,The adviser called about the documents and that shaped my overall impression!,neutral,1
+cx_8cc797ddfa30561a,test,2371,en,The adviser called about the documents!,neutral,1
+cx_6e7b0302d88da735,test,2225,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier pendant la procédure lors de ma demande de financement; voilà mon avis.",neutral,1
+cx_6b49d5ce8560c943,test,1346,fr,"Globalement, le service client ne répond jamais par rapport à mon expérience précédente.",negative,0
+cx_f2d5d9ca16a47847,test,2482,pt,"Sinceramente, o gestor ligou por causa dos documentos durante o processo.",neutral,1
+cx_6d0bb8e0010150ac,test,2807,es,"En general, la atención al cliente fue amable y eficaz.",positive,2
+cx_a3d4e043d15cf3bc,test,77,en,"In my experience, the online application was straightforward compared with my previous experience when I applied for financing.",positive,2
+cx_1253565050538746,test,1515,it,"Nel complesso, il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente quando ho chiesto il finanziamento.",neutral,1
+cx_f445e8047a957d8d,test,2800,es,"Sinceramente, el banco pidió un justificante de ingresos y eso influyó en mi opinión; esa es mi opinión.",neutral,1
+cx_d4956387178dddb4,test,1624,de,Insgesamt: ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1
+cx_088be0286a8fef2e,test,2214,it,Il servizio clienti non ha mai risposto per il mio prestito personale quando ho chiesto il finanziamento!,negative,0
+cx_39fc0a804946960b,test,678,en,"In my experience, the online application was straightforward for my personal loan.",positive,2
+cx_e164b36c9d7a9fd0,test,1999,de,Ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit!,neutral,1
+cx_80c8b7368df61794,test,452,en,"Overall, the online application was straightforward for my personal loan!",positive,2
+cx_c33e8fbe08d1dadd,test,858,fr,"Franchement, le service client était aimable et efficace; voilà mon avis.",positive,2
+cx_3e67d3c2a7f4ba1a,test,361,de,Insgesamt: der Onlineantrag war unkompliziert während des Antrags bei meinem Privatkredit; das ist meine Meinung.,positive,2
+cx_ed01a076695e9358,test,2593,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch; das ist meine Meinung.,negative,0
+cx_253fc3ad78279a3d,test,2405,pt,"Na minha experiência, o gestor ligou por causa dos documentos durante o processo quando pedi financiamento.",neutral,1
+cx_8c5572d32afe34a1,test,2321,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit.,neutral,1
+cx_47502fb0de45f0dd,test,2577,pt,"No geral, o gestor ligou por causa dos documentos durante o processo quando pedi financiamento!",neutral,1
+cx_51d6b02f8c1bb1ff,test,2829,pt,"Na minha experiência, gostei da transparência das condições e isso marcou a minha opinião; é essa a minha opinião.",positive,2
+cx_d884029ba4fd9cc0,test,353,de,Ehrlich gesagt: der Onlineantrag war unkompliziert im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe.,positive,2
+cx_19e70dc23896b537,test,2599,es,"En mi experiencia, el banco pidió un justificante de ingresos durante el trámite cuando solicité financiación!",neutral,1
+cx_1d72af7164a2abdc,test,419,es,"Sinceramente, el tipo de interés es demasiado alto para mi préstamo personal cuando solicité financiación!",negative,0
+cx_ede42e0f03d25fd3,test,2108,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert während des Antrags bei meinem Privatkredit!,positive,2
+cx_b44bb83438abd1b2,test,1230,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch.,negative,0
+cx_45b6c59ff933e5b2,test,819,es,"Sinceramente, el tipo de interés es demasiado alto durante el trámite para mi préstamo personal!",negative,0
+cx_67ac21a1a64260aa,test,1077,it,Il servizio clienti non ha mai risposto durante la procedura!,negative,0
+cx_6a4d3bb305e43417,test,2157,fr,Le service client ne répond jamais pour mon crédit à la consommation.,negative,0
+cx_f045f922e2710d54,test,1857,en,The adviser called about the documents during the application when I applied for financing.,neutral,1
+cx_ccd3fafe17b0683a,test,1275,pt,"Sinceramente, gostei da transparência das condições durante o processo quando pedi financiamento.",positive,2
+cx_52b6379fb35d986c,test,716,it,"Per esperienza personale, il servizio clienti non ha mai risposto quando ho chiesto il finanziamento.",negative,0
+cx_7453c68224a7550b,test,1312,it,Il servizio clienti non ha mai risposto quando ho chiesto il finanziamento; questa è la mia opinione.,negative,0
+cx_6cc10c483aabc2ac,test,1701,de,Insgesamt: der Onlineantrag war unkompliziert bei meinem Privatkredit; das ist meine Meinung.,positive,2
+cx_9e504d3c094ac60f,test,2426,fr,"Franchement, j’ai déposé ma demande de prêt hier pendant la procédure!",neutral,1
+cx_9787dd1f0c16b58e,test,1489,es,"En general, el tipo de interés es demasiado alto y eso influyó en mi opinión; esa es mi opinión.",negative,0
+cx_e01ca8af81b4f629,test,2674,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung.,negative,0
+cx_b61347abd9a93a79,test,324,en,"In my experience, the adviser called about the documents compared with my previous experience.",neutral,1
+cx_0485f7a98ca6c307,test,2008,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier par rapport à mon expérience précédente pour mon crédit à la consommation; voilà mon avis.",neutral,1
+cx_e28f82b14bd0fa27,test,228,pt,"Na minha experiência, sou contra contrair empréstimos em geral e isso marcou a minha opinião!",negative,0
+cx_512d8d9061ec82f1,test,1196,it,"Per esperienza personale, il servizio clienti non ha mai risposto!",negative,0
+cx_634bb75e551c5f63,test,1947,en,Customer support never answered my questions when I applied for financing for my personal loan!,negative,0
+cx_a670d0d8c7352c87,test,865,fr,Le service client ne répond jamais pour mon crédit à la consommation lors de ma demande de financement.,negative,0
+cx_754987a5c8d76d76,test,852,it,"Sinceramente, il consulente ha chiamato per i documenti durante la procedura quando ho chiesto il finanziamento.",neutral,1
+cx_257f6090a1df2593,test,2441,en,"In my experience, customer support never answered my questions and that shaped my overall impression when I applied for financing; that is my feedback.",negative,0
+cx_afa3bbb5d8fa97a9,test,421,fr,"Globalement, j’ai déposé ma demande de prêt hier pour mon crédit à la consommation; voilà mon avis.",neutral,1
+cx_750598297efaaae1,test,26,de,Ehrlich gesagt: der Onlineantrag war unkompliziert als ich die Finanzierung beantragt habe bei meinem Privatkredit!,positive,2
+cx_da846f8725b57080,test,2076,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch während des Antrags als ich die Finanzierung beantragt habe.,negative,0
+cx_7ea1fd30a7eb8fc6,test,2694,es,"Sinceramente, la atención al cliente fue amable y eficaz y eso influyó en mi opinión; esa es mi opinión.",positive,2
+cx_74a1a34dd8cafe3c,test,1629,es,"En mi experiencia, el banco pidió un justificante de ingresos para mi préstamo personal.",neutral,1
+cx_a6ce7c0db38cc1a7,test,1246,it,"Sinceramente, il consulente ha chiamato per i documenti quando ho chiesto il finanziamento per il mio prestito personale; questa è la mia opinione.",neutral,1
+cx_21b973ae8568c81e,test,2601,en,"Overall, the online application was straightforward during the application when I applied for financing!",positive,2
+cx_fdf115522d99fd71,test,2185,it,"Sinceramente, il consulente ha chiamato per i documenti quando ho chiesto il finanziamento per il mio prestito personale!",neutral,1
+cx_08e10ca59aaf57fc,test,2698,fr,Le service client était aimable et efficace; voilà mon avis.,positive,2
+cx_b032f21714b611fe,test,935,en,"To be clear, customer support never answered my questions for my personal loan when I applied for financing.",negative,0
+cx_b018c1c329e7d5ad,test,1440,fr,Le service client ne répond jamais par rapport à mon expérience précédente!,negative,0
+cx_83ec4ad3da143d67,test,486,es,"En mi experiencia, el tipo de interés es demasiado alto.",negative,0
+cx_0a7524a98b525cad,test,1790,it,"Nel complesso, il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento; questa è la mia opinione.",negative,0
+cx_0ba4a4fe5ee34c19,test,2400,es,La atención al cliente fue amable y eficaz y eso influyó en mi opinión cuando solicité financiación!,positive,2
+cx_c1ca575fd339687d,test,2815,fr,"Franchement, j’ai déposé ma demande de prêt hier et cela a influencé mon avis.",neutral,1
+cx_c667d69d116bced7,test,1874,it,"Per esperienza personale, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento!",neutral,1
+cx_93b75d196eddeede,test,1771,es,El banco pidió un justificante de ingresos para mi préstamo personal cuando solicité financiación; esa es mi opinión.,neutral,1
+cx_124220c79a08d2c7,test,1877,fr,"Franchement, j’ai déposé ma demande de prêt hier lors de ma demande de financement; voilà mon avis.",neutral,1
+cx_b0879508b072ffc9,test,97,fr,"Franchement, le service client était aimable et efficace et cela a influencé mon avis pour mon crédit à la consommation; voilà mon avis.",positive,2
+cx_3c4863980f295e23,test,322,es,"Sinceramente, la atención al cliente fue amable y eficaz para mi préstamo personal; esa es mi opinión.",positive,2
+cx_7f3d91b3422d2b15,test,1175,de,Der Zinssatz ist viel zu hoch als ich die Finanzierung beantragt habe bei meinem Privatkredit; das ist meine Meinung.,negative,0
+cx_8898a08e323dd28f,test,637,es,"Sinceramente, el banco pidió un justificante de ingresos para mi préstamo personal; esa es mi opinión.",neutral,1
+cx_9e39c8e0fde62cda,test,1976,fr,"Franchement, le service client ne répond jamais et cela a influencé mon avis lors de ma demande de financement; voilà mon avis.",negative,0
+cx_522785a09f127ae4,test,2210,it,"Nel complesso, il servizio clienti non ha mai risposto quando ho chiesto il finanziamento; questa è la mia opinione.",negative,0
+cx_50b925c78467608f,test,2676,es,"Sinceramente, el tipo de interés es demasiado alto y eso influyó en mi opinión!",negative,0
+cx_bb3441f78fd37a0d,test,1621,fr,"Franchement, le service client ne répond jamais lors de ma demande de financement!",negative,0
+cx_04497d8e83d35e5b,test,1695,it,La richiesta online è stata semplice durante la procedura per il mio prestito personale!,positive,2
+cx_634d86a7d7d01fef,test,2617,pt,Sou contra contrair empréstimos em geral durante o processo quando pedi financiamento.,negative,0
+cx_6306727c4a78f35c,test,1646,pt,"No geral, o gestor ligou por causa dos documentos quando pedi financiamento.",neutral,1
+cx_cca0f91cc3810449,test,776,en,"Overall, customer support never answered my questions when I applied for financing.",negative,0
+cx_1b2b9cf104df8b24,test,802,it,"Nel complesso, la richiesta online è stata semplice quando ho chiesto il finanziamento per il mio prestito personale; questa è la mia opinione.",positive,2
+cx_ab4d1816ac00df79,test,2863,en,"Overall, the online application was straightforward for my personal loan when I applied for financing!",positive,2
+cx_ded10ff917687087,test,1923,es,El tipo de interés es demasiado alto durante el trámite cuando solicité financiación!,negative,0
+cx_b02f2e7fcdf2f009,test,1588,es,"Sinceramente, la atención al cliente fue amable y eficaz durante el trámite cuando solicité financiación!",positive,2
+cx_fe42b2428012097c,test,1549,it,La richiesta online è stata semplice e questo ha influenzato il mio giudizio!,positive,2
+cx_3b9e84bfadf08b6d,test,1747,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier pendant la procédure.",neutral,1
+cx_1511f557cd76f161,test,931,en,"In my experience, the online application was straightforward during the application; that is my feedback.",positive,2
+cx_f7b3a34bf552cdcd,test,826,pt,"No geral, o gestor ligou por causa dos documentos e isso marcou a minha opinião no meu crédito pessoal!",neutral,1
+cx_06189cb5e3d1a574,test,1090,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt bei meinem Privatkredit als ich die Finanzierung beantragt habe!,neutral,1
+cx_072c5294ab543eb8,test,101,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung!,negative,0
+cx_7b363d859e4e8852,test,2824,pt,Sou contra contrair empréstimos em geral durante o processo!,negative,0
+cx_bbe8ab7738c776de,test,333,fr,"Franchement, le service client était aimable et efficace pour mon crédit à la consommation!",positive,2
+cx_e357cc43ca1fa7f1,test,1057,it,"Per esperienza personale, la richiesta online è stata semplice quando ho chiesto il finanziamento!",positive,2
+cx_812cb26589cff50c,test,1289,es,El tipo de interés es demasiado alto durante el trámite; esa es mi opinión.,negative,0
+cx_d6ab71cd0b9c813c,test,1886,it,Il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente quando ho chiesto il finanziamento; questa è la mia opinione.,neutral,1
+cx_d1ef167f2559679c,test,129,fr,"Globalement, le service client ne répond jamais par rapport à mon expérience précédente; voilà mon avis.",negative,0
+cx_3fde915bfebfc63f,test,1000,pt,Sou contra contrair empréstimos em geral durante o processo no meu crédito pessoal; é essa a minha opinião.,negative,0
+cx_1c8a965a8c226461,test,2606,es,"En general, el banco pidió un justificante de ingresos en comparación con mi experiencia anterior para mi préstamo personal.",neutral,1
+cx_cd0e95c9784d72a3,test,2070,es,"En mi experiencia, el tipo de interés es demasiado alto y eso influyó en mi opinión; esa es mi opinión.",negative,0
+cx_311cb27a7a2f3883,test,659,pt,"Sinceramente, o gestor ligou por causa dos documentos quando pedi financiamento no meu crédito pessoal!",neutral,1
+cx_24f79eefb9f8c512,test,2921,en,"In my experience, the online application was straightforward and that shaped my overall impression when I applied for financing; that is my feedback.",positive,2
+cx_91a4b984b97a9873,test,1937,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt während des Antrags als ich die Finanzierung beantragt habe.,neutral,1
+cx_0817bcf993bbcbe2,test,2474,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe bei meinem Privatkredit; das ist meine Meinung.,neutral,1
+cx_7e2b5386d39d3ff3,test,2069,pt,Gostei da transparência das condições no meu crédito pessoal quando pedi financiamento!,positive,2
+cx_d902161db8e8bfbe,test,1550,it,"Sinceramente, la richiesta online è stata semplice!",positive,2
+cx_152a83025c38fdde,test,1476,de,Ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1
+cx_35e52922c3603613,test,2867,pt,"No geral, gostei da transparência das condições durante o processo quando pedi financiamento!",positive,2
+cx_46f54cee10d92729,test,1412,pt,Sou contra contrair empréstimos em geral quando pedi financiamento!,negative,0
+cx_15f943c6c0e6015a,test,355,es,La atención al cliente fue amable y eficaz cuando solicité financiación!,positive,2
+cx_32aee43ee9e8c25c,test,306,pt,"No geral, sou contra contrair empréstimos em geral em comparação com a experiência anterior quando pedi financiamento.",negative,0
+cx_325c42287b44d43f,test,95,de,Der Zinssatz ist viel zu hoch während des Antrags als ich die Finanzierung beantragt habe; das ist meine Meinung.,negative,0
+cx_bd777840b4512dbd,test,1283,en,"In my experience, the online application was straightforward and that shaped my overall impression.",positive,2
+cx_abd17867bcf6c841,test,1967,fr,"Franchement, j’ai déposé ma demande de prêt hier pour mon crédit à la consommation lors de ma demande de financement.",neutral,1
+cx_e9606aa2181a00a6,test,2083,pt,"No geral, o gestor ligou por causa dos documentos durante o processo quando pedi financiamento.",neutral,1
+cx_1171ff66d3575df5,test,2060,en,"Overall, the online application was straightforward and that shaped my overall impression; that is my feedback.",positive,2
+cx_78fa2ea5d5de6737,test,862,en,"To be clear, customer support never answered my questions during the application!",negative,0
+cx_f0f9bf8aff56872f,test,1439,it,"Sinceramente, il servizio clienti non ha mai risposto durante la procedura per il mio prestito personale.",negative,0
+cx_99e56bfb7a2cbe5d,test,713,es,"En general, el banco pidió un justificante de ingresos en comparación con mi experiencia anterior para mi préstamo personal!",neutral,1
+cx_b4b097102c1bb443,test,2411,fr,J’ai déposé ma demande de prêt hier par rapport à mon expérience précédente!,neutral,1
+cx_604357899355145a,test,383,it,"Nel complesso, il servizio clienti non ha mai risposto per il mio prestito personale!",negative,0
+cx_e7380f361f6241c1,test,39,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch als ich die Finanzierung beantragt habe.,negative,0
+cx_14d43732416a699f,test,474,it,"Per esperienza personale, la richiesta online è stata semplice per il mio prestito personale quando ho chiesto il finanziamento; questa è la mia opinione.",positive,2
+cx_5ce8ffa5d2e03da0,test,2454,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier et cela a influencé mon avis lors de ma demande de financement!",neutral,1
+cx_027c74a434d5ce52,test,1291,en,"In my experience, the adviser called about the documents compared with my previous experience for my personal loan!",neutral,1
+cx_e880351fa4effdb6,test,336,it,Il servizio clienti non ha mai risposto quando ho chiesto il finanziamento per il mio prestito personale; questa è la mia opinione.,negative,0
+cx_75ac2d3f25c84d2e,test,2522,pt,"No geral, sou contra contrair empréstimos em geral quando pedi financiamento no meu crédito pessoal.",negative,0
+cx_c07cae841d46fe63,test,608,it,"Per esperienza personale, la richiesta online è stata semplice rispetto alla mia esperienza precedente per il mio prestito personale; questa è la mia opinione.",positive,2
+cx_7168ac25bfdc049f,test,1111,pt,"Na minha experiência, o gestor ligou por causa dos documentos durante o processo!",neutral,1
+cx_e79315778172ec7e,test,1679,en,"Overall, the adviser called about the documents compared with my previous experience!",neutral,1
+cx_4d2e5a650cf7ceb7,test,2467,en,"To be clear, the online application was straightforward during the application.",positive,2
+cx_fceb0420cac2f200,test,643,fr,"Globalement, le service client était aimable et efficace pendant la procédure; voilà mon avis.",positive,2
+cx_3aa2353961f8efe8,test,1281,es,"En general, el banco pidió un justificante de ingresos para mi préstamo personal cuando solicité financiación!",neutral,1
+cx_fc1bab045b35cff0,test,229,de,Der Zinssatz ist viel zu hoch während des Antrags bei meinem Privatkredit; das ist meine Meinung.,negative,0
+cx_6476320f756fab06,test,2134,de,Ehrlich gesagt: der Onlineantrag war unkompliziert und das hat meinen Eindruck geprägt bei meinem Privatkredit; das ist meine Meinung.,positive,2
+cx_099da293cab0e089,test,1372,es,"En mi experiencia, el tipo de interés es demasiado alto cuando solicité financiación; esa es mi opinión.",negative,0
+cx_0da24d8d7fc1f71b,test,260,de,Ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung; das ist meine Meinung.,neutral,1
+cx_5d6c86636adb9587,test,1255,en,"Overall, the online application was straightforward and that shaped my overall impression!",positive,2
+cx_62fcc37abe09639c,test,2764,pt,"No geral, sou contra contrair empréstimos em geral durante o processo no meu crédito pessoal; é essa a minha opinião.",negative,0
+cx_4cfc07de792ce8e6,test,1243,pt,"Na minha experiência, sou contra contrair empréstimos em geral e isso marcou a minha opinião; é essa a minha opinião.",negative,0
+cx_3547ca15effa386f,test,2552,de,Insgesamt: ich habe gestern einen Kredit beantragt und das hat meinen Eindruck geprägt bei meinem Privatkredit!,neutral,1
+cx_23d88bf0b806e954,test,2618,it,"Per esperienza personale, la richiesta online è stata semplice e questo ha influenzato il mio giudizio per il mio prestito personale.",positive,2
+cx_15cb9daf338ff1e3,test,2403,fr,Le service client ne répond jamais et cela a influencé mon avis lors de ma demande de financement; voilà mon avis.,negative,0
+cx_e1312f2b95e3b5ae,test,1446,de,Insgesamt: der Zinssatz ist viel zu hoch als ich die Finanzierung beantragt habe bei meinem Privatkredit; das ist meine Meinung.,negative,0
+cx_da6636467ccca895,test,2843,pt,O gestor ligou por causa dos documentos em comparação com a experiência anterior quando pedi financiamento.,neutral,1
+cx_a115c49a948a274d,test,911,es,El tipo de interés es demasiado alto en comparación con mi experiencia anterior para mi préstamo personal; esa es mi opinión.,negative,0
+cx_c48f93371057ebb2,test,944,en,Customer support never answered my questions compared with my previous experience for my personal loan!,negative,0
+cx_05d267c5ad7c3770,test,2931,en,"Overall, the adviser called about the documents for my personal loan when I applied for financing.",neutral,1
+cx_f6faadab2ba76d17,test,1169,fr,"Franchement, j’ai déposé ma demande de prêt hier pendant la procédure.",neutral,1
+cx_20a1f99607f4fb41,test,741,it,"Sinceramente, il servizio clienti non ha mai risposto per il mio prestito personale quando ho chiesto il finanziamento; questa è la mia opinione.",negative,0
+cx_2d43081e098ffdff,test,1718,pt,"Sinceramente, o gestor ligou por causa dos documentos durante o processo!",neutral,1
+cx_4378c8ea50d6b6bb,test,691,de,Der Onlineantrag war unkompliziert im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe.,positive,2
+cx_7e23a5fdc9ac136e,test,2150,fr,"Franchement, le service client ne répond jamais pendant la procédure pour mon crédit à la consommation!",negative,0
+cx_cdcbfd8713286956,test,2809,pt,"Na minha experiência, gostei da transparência das condições no meu crédito pessoal quando pedi financiamento!",positive,2
+cx_3e6005f1ef430f16,test,549,it,"Nel complesso, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento!",neutral,1
+cx_81b987ad66d12632,test,834,it,"Nel complesso, la richiesta online è stata semplice rispetto alla mia esperienza precedente quando ho chiesto il finanziamento; questa è la mia opinione.",positive,2
+cx_b82681e986fba245,test,358,it,"Per esperienza personale, il servizio clienti non ha mai risposto quando ho chiesto il finanziamento!",negative,0
+cx_3e10357973056512,test,368,en,Customer support never answered my questions for my personal loan!,negative,0
+cx_f0bbb5b4a34257ab,test,2656,en,"To be clear, the online application was straightforward when I applied for financing; that is my feedback.",positive,2
+cx_bcfcdeb63512ff31,test,187,fr,"Franchement, le service client ne répond jamais et cela a influencé mon avis pour mon crédit à la consommation; voilà mon avis.",negative,0
+cx_59d3b9022259a1f7,test,1653,en,"To be clear, customer support never answered my questions compared with my previous experience!",negative,0
+cx_6361f0f1dcdf3559,test,1662,it,"Nel complesso, il servizio clienti non ha mai risposto rispetto alla mia esperienza precedente per il mio prestito personale.",negative,0
+cx_193c8cbdde0bfbe5,test,2319,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert als ich die Finanzierung beantragt habe.,positive,2
+cx_5d6dc2661b3ef2ab,test,2328,pt,"Sinceramente, sou contra contrair empréstimos em geral em comparação com a experiência anterior.",negative,0
+cx_fe72d8dd56b7e7a0,test,41,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert als ich die Finanzierung beantragt habe; das ist meine Meinung.,positive,2
+cx_9be3895e2836aeb1,test,528,es,"En mi experiencia, el tipo de interés es demasiado alto en comparación con mi experiencia anterior cuando solicité financiación.",negative,0
+cx_a005228fe8796a52,test,1270,en,"Overall, customer support never answered my questions during the application for my personal loan!",negative,0
+cx_870c3bef6081a532,test,218,de,Insgesamt: der Zinssatz ist viel zu hoch.,negative,0
+cx_7ac8667b3a2ece30,test,430,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe.,positive,2
+cx_0bf909f3fff4beb7,test,1565,en,Customer support never answered my questions compared with my previous experience!,negative,0
+cx_59a416d563fed57b,test,2170,pt,Sou contra contrair empréstimos em geral no meu crédito pessoal!,negative,0
+cx_2b7b50f060c1d7a6,test,1725,en,"Overall, customer support never answered my questions and that shaped my overall impression for my personal loan!",negative,0
+cx_5fd527836a50907a,test,641,en,"Overall, the online application was straightforward during the application; that is my feedback.",positive,2
+cx_807bb60428015c68,test,495,pt,"Na minha experiência, gostei da transparência das condições durante o processo no meu crédito pessoal; é essa a minha opinião.",positive,2
+cx_90ce42bb81ffb3e7,test,2744,it,"Per esperienza personale, la richiesta online è stata semplice e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento; questa è la mia opinione.",positive,2
+cx_b36fd71941195d0e,test,1501,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch bei meinem Privatkredit!,negative,0
+cx_b5c3fad8c3f67e4d,test,1782,es,"En mi experiencia, la atención al cliente fue amable y eficaz cuando solicité financiación; esa es mi opinión.",positive,2
+cx_1830e7e6bc07d116,test,1946,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt während des Antrags als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1
+cx_c23bf44596391e46,test,109,fr,J’ai déposé ma demande de prêt hier pour mon crédit à la consommation!,neutral,1
+cx_1d4678a87d48c9f3,test,1413,de,Insgesamt: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit.,negative,0
+cx_402324f85a4556df,test,1182,en,"To be clear, the online application was straightforward during the application when I applied for financing; that is my feedback.",positive,2
+cx_6124c8315a3c2cf1,test,2022,de,Ehrlich gesagt: der Onlineantrag war unkompliziert während des Antrags.,positive,2
+cx_ec5088657786ba3b,test,1891,en,"To be clear, customer support never answered my questions and that shaped my overall impression.",negative,0
+cx_ab4503419e95cf9a,test,1542,en,Customer support never answered my questions compared with my previous experience for my personal loan.,negative,0
+cx_88e5432c801f07fa,test,1994,en,"Overall, the adviser called about the documents during the application!",neutral,1
+cx_bc53a0af4665e732,test,1766,en,"To be clear, the adviser called about the documents for my personal loan.",neutral,1
+cx_e5147a9f05c146b6,test,1107,pt,Sou contra contrair empréstimos em geral quando pedi financiamento no meu crédito pessoal.,negative,0
+cx_544c7fb773ba3497,test,317,fr,"Globalement, le service client était aimable et efficace par rapport à mon expérience précédente; voilà mon avis.",positive,2
+cx_cfa4f75835c5bb11,test,2571,en,"Overall, customer support never answered my questions when I applied for financing for my personal loan; that is my feedback.",negative,0
+cx_b0605e1ae1ba3749,test,258,en,The online application was straightforward when I applied for financing!,positive,2
+cx_50ed3afcdbe56b6d,test,1014,en,"To be clear, the online application was straightforward; that is my feedback.",positive,2
+cx_375340e3cdfaed72,test,677,es,"Sinceramente, el tipo de interés es demasiado alto para mi préstamo personal!",negative,0
+cx_0ea4568b2a604df8,test,223,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit.,positive,2
+cx_7c67547d0ae08b77,test,871,es,La atención al cliente fue amable y eficaz cuando solicité financiación; esa es mi opinión.,positive,2
+cx_ac94e856f888e6ce,test,1209,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch und das hat meinen Eindruck geprägt; das ist meine Meinung.,negative,0
+cx_ba5731bd6e88fd1b,test,1499,es,"Sinceramente, el tipo de interés es demasiado alto en comparación con mi experiencia anterior cuando solicité financiación.",negative,0
+cx_9e7cab88488435f9,test,200,de,Ich habe gestern einen Kredit beantragt!,neutral,1
+cx_9710f66178293776,test,2056,es,"Sinceramente, el tipo de interés es demasiado alto en comparación con mi experiencia anterior para mi préstamo personal.",negative,0
+cx_d5b57e597666dac3,test,1032,en,"In my experience, the online application was straightforward when I applied for financing for my personal loan.",positive,2
+cx_1285da0c3c6d582e,test,1774,de,Insgesamt: ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe bei meinem Privatkredit; das ist meine Meinung.,neutral,1
+cx_fbdf02102c2498d3,test,597,en,The online application was straightforward when I applied for financing for my personal loan; that is my feedback.,positive,2
+cx_196f975764e89104,test,919,fr,Le service client ne répond jamais pour mon crédit à la consommation!,negative,0
+cx_52d55ae309d27411,test,2048,de,Insgesamt: der Zinssatz ist viel zu hoch bei meinem Privatkredit; das ist meine Meinung.,negative,0
+cx_1382a08895240df5,test,600,es,"En mi experiencia, el banco pidió un justificante de ingresos para mi préstamo personal; esa es mi opinión.",neutral,1
+cx_3dd436a126e3c50d,test,1096,it,"Sinceramente, il consulente ha chiamato per i documenti durante la procedura quando ho chiesto il finanziamento; questa è la mia opinione.",neutral,1
+cx_4548847458157d66,test,752,fr,Le service client était aimable et efficace pendant la procédure; voilà mon avis.,positive,2
+cx_780438444cd6fbad,test,126,pt,Gostei da transparência das condições durante o processo; é essa a minha opinião.,positive,2
+cx_f2c83b29fe62df5f,test,1064,de,Insgesamt: ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit; das ist meine Meinung.,neutral,1
+cx_90ebe565c9d4123b,test,1821,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch während des Antrags.,negative,0
+cx_64c51f30b0eb0ef5,test,265,en,"Overall, the online application was straightforward when I applied for financing!",positive,2
+cx_8a4c7f0e0fec6634,test,18,it,"Nel complesso, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio per il mio prestito personale.",neutral,1
+cx_3451282e1ae1a6f6,test,2463,it,"Sinceramente, il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio per il mio prestito personale!",negative,0
+cx_0fb330c9f363d8a5,test,319,de,Insgesamt: der Zinssatz ist viel zu hoch bei meinem Privatkredit als ich die Finanzierung beantragt habe!,negative,0
+cx_0695aa9a6a638a6d,test,390,en,"Overall, the adviser called about the documents and that shaped my overall impression!",neutral,1
+cx_1e1029f086a813a5,test,1918,it,La richiesta online è stata semplice durante la procedura per il mio prestito personale.,positive,2
+cx_a2c6593cf1ed997a,test,2144,de,Ich habe gestern einen Kredit beantragt und das hat meinen Eindruck geprägt.,neutral,1
+cx_7e6ed3a3b85feb03,test,2013,es,"Sinceramente, la atención al cliente fue amable y eficaz y eso influyó en mi opinión cuando solicité financiación!",positive,2
+cx_4968a92ae1fb2beb,test,1987,it,"Sinceramente, la richiesta online è stata semplice rispetto alla mia esperienza precedente per il mio prestito personale!",positive,2
+cx_737bf94a7adb5c89,test,1438,en,"To be clear, the adviser called about the documents and that shaped my overall impression; that is my feedback.",neutral,1
+cx_3ba4128795cac427,test,1983,pt,"Na minha experiência, gostei da transparência das condições e isso marcou a minha opinião.",positive,2
+cx_2d49340c83a96e11,test,851,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt bei meinem Privatkredit.,neutral,1
+cx_a13e7fd497dba3d3,test,1244,it,La richiesta online è stata semplice e questo ha influenzato il mio giudizio.,positive,2
+cx_dcc9dcb431d85c3d,test,1128,it,"Per esperienza personale, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio!",neutral,1
+cx_4e2b08162cfd2cee,test,2231,en,"In my experience, the online application was straightforward compared with my previous experience for my personal loan; that is my feedback.",positive,2
+cx_495bd91c2aa920c7,test,521,it,"Nel complesso, la richiesta online è stata semplice per il mio prestito personale quando ho chiesto il finanziamento; questa è la mia opinione.",positive,2
+cx_2cb52c6f5fcbcc6a,test,2382,de,Der Onlineantrag war unkompliziert während des Antrags!,positive,2
+cx_47330f444bd48003,test,1357,fr,Le service client ne répond jamais pendant la procédure; voilà mon avis.,negative,0
+cx_9e4e9d2aecefe73d,test,830,pt,"No geral, gostei da transparência das condições e isso marcou a minha opinião.",positive,2
+cx_76c9c7398ccd0c31,test,2066,es,"En mi experiencia, el banco pidió un justificante de ingresos durante el trámite!",neutral,1
+cx_e841fd0b47a22aec,test,2476,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert und das hat meinen Eindruck geprägt!,positive,2
+cx_10ad573e39809cb2,test,2487,de,Insgesamt: ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe!,neutral,1
+cx_6a2c0e52a5529d2d,test,1710,en,"In my experience, the adviser called about the documents when I applied for financing; that is my feedback.",neutral,1
+cx_5871134cf6b63d36,test,705,fr,"Franchement, le service client ne répond jamais et cela a influencé mon avis lors de ma demande de financement.",negative,0
+cx_77804dbbb710aa92,test,2649,pt,"Na minha experiência, sou contra contrair empréstimos em geral em comparação com a experiência anterior quando pedi financiamento; é essa a minha opinião.",negative,0
+cx_574a35611139b8d0,test,1276,it,"Sinceramente, il servizio clienti non ha mai risposto durante la procedura quando ho chiesto il finanziamento; questa è la mia opinione.",negative,0
+cx_a842d64a2d1f5f82,test,1873,en,"In my experience, customer support never answered my questions during the application when I applied for financing!",negative,0
+cx_35ed614ae43265e7,test,303,es,"En mi experiencia, el banco pidió un justificante de ingresos.",neutral,1
+cx_4c943a99a8d1a9b2,test,301,en,"Overall, the online application was straightforward during the application!",positive,2
+cx_4967fe2de56d4fc9,test,1796,en,"To be clear, the adviser called about the documents compared with my previous experience for my personal loan!",neutral,1
+cx_d6775aff94368ee9,test,1526,it,"Per esperienza personale, la richiesta online è stata semplice rispetto alla mia esperienza precedente quando ho chiesto il finanziamento!",positive,2
+cx_740a1d3ff7660857,test,2726,de,Ehrlich gesagt: der Onlineantrag war unkompliziert bei meinem Privatkredit als ich die Finanzierung beantragt habe!,positive,2
+cx_d1e049f4b756fb8e,test,2503,es,"En general, el tipo de interés es demasiado alto en comparación con mi experiencia anterior cuando solicité financiación; esa es mi opinión.",negative,0
+cx_cf05df36561f8c63,test,482,pt,"Na minha experiência, o gestor ligou por causa dos documentos e isso marcou a minha opinião; é essa a minha opinião.",neutral,1
+cx_3090f6a999b435b0,test,1669,es,"En mi experiencia, el banco pidió un justificante de ingresos durante el trámite.",neutral,1
+cx_634e5058393399a1,test,552,en,"In my experience, the online application was straightforward and that shaped my overall impression for my personal loan.",positive,2
+cx_0b6b00bf9577e9a7,test,1536,de,Ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe bei meinem Privatkredit; das ist meine Meinung.,neutral,1
+cx_8ae750adaa67b397,test,289,de,Ich habe gestern einen Kredit beantragt bei meinem Privatkredit; das ist meine Meinung.,neutral,1
+cx_5f49caa1858f3fe0,test,1616,de,Insgesamt: der Zinssatz ist viel zu hoch und das hat meinen Eindruck geprägt bei meinem Privatkredit; das ist meine Meinung.,negative,0
+cx_90c2661c4daf1c5e,test,1700,en,"Overall, the online application was straightforward and that shaped my overall impression when I applied for financing!",positive,2
+cx_b5ddc6f706ab031d,test,719,en,Customer support never answered my questions during the application for my personal loan.,negative,0
+cx_8f80952ea69006e1,test,548,fr,J’ai déposé ma demande de prêt hier lors de ma demande de financement.,neutral,1
+cx_6a2bc95302210949,test,1316,fr,"Franchement, le service client ne répond jamais; voilà mon avis.",negative,0
+cx_de121545445d8777,test,88,pt,"Na minha experiência, sou contra contrair empréstimos em geral.",negative,0
+cx_f7dcff9ddb04527c,test,2475,pt,O gestor ligou por causa dos documentos durante o processo; é essa a minha opinião.,neutral,1
+cx_7fc7fe25ce46625e,test,2131,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe!,negative,0
+cx_55d4d3478d6cbf40,test,170,fr,"Franchement, le service client était aimable et efficace par rapport à mon expérience précédente.",positive,2
+cx_f857da0fb3a8077b,test,240,en,"To be clear, the adviser called about the documents when I applied for financing.",neutral,1
+cx_9a3ca3d0884f9091,test,99,fr,"Globalement, le service client ne répond jamais par rapport à mon expérience précédente lors de ma demande de financement.",negative,0
+cx_81321f4a753271b9,test,2817,fr,Le service client était aimable et efficace pendant la procédure lors de ma demande de financement.,positive,2
+cx_5ff0d314234fac7b,test,2682,fr,"Franchement, le service client ne répond jamais pendant la procédure!",negative,0
+cx_2a3398225deeaaa7,test,23,fr,"Globalement, j’ai déposé ma demande de prêt hier pendant la procédure; voilà mon avis.",neutral,1
+cx_14581b0a78d57de6,test,62,fr,"Globalement, le service client était aimable et efficace pour mon crédit à la consommation lors de ma demande de financement.",positive,2
+cx_c416fa06ee64ad18,test,2497,es,"En general, el tipo de interés es demasiado alto cuando solicité financiación para mi préstamo personal; esa es mi opinión.",negative,0
+cx_f41e4fdc3e7631b9,test,2448,it,"Sinceramente, il consulente ha chiamato per i documenti durante la procedura; questa è la mia opinione.",neutral,1
+cx_496226f79a119eb3,test,855,es,"En mi experiencia, el tipo de interés es demasiado alto para mi préstamo personal.",negative,0
+cx_a80dfe41dd713095,test,2901,fr,"Franchement, le service client était aimable et efficace pendant la procédure pour mon crédit à la consommation; voilà mon avis.",positive,2
+cx_4b41fb7fedc875fd,test,1979,fr,Le service client ne répond jamais pendant la procédure lors de ma demande de financement; voilà mon avis.,negative,0
+cx_89809fbaa998492c,test,1888,es,La atención al cliente fue amable y eficaz y eso influyó en mi opinión para mi préstamo personal!,positive,2
+cx_4f45877b64cb69c9,test,1052,de,Ich habe gestern einen Kredit beantragt und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1
+cx_57da7f8b179145ca,test,1723,pt,O gestor ligou por causa dos documentos.,neutral,1
+cx_ffd573ab9e6042a7,test,1201,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert und das hat meinen Eindruck geprägt bei meinem Privatkredit!,positive,2
+cx_10761d088af3c293,test,281,pt,"No geral, gostei da transparência das condições durante o processo.",positive,2
+cx_046eb808e980ac3b,test,1462,fr,J’ai déposé ma demande de prêt hier par rapport à mon expérience précédente pour mon crédit à la consommation!,neutral,1
+cx_65e6ce6fbd2c31bd,test,2868,fr,"D’après mon expérience, le service client ne répond jamais pendant la procédure lors de ma demande de financement!",negative,0
+cx_5d01d930d6737e3b,test,2803,en,Customer support never answered my questions during the application for my personal loan; that is my feedback.,negative,0
+cx_c53d4c4cb367aece,test,1341,de,Der Onlineantrag war unkompliziert bei meinem Privatkredit als ich die Finanzierung beantragt habe; das ist meine Meinung.,positive,2
+cx_7e8071ef83cbfac6,test,1011,es,"En general, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior.",positive,2
+cx_896feef08616feca,test,106,pt,"Sinceramente, sou contra contrair empréstimos em geral no meu crédito pessoal!",negative,0
+cx_b93a05266ce35640,test,2055,it,"Sinceramente, la richiesta online è stata semplice e questo ha influenzato il mio giudizio per il mio prestito personale.",positive,2
+cx_bfa07ea58ddc150d,test,208,pt,"Na minha experiência, o gestor ligou por causa dos documentos em comparação com a experiência anterior no meu crédito pessoal.",neutral,1
+cx_051227285c86eb11,test,2925,it,La richiesta online è stata semplice rispetto alla mia esperienza precedente!,positive,2
+cx_44af275338c9c518,test,1944,it,Il servizio clienti non ha mai risposto durante la procedura quando ho chiesto il finanziamento.,negative,0
+cx_074510d1e4c23864,test,2018,de,Ehrlich gesagt: der Onlineantrag war unkompliziert bei meinem Privatkredit.,positive,2
+cx_8cc3db80beb22440,test,1840,it,"Sinceramente, la richiesta online è stata semplice per il mio prestito personale!",positive,2
+cx_ecd989f5b1ded8a9,test,2498,fr,"D’après mon expérience, le service client était aimable et efficace lors de ma demande de financement pour mon crédit à la consommation; voilà mon avis.",positive,2
+cx_22ed5d56952efbae,test,2512,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1
+cx_ccfe9118d746dcdc,test,648,fr,"Globalement, le service client était aimable et efficace!",positive,2
+cx_c73fef43b71beae8,test,250,it,"Per esperienza personale, il consulente ha chiamato per i documenti durante la procedura per il mio prestito personale.",neutral,1
+cx_0306509f688ef176,test,557,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe!,negative,0
+cx_2ca484e38780d6e1,test,171,pt,"Na minha experiência, o gestor ligou por causa dos documentos no meu crédito pessoal.",neutral,1
+cx_a2002a54bb11dac5,test,485,es,El banco pidió un justificante de ingresos y eso influyó en mi opinión cuando solicité financiación.,neutral,1
+cx_5fb1dd8dd62dc6d1,test,1491,it,"Sinceramente, il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente quando ho chiesto il finanziamento.",neutral,1
+cx_f17819cf29a41d64,test,318,es,El tipo de interés es demasiado alto para mi préstamo personal; esa es mi opinión.,negative,0
+cx_50968a7839a38c26,test,887,es,"Sinceramente, el banco pidió un justificante de ingresos cuando solicité financiación para mi préstamo personal!",neutral,1
+cx_c556231be298c9b2,test,963,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert bei meinem Privatkredit!,positive,2
+cx_1a00f6f2a5c64cf0,test,28,pt,"Sinceramente, gostei da transparência das condições durante o processo no meu crédito pessoal!",positive,2
+cx_560ec7f7c2a605a5,test,1699,en,"To be clear, the adviser called about the documents!",neutral,1
+cx_be66b2d701c0f529,test,500,fr,J’ai déposé ma demande de prêt hier lors de ma demande de financement pour mon crédit à la consommation; voilà mon avis.,neutral,1
+cx_ee188a9223c0e98c,test,924,es,"Sinceramente, la atención al cliente fue amable y eficaz cuando solicité financiación!",positive,2
+cx_5dd5f72b385c0365,test,1775,it,"Sinceramente, il consulente ha chiamato per i documenti durante la procedura!",neutral,1
+cx_9f3467d62a782146,test,1029,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt während des Antrags als ich die Finanzierung beantragt habe.,neutral,1
+cx_86f44308c73a05e9,test,1284,en,"Overall, customer support never answered my questions during the application; that is my feedback.",negative,0
+cx_7117e0a6405af731,test,2073,pt,"Sinceramente, gostei da transparência das condições.",positive,2
+cx_68d2c055fe1691c3,test,1418,de,Insgesamt: der Onlineantrag war unkompliziert bei meinem Privatkredit als ich die Finanzierung beantragt habe!,positive,2
+cx_8b7c0eb2a5bae1cc,test,2551,fr,"Globalement, le service client était aimable et efficace lors de ma demande de financement; voilà mon avis.",positive,2
+cx_bb52b36fe6105d6c,test,261,en,Customer support never answered my questions for my personal loan when I applied for financing.,negative,0
+cx_e92d704d4955e739,test,1620,es,"En mi experiencia, el tipo de interés es demasiado alto durante el trámite!",negative,0
+cx_1d24aae8a67860ec,test,2802,en,Customer support never answered my questions when I applied for financing for my personal loan; that is my feedback.,negative,0
+cx_28343993654bab41,test,959,es,"Sinceramente, el tipo de interés es demasiado alto para mi préstamo personal.",negative,0
+cx_e558703d3035e372,test,2794,it,"Nel complesso, la richiesta online è stata semplice e questo ha influenzato il mio giudizio!",positive,2
+cx_c2b7082d9fe878c4,test,394,it,La richiesta online è stata semplice rispetto alla mia esperienza precedente.,positive,2
+cx_40c2502c24c630f6,test,2412,it,"Sinceramente, la richiesta online è stata semplice e questo ha influenzato il mio giudizio!",positive,2
+cx_2cf60823763517b3,test,367,de,Ehrlich gesagt: der Onlineantrag war unkompliziert während des Antrags bei meinem Privatkredit; das ist meine Meinung.,positive,2
+cx_07d8f4aa36dd0f68,test,2031,es,"En mi experiencia, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior cuando solicité financiación.",positive,2
+cx_d20c3621a8a9abbe,test,1907,fr,J’ai déposé ma demande de prêt hier par rapport à mon expérience précédente pour mon crédit à la consommation; voilà mon avis.,neutral,1
+cx_7de42473213b774c,test,1860,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert und das hat meinen Eindruck geprägt.,positive,2
+cx_81c85468822bc85e,test,1021,fr,"Franchement, j’ai déposé ma demande de prêt hier lors de ma demande de financement!",neutral,1
+cx_394ff76193638285,test,2434,de,Insgesamt: ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung.,neutral,1
+cx_d511e322a7b1cb1d,test,1183,fr,"Globalement, le service client était aimable et efficace.",positive,2
+cx_658b176fbb49b4b7,test,2242,es,"Sinceramente, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior cuando solicité financiación.",positive,2
+cx_250ac750595ba6d3,test,2391,de,Insgesamt: der Onlineantrag war unkompliziert; das ist meine Meinung.,positive,2
+cx_40c13e0d25844840,test,694,en,"Overall, the adviser called about the documents when I applied for financing for my personal loan!",neutral,1
+cx_8417ed95bd32d4e5,test,2521,es,"En mi experiencia, el tipo de interés es demasiado alto durante el trámite para mi préstamo personal.",negative,0
+cx_5034cf438c38db68,test,883,es,"En general, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior cuando solicité financiación!",positive,2
+cx_1e244f6e7f677b0c,test,1975,pt,"Na minha experiência, gostei da transparência das condições quando pedi financiamento no meu crédito pessoal!",positive,2
+cx_082de87c8973729a,test,609,it,"Nel complesso, il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio!",negative,0
+cx_35361824ddb803e5,test,1108,es,El tipo de interés es demasiado alto en comparación con mi experiencia anterior!,negative,0
+cx_14c1d1360dc05bb9,test,2906,fr,Le service client était aimable et efficace et cela a influencé mon avis pour mon crédit à la consommation.,positive,2
+cx_24d76b333726adea,test,137,it,Il servizio clienti non ha mai risposto per il mio prestito personale!,negative,0
+cx_107d0eb733783495,test,1251,pt,"No geral, o gestor ligou por causa dos documentos durante o processo no meu crédito pessoal!",neutral,1
+cx_fff160d0e660468b,test,2106,pt,"Na minha experiência, o gestor ligou por causa dos documentos e isso marcou a minha opinião quando pedi financiamento; é essa a minha opinião.",neutral,1
+cx_792cc7ac49e7de58,test,899,es,"En mi experiencia, la atención al cliente fue amable y eficaz durante el trámite para mi préstamo personal!",positive,2
+cx_57e72723d572783c,test,845,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch und das hat meinen Eindruck geprägt.,negative,0
+cx_9747b0ec9683c182,test,1490,de,Der Zinssatz ist viel zu hoch als ich die Finanzierung beantragt habe!,negative,0
+cx_67a1b3bad384566a,test,2432,pt,"No geral, sou contra contrair empréstimos em geral e isso marcou a minha opinião quando pedi financiamento!",negative,0
+cx_0059c3b056606777,test,48,pt,Sou contra contrair empréstimos em geral em comparação com a experiência anterior.,negative,0
+cx_ac0a4bd95c8ef836,test,1071,es,"En mi experiencia, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior para mi préstamo personal.",positive,2
+cx_e8f4246283d64087,test,2109,en,The adviser called about the documents compared with my previous experience.,neutral,1
+cx_83f6a401675089be,test,1206,pt,O gestor ligou por causa dos documentos durante o processo quando pedi financiamento; é essa a minha opinião.,neutral,1
+cx_54b43417556f5c08,test,823,fr,"D’après mon expérience, le service client ne répond jamais et cela a influencé mon avis pour mon crédit à la consommation!",negative,0
+cx_eb434577dd059e52,test,375,es,"En general, el tipo de interés es demasiado alto para mi préstamo personal; esa es mi opinión.",negative,0
+cx_f2e5779edd97df2d,test,1731,pt,"Sinceramente, gostei da transparência das condições no meu crédito pessoal quando pedi financiamento; é essa a minha opinião.",positive,2
+cx_ed2a9e72447794ef,test,1966,pt,"Na minha experiência, o gestor ligou por causa dos documentos no meu crédito pessoal quando pedi financiamento; é essa a minha opinião.",neutral,1
+cx_42fe53b127f43341,test,596,pt,"No geral, gostei da transparência das condições durante o processo no meu crédito pessoal!",positive,2
+cx_3554415fb198b66b,test,569,es,"Sinceramente, el banco pidió un justificante de ingresos cuando solicité financiación para mi préstamo personal; esa es mi opinión.",neutral,1
+cx_bb8996163231ab4b,test,837,en,"In my experience, the adviser called about the documents during the application for my personal loan; that is my feedback.",neutral,1
+cx_a0be0dec81d9a654,test,2340,es,La atención al cliente fue amable y eficaz durante el trámite.,positive,2
+cx_083e54cc28867c50,test,2183,pt,"Na minha experiência, gostei da transparência das condições em comparação com a experiência anterior; é essa a minha opinião.",positive,2
+cx_3247fee7d9c11ab1,test,1903,pt,"Na minha experiência, sou contra contrair empréstimos em geral durante o processo no meu crédito pessoal!",negative,0
+cx_b9941c1a84af4acc,test,2074,fr,"D’après mon expérience, le service client ne répond jamais lors de ma demande de financement pour mon crédit à la consommation.",negative,0
+cx_87d7b13cc8d37c1b,test,562,it,"Nel complesso, il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio per il mio prestito personale; questa è la mia opinione.",negative,0
+cx_25554b2375d59d80,test,411,es,La atención al cliente fue amable y eficaz durante el trámite para mi préstamo personal.,positive,2
+cx_7422f39bb716d2b4,test,794,en,"In my experience, the online application was straightforward and that shaped my overall impression; that is my feedback.",positive,2
+cx_cb09dd7541d6f98e,test,241,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt während des Antrags!,neutral,1
+cx_557d1f9b9a417e6b,test,54,de,Ich habe gestern einen Kredit beantragt während des Antrags als ich die Finanzierung beantragt habe.,neutral,1
+cx_ee81440291bf0319,test,2289,es,"Sinceramente, la atención al cliente fue amable y eficaz y eso influyó en mi opinión para mi préstamo personal!",positive,2
+cx_3cf322a3288704eb,test,2658,en,"Overall, customer support never answered my questions during the application for my personal loan.",negative,0
+cx_b6fbaeaf57591eeb,test,2469,es,"En mi experiencia, el tipo de interés es demasiado alto en comparación con mi experiencia anterior cuando solicité financiación!",negative,0
+cx_e74815ed1cd3a56d,test,1199,fr,"Globalement, le service client ne répond jamais et cela a influencé mon avis pour mon crédit à la consommation!",negative,0
+cx_18aac423f9e2c88c,test,2081,es,"Sinceramente, el tipo de interés es demasiado alto en comparación con mi experiencia anterior para mi préstamo personal!",negative,0
+cx_c9ee318963acaa6c,test,1202,it,"Nel complesso, la richiesta online è stata semplice durante la procedura quando ho chiesto il finanziamento!",positive,2
+cx_1b95c0b7164ead88,test,138,de,Ehrlich gesagt: der Onlineantrag war unkompliziert bei meinem Privatkredit als ich die Finanzierung beantragt habe; das ist meine Meinung.,positive,2
+cx_1b679785f9f9988a,test,976,es,El banco pidió un justificante de ingresos para mi préstamo personal cuando solicité financiación.,neutral,1
+cx_3539fa6df6254728,test,2561,es,El banco pidió un justificante de ingresos cuando solicité financiación!,neutral,1
+cx_346e68914327dbf1,test,470,fr,"D’après mon expérience, le service client était aimable et efficace par rapport à mon expérience précédente lors de ma demande de financement.",positive,2
+cx_54f8cff4e8eea3ab,test,395,pt,Sou contra contrair empréstimos em geral no meu crédito pessoal quando pedi financiamento; é essa a minha opinião.,negative,0
+cx_fbd2fda0db0a2304,test,79,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe; das ist meine Meinung.,negative,0
+cx_215a3e0b80d7beb3,test,29,pt,"Na minha experiência, gostei da transparência das condições em comparação com a experiência anterior quando pedi financiamento!",positive,2
+cx_57c49496f5affc41,test,1447,fr,"D’après mon expérience, le service client ne répond jamais par rapport à mon expérience précédente.",negative,0
+cx_31af337000a78de3,test,583,de,Insgesamt: der Onlineantrag war unkompliziert bei meinem Privatkredit als ich die Finanzierung beantragt habe.,positive,2
+cx_e3bd2ba21435cebc,test,445,de,Der Zinssatz ist viel zu hoch bei meinem Privatkredit als ich die Finanzierung beantragt habe; das ist meine Meinung.,negative,0
+cx_977e62c8a44651aa,test,2670,it,"Per esperienza personale, il servizio clienti non ha mai risposto rispetto alla mia esperienza precedente quando ho chiesto il finanziamento.",negative,0
+cx_ec020892bc90e51c,test,2091,pt,"Na minha experiência, gostei da transparência das condições quando pedi financiamento; é essa a minha opinião.",positive,2
+cx_085ca6b2bb57179b,test,2124,es,"En general, el banco pidió un justificante de ingresos durante el trámite; esa es mi opinión.",neutral,1
+cx_c39c03a35896973a,test,1031,fr,"D’après mon expérience, le service client ne répond jamais!",negative,0
+cx_b4833ebec33b7115,test,581,en,Customer support never answered my questions when I applied for financing.,negative,0
+cx_c4bd7eaa2ebdec51,test,1332,es,"En general, el banco pidió un justificante de ingresos; esa es mi opinión.",neutral,1
+cx_c500407afbc1ede3,test,507,en,"In my experience, the adviser called about the documents compared with my previous experience; that is my feedback.",neutral,1
+cx_c6d1ae21698572af,test,1181,pt,Sou contra contrair empréstimos em geral quando pedi financiamento; é essa a minha opinião.,negative,0
+cx_62f526d733d83f0d,test,515,de,Der Onlineantrag war unkompliziert bei meinem Privatkredit!,positive,2
+cx_88bbbd3c776760f1,test,2346,fr,"Franchement, j’ai déposé ma demande de prêt hier par rapport à mon expérience précédente lors de ma demande de financement.",neutral,1
+cx_0b3add8ef2efc3af,test,782,es,"Sinceramente, el banco pidió un justificante de ingresos para mi préstamo personal cuando solicité financiación; esa es mi opinión.",neutral,1
+cx_ad183f5d78aa29e8,test,2846,en,The online application was straightforward and that shaped my overall impression when I applied for financing; that is my feedback.,positive,2
+cx_92343ce534e76cd6,test,59,pt,Sou contra contrair empréstimos em geral em comparação com a experiência anterior no meu crédito pessoal.,negative,0
+cx_dd80daeb3e48f90e,test,100,pt,"No geral, o gestor ligou por causa dos documentos em comparação com a experiência anterior.",neutral,1
+cx_231b924e1b6c1921,test,863,es,"En mi experiencia, el banco pidió un justificante de ingresos y eso influyó en mi opinión; esa es mi opinión.",neutral,1
+cx_567280f3c867c490,test,2416,it,La richiesta online è stata semplice e questo ha influenzato il mio giudizio per il mio prestito personale; questa è la mia opinione.,positive,2
+cx_0e7003263d1ec300,test,873,en,The online application was straightforward and that shaped my overall impression for my personal loan.,positive,2
+cx_40ac2d81dd086c3f,test,762,de,Ich habe gestern einen Kredit beantragt bei meinem Privatkredit als ich die Finanzierung beantragt habe.,neutral,1
+cx_56ebf0233ccfea12,test,576,en,"Overall, the adviser called about the documents during the application for my personal loan; that is my feedback.",neutral,1
+cx_51bb84ebc8dfa5db,test,47,es,"Sinceramente, el banco pidió un justificante de ingresos; esa es mi opinión.",neutral,1
+cx_464c92615dec181d,test,824,fr,"Globalement, j’ai déposé ma demande de prêt hier pendant la procédure lors de ma demande de financement!",neutral,1
+cx_edee1ff8e5019304,test,948,it,Il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente!,neutral,1
+cx_858abbe6eaf64dd0,test,939,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier pendant la procédure pour mon crédit à la consommation; voilà mon avis.",neutral,1
+cx_46e4ae61b54d7a2f,test,892,pt,Sou contra contrair empréstimos em geral e isso marcou a minha opinião; é essa a minha opinião.,negative,0
+cx_eb24494951b1f34a,test,2275,en,Customer support never answered my questions and that shaped my overall impression when I applied for financing!,negative,0
+cx_6501a297b8b963ef,test,2330,de,Der Onlineantrag war unkompliziert als ich die Finanzierung beantragt habe; das ist meine Meinung.,positive,2
+cx_ef25fd28abb0fe8f,test,212,pt,"Na minha experiência, sou contra contrair empréstimos em geral e isso marcou a minha opinião.",negative,0
+cx_f79794582d24bb22,test,2387,fr,"D’après mon expérience, le service client était aimable et efficace pendant la procédure!",positive,2
+cx_ee3cf804c771b704,test,186,en,"To be clear, the adviser called about the documents compared with my previous experience!",neutral,1
+cx_2c92960d5b922cfb,test,192,en,"To be clear, the online application was straightforward compared with my previous experience; that is my feedback.",positive,2
+cx_03c6ae20a18ad3f7,test,590,en,"To be clear, customer support never answered my questions compared with my previous experience when I applied for financing!",negative,0
+cx_aad9367f7c222335,test,1470,fr,"Franchement, le service client était aimable et efficace par rapport à mon expérience précédente pour mon crédit à la consommation!",positive,2
+cx_26eb87a06f84a91b,test,2607,pt,"Sinceramente, o gestor ligou por causa dos documentos e isso marcou a minha opinião quando pedi financiamento!",neutral,1
+cx_0bd8bdf25ebcf381,test,2181,de,Ich habe gestern einen Kredit beantragt bei meinem Privatkredit als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1
+cx_3f773dcc803c9462,test,1811,fr,"Globalement, le service client ne répond jamais par rapport à mon expérience précédente!",negative,0
+cx_bef52bd35fc95173,test,227,en,The online application was straightforward for my personal loan!,positive,2
+cx_4ba63b939b106a56,test,2866,pt,"Na minha experiência, gostei da transparência das condições em comparação com a experiência anterior no meu crédito pessoal!",positive,2
+cx_a90b073e6f1de147,test,1039,it,"Nel complesso, il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente quando ho chiesto il finanziamento!",neutral,1
+cx_f40e3501f0f0a060,test,698,en,"Overall, customer support never answered my questions and that shaped my overall impression when I applied for financing!",negative,0
+cx_cf1408b81fae36b1,test,2538,en,"Overall, the online application was straightforward compared with my previous experience when I applied for financing; that is my feedback.",positive,2
+cx_73a56e35fad772c7,test,105,en,The adviser called about the documents for my personal loan; that is my feedback.,neutral,1
+cx_f345bc6959d78dac,test,1538,es,El tipo de interés es demasiado alto durante el trámite cuando solicité financiación.,negative,0
+cx_94c74d01349022ca,test,2595,pt,"Sinceramente, gostei da transparência das condições em comparação com a experiência anterior quando pedi financiamento!",positive,2
+cx_5c645569d1e4da53,test,311,pt,"No geral, sou contra contrair empréstimos em geral e isso marcou a minha opinião!",negative,0
+cx_3d6c3066ee19e7aa,test,2574,fr,"Franchement, j’ai déposé ma demande de prêt hier lors de ma demande de financement pour mon crédit à la consommation!",neutral,1
+cx_cb908d0a648fef1a,test,708,es,"Sinceramente, la atención al cliente fue amable y eficaz durante el trámite cuando solicité financiación.",positive,2
+cx_468bd64de2c2c5b5,test,2891,fr,"Franchement, le service client était aimable et efficace pour mon crédit à la consommation; voilà mon avis.",positive,2
+cx_3d76228ca4886e96,test,2591,es,La atención al cliente fue amable y eficaz y eso influyó en mi opinión cuando solicité financiación.,positive,2
+cx_82f26a97b6df0672,test,2582,pt,"Na minha experiência, o gestor ligou por causa dos documentos e isso marcou a minha opinião no meu crédito pessoal!",neutral,1
+cx_491c7c8b80892a3d,test,61,pt,"Na minha experiência, gostei da transparência das condições.",positive,2
+cx_d56aa6e9b98e1a7a,test,2442,de,Der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung als ich die Finanzierung beantragt habe; das ist meine Meinung.,negative,0
+cx_42f7e02557ee1968,test,1059,pt,"No geral, sou contra contrair empréstimos em geral no meu crédito pessoal quando pedi financiamento; é essa a minha opinião.",negative,0
+cx_714084bc9a544cca,test,1681,it,"Per esperienza personale, il consulente ha chiamato per i documenti quando ho chiesto il finanziamento per il mio prestito personale; questa è la mia opinione.",neutral,1
+cx_2247abea32a14448,test,1318,de,Ehrlich gesagt: der Onlineantrag war unkompliziert während des Antrags!,positive,2
+cx_bb34fc1e6af90fd3,test,1740,fr,"D’après mon expérience, le service client était aimable et efficace pendant la procédure pour mon crédit à la consommation.",positive,2
+cx_1ab6a2e7b5d65f91,test,1712,en,Customer support never answered my questions when I applied for financing for my personal loan.,negative,0
+cx_eb4b81b0a8e24263,test,1055,fr,"D’après mon expérience, le service client ne répond jamais pour mon crédit à la consommation lors de ma demande de financement!",negative,0
+cx_96095651f31b68e5,test,1645,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe bei meinem Privatkredit!,neutral,1
+cx_3f80e08ecf8e4837,test,531,fr,"Globalement, j’ai déposé ma demande de prêt hier lors de ma demande de financement.",neutral,1
+cx_5f9e508577f326a5,test,2180,es,"En mi experiencia, la atención al cliente fue amable y eficaz y eso influyó en mi opinión cuando solicité financiación!",positive,2
+cx_d88e5dfb6f80115a,test,906,en,"Overall, the adviser called about the documents and that shaped my overall impression for my personal loan!",neutral,1
+cx_58d91ac03904007f,test,697,it,"Per esperienza personale, il consulente ha chiamato per i documenti per il mio prestito personale!",neutral,1
+cx_83d508f9bfb874b8,test,2407,es,La atención al cliente fue amable y eficaz en comparación con mi experiencia anterior para mi préstamo personal; esa es mi opinión.,positive,2
+cx_022ef16bac1dbbe9,test,2364,pt,"Na minha experiência, gostei da transparência das condições em comparação com a experiência anterior quando pedi financiamento.",positive,2
+cx_626a4c65481fe1e2,test,1502,en,"Overall, the adviser called about the documents and that shaped my overall impression; that is my feedback.",neutral,1
+cx_c5e55c9be4bdc41a,test,807,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe; das ist meine Meinung.,negative,0
+cx_9894775c1b6554d5,test,2481,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert bei meinem Privatkredit als ich die Finanzierung beantragt habe.,positive,2
+cx_b7ffd59b3ee760e3,test,2615,en,The adviser called about the documents; that is my feedback.,neutral,1
+cx_3b96f6c088d87dba,test,2832,en,"To be clear, the adviser called about the documents during the application for my personal loan.",neutral,1
+cx_e9d3a64eb99ac4bb,test,1403,es,"En mi experiencia, el banco pidió un justificante de ingresos durante el trámite cuando solicité financiación.",neutral,1
+cx_d2ffc7d08950e3af,test,305,en,"To be clear, the adviser called about the documents when I applied for financing for my personal loan!",neutral,1
+cx_3b4777634a882f88,test,2452,it,Il servizio clienti non ha mai risposto durante la procedura quando ho chiesto il finanziamento!,negative,0
+cx_36f7491493da65e0,test,1906,it,Il servizio clienti non ha mai risposto rispetto alla mia esperienza precedente per il mio prestito personale.,negative,0
+cx_39ee0677a6e95853,test,185,es,"En mi experiencia, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior.",positive,2
+cx_b33a425a2992d189,test,1977,de,Insgesamt: ich habe gestern einen Kredit beantragt und das hat meinen Eindruck geprägt bei meinem Privatkredit.,neutral,1
+cx_001baeb140d9fc3f,test,2808,it,"Per esperienza personale, la richiesta online è stata semplice.",positive,2
+cx_6aee302c82823627,test,2610,es,"Sinceramente, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior.",positive,2
+cx_b5e0e6a3d0cfa870,test,544,it,"Nel complesso, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio per il mio prestito personale; questa è la mia opinione.",neutral,1
+cx_b1ea70461ce9c8f6,test,2067,pt,"No geral, sou contra contrair empréstimos em geral durante o processo; é essa a minha opinião.",negative,0
+cx_54fba9b0f811bf5b,test,285,en,The adviser called about the documents during the application when I applied for financing!,neutral,1
+cx_9822223209f47c4f,test,357,en,"Overall, customer support never answered my questions when I applied for financing; that is my feedback.",negative,0
+cx_09d4c69042911d92,test,797,fr,"Globalement, le service client était aimable et efficace lors de ma demande de financement pour mon crédit à la consommation!",positive,2
+cx_287d9166375f3dab,test,869,pt,"Sinceramente, gostei da transparência das condições no meu crédito pessoal quando pedi financiamento!",positive,2
+cx_f73b517807c4c1d2,test,2516,pt,"Sinceramente, o gestor ligou por causa dos documentos em comparação com a experiência anterior!",neutral,1
+cx_06ec91756b64f249,test,1495,it,"Sinceramente, il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente quando ho chiesto il finanziamento!",neutral,1
+cx_8f811cc73f3954c1,test,1335,es,El tipo de interés es demasiado alto en comparación con mi experiencia anterior.,negative,0
+cx_16955b1f51815241,test,1581,es,"En general, el tipo de interés es demasiado alto cuando solicité financiación!",negative,0
+cx_e1073132a017c7dd,test,479,es,"Sinceramente, la atención al cliente fue amable y eficaz.",positive,2
+cx_5b1e6621522bffdf,test,30,it,"Per esperienza personale, il consulente ha chiamato per i documenti per il mio prestito personale quando ho chiesto il finanziamento!",neutral,1
+cx_4e888f687bd32406,test,1074,pt,"Sinceramente, sou contra contrair empréstimos em geral e isso marcou a minha opinião no meu crédito pessoal.",negative,0
+cx_f26ee54c5cfc11c3,test,1013,es,"En general, el banco pidió un justificante de ingresos cuando solicité financiación para mi préstamo personal; esa es mi opinión.",neutral,1
+cx_b905b2230530ddaf,test,525,de,Ehrlich gesagt: ich habe gestern einen Kredit beantragt im Vergleich zu meiner früheren Erfahrung!,neutral,1
+cx_441aff1e5ed0fbbd,test,2221,fr,"Franchement, le service client ne répond jamais pendant la procédure lors de ma demande de financement; voilà mon avis.",negative,0
+cx_ac7bb9ee267a269d,test,1990,it,Il consulente ha chiamato per i documenti quando ho chiesto il finanziamento.,neutral,1
+cx_e014e1ad877e6fe2,test,1414,pt,Gostei da transparência das condições quando pedi financiamento no meu crédito pessoal; é essa a minha opinião.,positive,2
+cx_58a3638353b20869,test,738,en,"In my experience, the adviser called about the documents compared with my previous experience for my personal loan.",neutral,1
+cx_4ae3359e254c42ea,test,284,de,Insgesamt: der Zinssatz ist viel zu hoch als ich die Finanzierung beantragt habe!,negative,0
+cx_ccf46301fdfbc922,test,220,pt,O gestor ligou por causa dos documentos em comparação com a experiência anterior quando pedi financiamento; é essa a minha opinião.,neutral,1
+cx_d4f7cc3395dd9cca,test,1778,es,"En mi experiencia, el tipo de interés es demasiado alto durante el trámite para mi préstamo personal!",negative,0
+cx_fe159264c9451bb0,test,2268,fr,Le service client ne répond jamais et cela a influencé mon avis lors de ma demande de financement.,negative,0
+cx_e64d3495c6ed4c0a,test,1936,fr,"Franchement, le service client ne répond jamais pendant la procédure.",negative,0
+cx_a64f5db469045a72,test,2394,it,"Nel complesso, il servizio clienti non ha mai risposto rispetto alla mia esperienza precedente quando ho chiesto il finanziamento!",negative,0
+cx_78c68286da5dd10f,test,1434,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch während des Antrags!,negative,0
+cx_eb7e000a2986d361,test,416,pt,"No geral, gostei da transparência das condições e isso marcou a minha opinião quando pedi financiamento!",positive,2
+cx_03b068a04ff49045,test,938,es,"En mi experiencia, el tipo de interés es demasiado alto durante el trámite cuando solicité financiación!",negative,0
+cx_5126dc4e9caacd3d,test,2681,it,La richiesta online è stata semplice; questa è la mia opinione.,positive,2
+cx_fd2f0461f6223e23,test,2488,en,"Overall, the adviser called about the documents and that shaped my overall impression when I applied for financing!",neutral,1
+cx_56d74ca7377302be,test,1756,pt,"Sinceramente, gostei da transparência das condições durante o processo no meu crédito pessoal; é essa a minha opinião.",positive,2
+cx_a4fc588850ea7aa2,test,1311,de,Der Zinssatz ist viel zu hoch bei meinem Privatkredit; das ist meine Meinung.,negative,0
+cx_10bb3b7f93657d9c,test,2791,pt,Sou contra contrair empréstimos em geral no meu crédito pessoal; é essa a minha opinião.,negative,0
+cx_55a60a624711f183,test,2244,de,Meiner Erfahrung nach: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit!,negative,0
+cx_6ff538950ff0cfdc,test,124,it,La richiesta online è stata semplice quando ho chiesto il finanziamento.,positive,2
+cx_b6cd23931f8c9f52,test,890,de,Der Onlineantrag war unkompliziert während des Antrags bei meinem Privatkredit.,positive,2
+cx_37f520669d4af37c,test,1741,it,"Nel complesso, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento.",neutral,1
+cx_a125c92875d8235a,test,69,pt,"Sinceramente, sou contra contrair empréstimos em geral quando pedi financiamento; é essa a minha opinião.",negative,0
+cx_e512bf9caa741a5b,test,1528,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier par rapport à mon expérience précédente lors de ma demande de financement; voilà mon avis.",neutral,1
+cx_c4e303178c552492,test,2569,fr,J’ai déposé ma demande de prêt hier par rapport à mon expérience précédente lors de ma demande de financement.,neutral,1
+cx_d8ad10690a910776,test,2600,de,Meiner Erfahrung nach: der Onlineantrag war unkompliziert und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe!,positive,2
+cx_caf6c251cf1187a0,test,831,fr,"Globalement, le service client ne répond jamais lors de ma demande de financement!",negative,0
+cx_e375a77ecc2982e9,test,1545,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt während des Antrags bei meinem Privatkredit!,neutral,1
+cx_147d78e3e8cbf12d,test,449,fr,"Globalement, le service client était aimable et efficace pendant la procédure pour mon crédit à la consommation!",positive,2
+cx_5d375f655d23b530,test,1010,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt; das ist meine Meinung.,neutral,1
+cx_eaad7a3bac0449f9,test,927,es,"En mi experiencia, la atención al cliente fue amable y eficaz para mi préstamo personal cuando solicité financiación.",positive,2
+cx_50e064dbe3232f71,test,1883,it,Il consulente ha chiamato per i documenti durante la procedura quando ho chiesto il finanziamento!,neutral,1
+cx_fead2503f9d1e4e1,test,2920,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe.,negative,0
+cx_66553adaf8c9b915,test,257,it,Il consulente ha chiamato per i documenti durante la procedura!,neutral,1
+cx_732e20c7b1277d28,test,1887,pt,"Na minha experiência, o gestor ligou por causa dos documentos durante o processo no meu crédito pessoal; é essa a minha opinião.",neutral,1
+cx_d166fd663c5b974a,test,2292,de,Insgesamt: ich habe gestern einen Kredit beantragt und das hat meinen Eindruck geprägt als ich die Finanzierung beantragt habe.,neutral,1
+cx_18ec50aa04a56515,test,2171,pt,O gestor ligou por causa dos documentos durante o processo no meu crédito pessoal.,neutral,1
+cx_4b772f0a99a4c0cf,test,1506,it,"Nel complesso, la richiesta online è stata semplice durante la procedura per il mio prestito personale!",positive,2
+cx_85abcec4ab39981c,test,2922,en,"To be clear, customer support never answered my questions and that shaped my overall impression when I applied for financing!",negative,0
+cx_25bc0267cf5f9049,test,880,it,"Nel complesso, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio!",neutral,1
+cx_d1152b62ed431ef7,test,280,it,"Sinceramente, il servizio clienti non ha mai risposto per il mio prestito personale quando ho chiesto il finanziamento.",negative,0
+cx_35a9073a870fbe66,test,2333,es,"Sinceramente, la atención al cliente fue amable y eficaz en comparación con mi experiencia anterior!",positive,2
+cx_4e4feff2826ced61,test,1177,pt,"No geral, gostei da transparência das condições em comparação com a experiência anterior quando pedi financiamento!",positive,2
+cx_d571503597babda0,test,1900,es,"En mi experiencia, la atención al cliente fue amable y eficaz durante el trámite cuando solicité financiación!",positive,2
+cx_f092b53096ad0ba3,test,2527,it,"Sinceramente, il servizio clienti non ha mai risposto quando ho chiesto il finanziamento per il mio prestito personale.",negative,0
+cx_843e2e349c84f84c,test,162,en,The online application was straightforward compared with my previous experience.,positive,2
+cx_80ee16ed46b5eca5,test,587,fr,"Globalement, le service client était aimable et efficace par rapport à mon expérience précédente.",positive,2
+cx_97829429031356bc,test,1956,it,"Nel complesso, la richiesta online è stata semplice e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento!",positive,2
+cx_ced0212911e0fc22,test,73,es,La atención al cliente fue amable y eficaz en comparación con mi experiencia anterior!,positive,2
+cx_d534f5b225d1bbcb,test,197,it,"Nel complesso, il consulente ha chiamato per i documenti per il mio prestito personale!",neutral,1
+cx_ea8bd74bccc1454b,test,300,fr,"D’après mon expérience, j’ai déposé ma demande de prêt hier lors de ma demande de financement pour mon crédit à la consommation; voilà mon avis.",neutral,1
+cx_837a0239e98d455b,test,50,it,"Sinceramente, il servizio clienti non ha mai risposto!",negative,0
+cx_0bff521e2a2aeb31,test,2263,fr,Le service client était aimable et efficace pendant la procédure.,positive,2
+cx_d71822eae1e1bc77,test,1839,it,"Per esperienza personale, il consulente ha chiamato per i documenti quando ho chiesto il finanziamento!",neutral,1
+cx_aead74e5e2683c2b,test,1617,fr,Le service client ne répond jamais lors de ma demande de financement pour mon crédit à la consommation.,negative,0
+cx_970c3078235ae918,test,540,fr,J’ai déposé ma demande de prêt hier pendant la procédure.,neutral,1
+cx_86862d1002c26572,test,2039,fr,"D’après mon expérience, le service client ne répond jamais pendant la procédure pour mon crédit à la consommation!",negative,0
+cx_5fca19b35f8e9db0,test,2417,fr,"Franchement, le service client était aimable et efficace lors de ma demande de financement pour mon crédit à la consommation!",positive,2
+cx_abfd4aa3cf146f40,test,424,es,"Sinceramente, el tipo de interés es demasiado alto durante el trámite!",negative,0
+cx_9357518bade34a63,test,874,pt,O gestor ligou por causa dos documentos em comparação com a experiência anterior.,neutral,1
+cx_90070d2bc694ab76,test,1353,en,Customer support never answered my questions during the application.,negative,0
+cx_630ddea18563e1e5,test,733,fr,"Globalement, le service client était aimable et efficace et cela a influencé mon avis.",positive,2
+cx_f4866a9ab5a24259,test,2256,it,Il servizio clienti non ha mai risposto durante la procedura per il mio prestito personale!,negative,0
+cx_177b6ada2f6cdc03,test,1652,fr,Le service client ne répond jamais pendant la procédure lors de ma demande de financement.,negative,0
+cx_0fcb9a7c07ff773d,test,1732,en,Customer support never answered my questions compared with my previous experience for my personal loan; that is my feedback.,negative,0
+cx_5f5a4a40aaea3a4d,test,1214,fr,"Globalement, le service client était aimable et efficace lors de ma demande de financement pour mon crédit à la consommation; voilà mon avis.",positive,2
+cx_478b80ee63c4daf2,test,1748,fr,Le service client était aimable et efficace par rapport à mon expérience précédente pour mon crédit à la consommation!,positive,2
+cx_a448ebf4116eeb23,test,404,it,"Nel complesso, la richiesta online è stata semplice rispetto alla mia esperienza precedente.",positive,2
+cx_676b8017295d5ef2,test,2456,it,"Nel complesso, il consulente ha chiamato per i documenti rispetto alla mia esperienza precedente per il mio prestito personale; questa è la mia opinione.",neutral,1
+cx_e4879e7dead249b9,test,316,es,"En mi experiencia, el tipo de interés es demasiado alto y eso influyó en mi opinión!",negative,0
+cx_dd6a6d2c96f70788,test,786,es,"En general, el banco pidió un justificante de ingresos y eso influyó en mi opinión!",neutral,1
+cx_ff92262474ba5f0a,test,2014,de,Ehrlich gesagt: der Zinssatz ist viel zu hoch bei meinem Privatkredit!,negative,0
+cx_818b077b9912b8dd,test,2038,es,El banco pidió un justificante de ingresos durante el trámite!,neutral,1
+cx_5fe3244a29e21b1e,test,2121,de,Insgesamt: der Zinssatz ist viel zu hoch im Vergleich zu meiner früheren Erfahrung bei meinem Privatkredit!,negative,0
+cx_342c14d14ca1acad,test,2831,es,La atención al cliente fue amable y eficaz para mi préstamo personal cuando solicité financiación.,positive,2
+cx_72c2f2ec1a4a89a6,test,2564,en,"Overall, the online application was straightforward when I applied for financing.",positive,2
+cx_db92203bc7e49bd3,test,2392,it,"Sinceramente, il servizio clienti non ha mai risposto e questo ha influenzato il mio giudizio per il mio prestito personale; questa è la mia opinione.",negative,0
+cx_9493baa2d6a520c9,test,904,fr,"Franchement, le service client ne répond jamais par rapport à mon expérience précédente pour mon crédit à la consommation!",negative,0
+cx_5e7fd753840ba5ec,test,1450,pt,O gestor ligou por causa dos documentos durante o processo!,neutral,1
+cx_87043e3e96d9488c,test,2419,es,"Sinceramente, el banco pidió un justificante de ingresos cuando solicité financiación para mi préstamo personal.",neutral,1
+cx_c3f745f02437c00e,test,2339,de,Ehrlich gesagt: der Onlineantrag war unkompliziert!,positive,2
+cx_2bae49101bb6c1d3,test,328,pt,"Sinceramente, gostei da transparência das condições no meu crédito pessoal.",positive,2
+cx_d537ebc3c3924735,test,1613,es,"En mi experiencia, el banco pidió un justificante de ingresos cuando solicité financiación para mi préstamo personal.",neutral,1
+cx_629488d1ea4076c8,test,2024,pt,"No geral, o gestor ligou por causa dos documentos no meu crédito pessoal quando pedi financiamento.",neutral,1
+cx_e90883a9e374b4b0,test,1733,es,"En mi experiencia, el banco pidió un justificante de ingresos en comparación con mi experiencia anterior cuando solicité financiación!",neutral,1
+cx_f779f2ecfaa0a470,test,468,pt,"No geral, gostei da transparência das condições em comparação com a experiência anterior quando pedi financiamento.",positive,2
+cx_78d368746c05071f,test,2695,en,"In my experience, the online application was straightforward compared with my previous experience when I applied for financing!",positive,2
+cx_23053c9a1044826c,test,243,en,Customer support never answered my questions and that shaped my overall impression.,negative,0
+cx_24e29dc9cfebc3ab,test,2393,fr,"D’après mon expérience, le service client ne répond jamais pour mon crédit à la consommation lors de ma demande de financement.",negative,0
+cx_1095d4a90f61af24,test,226,de,Insgesamt: ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe bei meinem Privatkredit.,neutral,1
+cx_13d9fe940bbd07e7,test,1185,it,"Per esperienza personale, la richiesta online è stata semplice durante la procedura; questa è la mia opinione.",positive,2
+cx_6e92d915acd41da4,test,700,it,"Per esperienza personale, la richiesta online è stata semplice rispetto alla mia esperienza precedente quando ho chiesto il finanziamento.",positive,2
+cx_aa1b4368e7fe611b,test,1986,pt,"Na minha experiência, gostei da transparência das condições em comparação com a experiência anterior!",positive,2
+cx_c02149f32b28338a,test,2290,it,"Per esperienza personale, la richiesta online è stata semplice quando ho chiesto il finanziamento per il mio prestito personale!",positive,2
+cx_853236f73379a71f,test,551,pt,"Na minha experiência, o gestor ligou por causa dos documentos em comparação com a experiência anterior.",neutral,1
+cx_6ac5e14c3d90779c,test,251,pt,O gestor ligou por causa dos documentos no meu crédito pessoal quando pedi financiamento!,neutral,1
+cx_fe7556d7ad4d7a79,test,1759,it,"Sinceramente, il consulente ha chiamato per i documenti e questo ha influenzato il mio giudizio; questa è la mia opinione.",neutral,1
+cx_e01f8734a38f2fa2,test,490,fr,"Globalement, j’ai déposé ma demande de prêt hier par rapport à mon expérience précédente; voilà mon avis.",neutral,1
+cx_f213eb2f2ffa0746,test,2818,en,"To be clear, customer support never answered my questions compared with my previous experience when I applied for financing.",negative,0
+cx_6974b61cb3f59b5b,test,209,fr,"Franchement, j’ai déposé ma demande de prêt hier et cela a influencé mon avis lors de ma demande de financement!",neutral,1
+cx_c698b761e2576145,test,334,es,"En mi experiencia, el banco pidió un justificante de ingresos en comparación con mi experiencia anterior cuando solicité financiación.",neutral,1
+cx_742872ec8d5d1988,test,1933,fr,"Franchement, j’ai déposé ma demande de prêt hier pour mon crédit à la consommation lors de ma demande de financement!",neutral,1
+cx_6f44be99a13d0e02,test,1984,en,Customer support never answered my questions and that shaped my overall impression when I applied for financing; that is my feedback.,negative,0
+cx_9f5ffb989925275d,test,806,es,"En mi experiencia, la atención al cliente fue amable y eficaz cuando solicité financiación para mi préstamo personal; esa es mi opinión.",positive,2
+cx_bbbd15612baa15d0,test,2288,pt,"Na minha experiência, o gestor ligou por causa dos documentos e isso marcou a minha opinião quando pedi financiamento!",neutral,1
+cx_fe3a750f65f0c376,test,2905,pt,"Na minha experiência, sou contra contrair empréstimos em geral em comparação com a experiência anterior.",negative,0
+cx_9e915dd7252ff0c9,test,181,it,"Per esperienza personale, il servizio clienti non ha mai risposto per il mio prestito personale.",negative,0
+cx_0e113889bfd1c13c,test,1791,es,"En general, el banco pidió un justificante de ingresos en comparación con mi experiencia anterior cuando solicité financiación!",neutral,1
+cx_9c1b680fee9cd79f,test,844,pt,"No geral, gostei da transparência das condições quando pedi financiamento no meu crédito pessoal!",positive,2
+cx_5388357442453286,test,2112,it,"Sinceramente, la richiesta online è stata semplice e questo ha influenzato il mio giudizio quando ho chiesto il finanziamento; questa è la mia opinione.",positive,2
+cx_3dd6a70cc943893a,test,2152,fr,"Globalement, le service client était aimable et efficace pendant la procédure lors de ma demande de financement!",positive,2
+cx_c7c7b899eed08c43,test,1409,de,Meiner Erfahrung nach: ich habe gestern einen Kredit beantragt als ich die Finanzierung beantragt habe; das ist meine Meinung.,neutral,1

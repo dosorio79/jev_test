@@ -4,7 +4,6 @@ import argparse
 import json
 import os
 from collections.abc import Sequence
-from dataclasses import asdict
 from pathlib import Path
 
 import polars as pl
@@ -20,7 +19,7 @@ from cx_sentiment.providers.base import SentimentProvider
 from cx_sentiment.providers.jev import DEFAULT_JEV_BASE_URL, DEFAULT_JEV_MODEL, JevProvider
 from cx_sentiment.providers.mock import MockProvider
 from cx_sentiment.providers.openai_provider import OpenAIProvider
-from cx_sentiment.reporting import write_report, write_selection_report
+from cx_sentiment.reporting import ReportError, require_quarto, write_report, write_selection_report
 from cx_sentiment.routing import select_threshold
 from cx_sentiment.runner import run_predictions
 
@@ -45,6 +44,7 @@ def _write_run(
     *,
     max_cost_per_request_usd: float = 0,
 ) -> None:
+    require_quarto()
     predictions = run_predictions(
         provider,
         _records(frame),
@@ -157,6 +157,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == "run":
         _apply_run_config(args, parser)
+    try:
+        return _execute(args)
+    except ReportError as exc:
+        parser.error(str(exc))
+
+
+def _execute(args: argparse.Namespace) -> int:
     if args.command == "audit":
         result = audit_dataset(load_dataset(args.input, expected_split=args.split))
         print(json.dumps(result.__dict__, indent=2))
@@ -175,8 +182,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             decision_cost=args.decision_cost_usd,
             fallback_cost=args.fallback_cost_usd,
         )
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(asdict(selected), indent=2) + "\n", encoding="utf-8")
         write_selection_report(args.output, selected)
         return 0
     if args.command == "report":

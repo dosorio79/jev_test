@@ -150,8 +150,7 @@ def test_yaml_live_run_passes_explicit_caps_to_runner(tmp_path: Path, monkeypatc
     dataset = Path("data/cx_sentiment_test_600.csv").resolve()
     config = tmp_path / "experiment.yaml"
     config.write_text(
-        f"provider: jev\ninput: {dataset}\nlimit: 2\n"
-        "budget_usd: 0.05\ncost_per_request_usd: 0.01\n"
+        f"provider: jev\ninput: {dataset}\nlimit: 2\nbudget_usd: 0.05\ncost_per_request_usd: 0.01\n"
     )
     calls = []
 
@@ -167,3 +166,20 @@ def test_yaml_live_run_passes_explicit_caps_to_runner(tmp_path: Path, monkeypatc
     monkeypatch.setattr("cx_sentiment.cli._write_run", capture_run)
     assert main(["run", str(config), "--live"]) == 0
     assert len(calls) == 1
+
+
+def test_missing_quarto_stops_before_provider_calls(tmp_path: Path, monkeypatch, capsys) -> None:
+    def unexpected_call(*args, **kwargs):
+        pytest.fail("provider must not be called without Quarto")
+
+    monkeypatch.setattr("cx_sentiment.reporting.shutil.which", lambda name: None)
+    monkeypatch.setattr("cx_sentiment.cli.run_predictions", unexpected_call)
+    config = tmp_path / "experiment.yaml"
+    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    config.write_text(f"provider: mock\ninput: {dataset}\n")
+
+    with pytest.raises(SystemExit) as error:
+        main(["run", str(config)])
+
+    assert error.value.code == 2
+    assert "Quarto" in capsys.readouterr().err

@@ -53,7 +53,10 @@ chose YAML experiment configuration.
 - `runner.py`, `cache.py`, `budget.py`, `pricing.py`: sequential execution,
   resumable results, spending guards, and token pricing.
 - `metrics.py`, `routing.py`, `reporting.py`: evaluation, cached policy selection,
-  and JSON/CSV/HTML output. Keep report rendering straightforward.
+  and JSON/CSV output with Quarto rendering. Edit the readable report documents in
+  `src/cx_sentiment/reports/`; keep data calculations in Python. See docs/REPORTING.md
+  for setup and re-rendering. Use Great Tables and Plotly with Polars directly.
+  Avoid pandas conversions, hand-built HTML/SVG, or a second rendering engine.
 
 ## Data, evaluation, and paid calls
 
@@ -90,6 +93,8 @@ git diff --check
 
 - Exercise affected CLI commands and generated reports with mock data or a
   zero-network preview. Use temporary output folders to preserve existing runs.
+- Report integration tests require the Quarto CLI on PATH. Verify actual renders
+  when changing `.qmd` documents; Python lint/type checks do not cover their cells.
 - Documentation-only changes need source/link checks, not a full test run.
 - Report what actually ran and any checks that could not run. Avoid fixed test
   counts in instructions, and do not fix unrelated failures without a request.

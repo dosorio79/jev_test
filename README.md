@@ -6,10 +6,12 @@ The dataset boundary uses Polars and Dataframely, so schema, nullability, unique
 
 ## Install and verify
 
-Python 3.11 or 3.12 and [uv](https://docs.astral.sh/uv/) are required.
+Python 3.11 or 3.12 and [uv](https://docs.astral.sh/uv/) are required. Install the
+[Quarto CLI](https://quarto.org/docs/get-started/) to generate HTML reports.
 
 ```bash
 uv sync
+uv run quarto check jupyter
 uv run pytest
 uv run ruff check .
 uv run pyright
@@ -26,6 +28,9 @@ uv run cx-sentiment run experiment.yaml
 The supplied config uses `mock`, five records, and `outputs/experiment`. It makes
 no network calls and writes `predictions.jsonl`, `metrics.json`, `metrics.csv`, and
 `report.html`. Mock accuracy is a pipeline test, not a model result.
+Reports also include an editable `report.qmd` and `report_metadata.json`.
+See [Learning Quarto](docs/REPORTING.md) for setup, a small example, and how to edit
+and re-render saved reports without provider calls.
 
 ```yaml
 provider: mock  # mock, openai, or jev
@@ -63,7 +68,8 @@ The CLI does not read credentials from YAML. OpenAI's model remains configured w
 `cli.py` reads the experiment settings from `config.py` and loads the dataset through
 `data.py`. `runner.py` checks the cache and budget, then calls the selected provider.
 Each provider returns the same `Prediction` model. `metrics.py` scores those results;
-`reporting.py` writes JSON, CSV, and HTML. `routing.py` compares cached decision and
+`reporting.py` writes JSON/CSV and renders Quarto documents with Great Tables
+and Plotly using Polars directly. `routing.py` compares cached decision and
 fallback predictions to select a validation threshold without extra API calls.
 
 ## Validation sample

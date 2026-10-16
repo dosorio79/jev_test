@@ -45,7 +45,7 @@ def get_openai_price_card(model_id: str) -> PriceCard:
         return OPENAI_STANDARD_RATE_CARDS[model_id]
     except KeyError as exc:
         raise KeyError(
-            f"No verified OpenAI rate card for {model_id!r}; supply explicit dated rates"
+            f"No verified OpenAI rate card for {model_id!r}; add a dated rate card in pricing.py"
         ) from exc
 
 
@@ -54,5 +54,6 @@ def get_jev_price_card(model_id: str) -> PriceCard:
         return JEV_TYPESAFE_RATE_CARDS[model_id]
     except KeyError as exc:
         raise KeyError(
-            f"No verified TypeSafe Jev rate card for {model_id!r}; supply explicit dated rates"
+            f"No verified TypeSafe Jev rate card for {model_id!r}; "
+            "add a dated rate card in pricing.py"
         ) from exc

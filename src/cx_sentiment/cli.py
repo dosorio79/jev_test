@@ -10,7 +10,7 @@ import polars as pl
 
 from cx_sentiment.budget import LiveSafety
 from cx_sentiment.cache import PredictionCache, RawResponseStore
-from cx_sentiment.config import load_config
+from cx_sentiment.config import create_run_directory, load_config
 from cx_sentiment.data import audit_dataset, create_validation_sample, load_dataset
 from cx_sentiment.metrics import evaluate_predictions
 from cx_sentiment.models import Prediction
@@ -242,7 +242,7 @@ def _apply_run_config(args: argparse.Namespace, parser: argparse.ArgumentParser)
         if config.budget_usd is None:
             parser.error("set budget_usd in the experiment YAML for live calls")
     args.input = config.input
-    args.output_dir = config.output_dir
+    args.output_dir = create_run_directory(config, live=args.live)
     args.provider = config.provider
     args.limit = config.limit
     args.max_requests = config.limit

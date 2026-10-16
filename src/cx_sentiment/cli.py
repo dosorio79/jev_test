@@ -11,6 +11,7 @@ import polars as pl
 
 from cx_sentiment.budget import LiveSafety, PriceCard
 from cx_sentiment.cache import PredictionCache, RawResponseStore
+from cx_sentiment.config import load_config
 from cx_sentiment.data import audit_dataset, create_validation_sample, load_dataset
 from cx_sentiment.metrics import evaluate_predictions
 from cx_sentiment.models import Prediction
@@ -69,6 +70,7 @@ def _write_run(
             "simulated": provider.provider_name == "mock",
         },
     )
+    print(f"Report: {output_dir / 'report.html'}")
 
 
 def _provider_from_environment(name: str) -> SentimentProvider:
@@ -133,21 +135,28 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--output-dir", type=Path, required=True)
     report.add_argument("--title", default="CX sentiment benchmark")
     demo = subparsers.add_parser("offline-demo")
-    run = subparsers.add_parser("run")
-    for command in (demo, run):
-        command.add_argument("--input", type=Path, required=True)
-        command.add_argument("--output-dir", type=Path, required=True)
-        command.add_argument("--limit", type=int, default=5)
-    run.add_argument("--provider", choices=["openai", "jev"], required=True)
-    run.add_argument("--live", action="store_true")
-    run.add_argument("--max-requests", type=int)
-    run.add_argument("--max-estimated-cost-usd", type=float)
-    run.add_argument("--max-cost-per-request-usd", type=float)
+    demo.add_argument("--input", type=Path, required=True)
+    demo.add_argument("--output-dir", type=Path, required=True)
+    demo.add_argument("--limit", type=int, default=5)
+    run = subparsers.add_parser("run", help="Run or preview a YAML experiment")
+    run.add_argument("config", type=Path, nargs="?", help="Experiment YAML file")
+    run.add_argument("--live", action="store_true", help="Allow paid provider calls")
+    # Existing scripts remain usable; YAML is the documented interface.
+    run.add_argument("--input", type=Path, help=argparse.SUPPRESS)
+    run.add_argument("--output-dir", type=Path, help=argparse.SUPPRESS)
+    run.add_argument("--limit", type=int, help=argparse.SUPPRESS)
+    run.add_argument("--provider", choices=["openai", "jev"], help=argparse.SUPPRESS)
+    run.add_argument("--max-requests", type=int, help=argparse.SUPPRESS)
+    run.add_argument("--max-estimated-cost-usd", type=float, help=argparse.SUPPRESS)
+    run.add_argument("--max-cost-per-request-usd", type=float, help=argparse.SUPPRESS)
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.command == "run":
+        _apply_run_config(args, parser)
     if args.command == "audit":
         result = audit_dataset(load_dataset(args.input, expected_split=args.split))
         print(json.dumps(result.__dict__, indent=2))
@@ -181,7 +190,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_report(args.output_dir, predictions, metrics, title=args.title)
         return 0
     frame = load_dataset(args.input).head(args.limit)
-    if args.command == "offline-demo":
+    if args.command == "offline-demo" or args.provider == "mock":
         _write_run(frame, MockProvider(), args.output_dir, LiveSafety())
         return 0
     if not args.live:
@@ -195,6 +204,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         (args.output_dir / "dry_run.json").write_text(
             json.dumps(plan, indent=2) + "\n", encoding="utf-8"
         )
+        print(f"Preview: {args.output_dir / 'dry_run.json'} (no network calls)")
         return 0
     if args.max_cost_per_request_usd is None or args.max_cost_per_request_usd <= 0:
         raise ValueError("--max-cost-per-request-usd is required and must be positive")
@@ -212,6 +222,42 @@ def main(argv: Sequence[str] | None = None) -> int:
         max_cost_per_request_usd=args.max_cost_per_request_usd,
     )
     return 0
+
+
+def _apply_run_config(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
+    if args.config is None:
+        if args.input is None or args.output_dir is None or args.provider is None:
+            parser.error("run requires an experiment YAML file")
+        if args.limit is None:
+            args.limit = 5
+        return
+    legacy_options = (
+        args.input,
+        args.output_dir,
+        args.limit,
+        args.provider,
+        args.max_requests,
+        args.max_estimated_cost_usd,
+        args.max_cost_per_request_usd,
+    )
+    if any(value is not None for value in legacy_options):
+        parser.error("use a YAML file or legacy flags, not both")
+    try:
+        config = load_config(args.config)
+    except ValueError as exc:
+        parser.error(str(exc))
+    if args.live and config.provider != "mock":
+        if config.cost_per_request_usd is None:
+            parser.error("set cost_per_request_usd in the experiment YAML for live calls")
+        if config.budget_usd is None:
+            parser.error("set budget_usd in the experiment YAML for live calls")
+    args.input = config.input
+    args.output_dir = config.output_dir
+    args.provider = config.provider
+    args.limit = config.limit
+    args.max_requests = config.limit
+    args.max_estimated_cost_usd = config.budget_usd
+    args.max_cost_per_request_usd = config.cost_per_request_usd
 
 
 if __name__ == "__main__":

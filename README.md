@@ -15,17 +15,56 @@ uv run ruff check .
 uv run pyright
 ```
 
-Audit the locked sample and run the zero-network end-to-end demo:
+## Run an experiment
+
+Edit [`experiment.yaml`](experiment.yaml), then run:
 
 ```bash
-uv run cx-sentiment audit --input data/cx_sentiment_test_600.csv --split test
-uv run cx-sentiment offline-demo \
-  --input data/cx_sentiment_test_600.csv \
-  --output-dir outputs/offline-demo \
-  --limit 600
+uv run cx-sentiment run experiment.yaml
 ```
 
-The demo writes `predictions.jsonl`, `metrics.json`, `metrics.csv`, and `report.html`. Mock predictions are deterministic and carry genuine mock probability vectors. Their accuracy is a pipeline test, not a model result.
+The supplied config uses `mock`, five records, and `outputs/experiment`. It makes
+no network calls and writes `predictions.jsonl`, `metrics.json`, `metrics.csv`, and
+`report.html`. Mock accuracy is a pipeline test, not a model result.
+
+```yaml
+provider: mock  # mock, openai, or jev
+input: data/cx_sentiment_test_600.csv
+output_dir: outputs/experiment
+limit: 5
+```
+
+Paths are relative to the YAML file. Unknown settings and nonpositive limits are
+rejected. `limit` also caps provider requests. Use a separate output folder for
+each experiment you want to keep; rerunning replaces its reports.
+The command prints the report location when finished. Configuration errors name
+the file and setting to fix.
+
+For a paid provider, change `provider`, set credentials as described below, and add
+explicit cost caps chosen for your model and input:
+
+```yaml
+budget_usd: 0.05
+cost_per_request_usd: 0.01
+```
+
+Preview with the same command; it writes `dry_run.json` without requiring credentials.
+To execute paid calls explicitly:
+
+```bash
+uv run cx-sentiment run experiment.yaml --live
+```
+
+The CLI does not read credentials from YAML. OpenAI's model remains configured with
+`OPENAI_MODEL`. Legacy flag-based commands still work, but cannot be mixed with YAML.
+
+## How the code fits together
+
+`cli.py` reads the experiment settings from `config.py` and loads the dataset through
+`data.py`. `runner.py` checks the cache and budget, then calls the selected provider.
+Each provider returns the same `Prediction` model. `metrics.py` scores those results;
+`reporting.py` writes JSON, CSV, and HTML. `routing.py` compares cached decision and
+fallback predictions to select a validation threshold without extra API calls.
 
 ## Validation sample
 
@@ -53,34 +92,10 @@ The built-in standard short-context rate table, checked on 2026-10-15, covers `g
 
 Jev uses TypeSafe's official `https://api.typesafe.ai/v1/systemone` endpoint and a typed `choice` question. The default model is pinned to `jev-1.13.0` so calibrated thresholds do not move with an alias. Its probability vector remains separate from provider confidence. TypeSafe lists Jev 1.13 and 1.14 at $0.042 per million input tokens with output tokens free; the dated table in `pricing.py` converts actual usage to USD. Override the URL or model only when the issuer of your key documents a different contract.
 
-## First five-record live smoke tests
-
-First preview either run. It makes zero network calls and does not require a key:
-
-```bash
-uv run cx-sentiment run --provider openai \
-  --input data/cx_sentiment_test_600.csv --output-dir outputs/openai-smoke --limit 5
-```
-
-After exporting credentials and checking the current provider price, run OpenAI with user-chosen caps. Replace `0.05` and `0.01` if your verified upper bounds differ:
-
-```bash
-uv run cx-sentiment run --provider openai \
-  --input data/cx_sentiment_test_600.csv --output-dir outputs/openai-smoke --limit 5 \
-  --live --max-requests 5 --max-estimated-cost-usd 0.05 \
-  --max-cost-per-request-usd 0.01
-```
-
-Run Jev with the same explicit request and budget guard. The USD guard is a conservative user-supplied ceiling; actual token usage is also converted with the dated TypeSafe rate card:
-
-```bash
-uv run cx-sentiment run --provider jev \
-  --input data/cx_sentiment_test_600.csv --output-dir outputs/jev-smoke --limit 5 \
-  --live --max-requests 5 --max-estimated-cost-usd 0.05 \
-  --max-cost-per-request-usd 0.01
-```
-
-Live mode hard-fails without credentials, a request cap, a total USD budget, and a per-request upper bound. Concurrency is one. Responses are resumable through the content-addressed `.cache/cx_sentiment/` cache. Keys and full raw response bodies are never logged or written to normal outputs.
+Live mode requires credentials, a positive record limit, a total USD budget, and a
+per-request upper bound. Concurrency is one. Responses are resumable through the
+content-addressed `.cache/cx_sentiment/` cache. Keys and full raw response bodies are
+never logged or written to normal outputs.
 
 ## Scientific boundary
 

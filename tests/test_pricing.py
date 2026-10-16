@@ -25,6 +25,17 @@ def test_jev_typesafe_rate_table_charges_input_tokens_and_free_output() -> None:
     assert card.estimate(input_tokens=1_000_000, output_tokens=50_000) == pytest.approx(0.042)
 
 
+@pytest.mark.parametrize("model", ["gpt-5.4-mini", "gpt-5.4-mini-2026-03-17"])
+def test_gpt54_mini_rate_card_has_verified_rates_and_provenance(model: str) -> None:
+    card = get_openai_price_card(model)
+
+    assert card.input_usd_per_million == 0.75
+    assert card.output_usd_per_million == 4.5
+    assert card.as_of == "2026-10-16"
+    assert card.source_url == "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+    assert card.estimate(input_tokens=104, output_tokens=14) == pytest.approx(0.000141)
+
+
 @pytest.mark.parametrize("legacy_prices", ["absent", "partial", "complete"])
 def test_cli_uses_model_rate_card_without_environment_prices(
     monkeypatch, legacy_prices: str

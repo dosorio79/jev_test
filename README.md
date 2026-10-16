@@ -248,6 +248,69 @@ per-request upper bound. Concurrency is one. Responses are resumable through the
 content-addressed `.cache/cx_sentiment/` cache. Keys and full raw response bodies are
 never logged or written to normal outputs.
 
+## Jev probability precision and hybrid policy
+
+Research checked against official TypeSafe sources on **2026-10-16**:
+
+| Official source | What it establishes |
+| --- | --- |
+| [Choice](https://docs.typesafe.ai/primitives/choice) and [HTTP API](https://docs.typesafe.ai/api) | A probability is returned for each option, and the distribution is described as summing to 1. |
+| [Python SDK answers and responses](https://docs.typesafe.ai/sdk/python/api/types/responses) | The Choice probability field is described as summing to approximately 1. |
+| [Confidence](https://docs.typesafe.ai/confidence#choice) | Choice confidence is derived from the top probability and number of options; it is a different scale from maximum class probability. |
+
+The reviewed sources do **not** specify a decimal precision, numerical acceptance
+tolerance, or client normalization procedure. The Jev 1.13
+[known-limitations page](https://docs.typesafe.ai/model-jaggedness/jev-1.13)
+also supplies no probability-rounding policy. Consequently, treating our observed
+discrepancy as rounding is a plausible explanation, not a confirmed guarantee.
+The SDK's approximate-sum wording is important context when reviewing the strict
+validator; it does not establish that every off-sum vector is acceptable.
+
+In the full 600-record validation run, two otherwise schema-valid Jev responses
+contained all three class probabilities with a total of **0.99**. Both selected
+`neutral`, matching the references (one German record and one Portuguese record).
+Our shared `Prediction` validator requires `abs(sum(probabilities) - 1) <= 0.0001`,
+so the adapter recorded both as `invalid_response`. They remain unresolved in
+the original benchmark: **574/600 correct, 99.67% operational coverage**. A correct
+returned label does not make the complete response valid under the current rules.
+
+This affects a hybrid policy because rejected Jev responses trigger OpenAI
+fallback. Accepting a bounded discrepancy and normalizing it would instead let
+the routing score decide. Normalization can also move scores across a threshold:
+for example, a maximum of `0.60` in a vector totaling `0.99` becomes approximately
+`0.6061` after dividing every probability by the total.
+
+For three classes, TypeSafe's documented Choice-confidence formula simplifies
+to `confidence = (3 * p_max - 1) / 2`. A top probability of `0.61` therefore maps
+to a confidence of `0.415` under that formula. A threshold on `p_max` cannot be
+copied unchanged to provider confidence. Preserve the returned confidence as its
+own field, even if a future adapter normalizes the probability vector.
+
+Before freezing a hybrid policy:
+
+1. Specify the accepted discrepancy, its evidence or mathematical justification,
+   and whether routing uses normalized maximum probability or provider confidence.
+   No additional Jev-specific rounding tolerance is implemented today.
+2. Keep normalization in the Jev adapter and the shared prediction contract strict.
+   Require exactly the canonical classes, finite values in `[0, 1]`, a positive
+   total, and an explicitly bounded discrepancy. Reject malformed distributions.
+3. Test exact sums, accepted and rejected boundary cases, missing classes,
+   negative/nonfinite values, and routing decisions close to the threshold.
+4. Preserve original responses and runs. Reprocess available saved responses
+   offline into a new, identified derived run with its interpretation recorded;
+   ensure old error-cache entries do not bypass the new interpretation. Re-select
+   thresholds on validation data before final testing. New paid calls are not
+   needed just to reinterpret the retained responses.
+
+The current error path also omits usage and elapsed request time from the
+normal failed-prediction record. A future adapter correction should retain those
+measurements even when score validation fails. The saved raw responses allowed
+a separate usage audit to supplement Jev's known cost from **$0.00968058** to
+**$0.009712878** for this run; the original report still marks total cost incomplete.
+Unrecorded historical latency cannot be recovered from token usage or invented.
+This research update changes documentation only; it does not normalize scores,
+reclassify failures, overwrite caches, or change the selected hybrid policy.
+
 ## Scientific boundary
 
 Threshold selection belongs exclusively on the generated validation set. Cache both providers' validation predictions once, then simulate thresholds from cached results. Freeze the prompt version, model IDs, routing signal, and chosen threshold before the one-time test evaluation. See [METHODS.md](docs/METHODS.md) for the protocol and limitations.

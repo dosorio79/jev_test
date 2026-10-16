@@ -88,6 +88,26 @@ chose YAML experiment configuration.
 - Consult current official provider documentation when changing API contracts
   or pricing; retain dated pricing provenance.
 
+## Jev probabilities and hybrid policy
+
+- Use the [official Choice docs](https://docs.typesafe.ai/primitives/choice) and
+  [Python SDK response reference](https://docs.typesafe.ai/sdk/python/api/types/responses).
+  As checked on 2026-10-16, they describe sums of 1 and approximately 1,
+  respectively, without a numeric tolerance. Treat decimal rounding as a hypothesis.
+- Keep the shared `Prediction` contract strict. Any future Jev normalization
+  belongs in its adapter, with an explicit, justified bound and regression tests
+  for valid, boundary, malformed, and nonfinite inputs. Never normalize arbitrary
+  vectors or fill missing classes. No Jev rounding workaround is implemented yet.
+- Preserve raw responses and provider-reported confidence. Keep normalized scores
+  and any derived confidence distinguishable; their thresholds use different scales.
+- Before freezing a hybrid policy, settle and record score interpretation, routing
+  signal, and threshold. Reprocess retained responses offline into a new derived
+  run; preserve original runs and prevent reuse of incompatible cached results.
+- Retain available usage and measured latency even when label/score validation
+  fails in future adapter work. Never invent missing historical measurements.
+  See [README research notes](README.md#jev-probability-precision-and-hybrid-policy)
+  for evidence, routing implications, and current limitations.
+
 ## Verification and Git
 
 Use Python 3.11 or 3.12 with uv. Start with the narrowest relevant test; add a

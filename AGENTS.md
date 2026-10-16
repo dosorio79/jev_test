@@ -31,7 +31,7 @@ chose YAML experiment configuration.
 
 ## Experiment interface
 
-- Keep `uv run cx-sentiment run experiment.yaml` as the primary run workflow.
+- Keep `uv run cx-sentiment run experiments/mock.yaml` as the primary run workflow.
   `--live` explicitly enables paid calls; experiment settings belong in YAML.
 - Keep configuration flat and small. Do not grow the CLI with flags duplicating
   YAML settings. Preserve existing legacy commands, and reject mixing their run
@@ -40,7 +40,7 @@ chose YAML experiment configuration.
   settings, invalid providers, and nonpositive limits or cost caps.
 - Treat YAML `output_dir` as a run parent. Create a dated child for every invocation,
   with provider/mode in its name and a resolved `experiment.yaml` beside results.
-  Preserve old runs; keep credentials out of snapshots and `runs/` out of Git.
+  Preserve old runs; keep credentials out of snapshots and `experiments/runs/` out of Git.
 - Parse YAML with `safe_load` and validate it through the existing Pydantic model.
 - Give readable configuration errors without echoing configuration values or
   exposing tracebacks. Print the report or preview path after a successful run.

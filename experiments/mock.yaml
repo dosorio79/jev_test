@@ -1,6 +1,6 @@
 # Paths are relative to this file. Credentials stay in environment variables.
 provider: mock  # mock, openai, or jev
-input: data/cx_sentiment_test_600.csv
+input: ../data/cx_sentiment_test_600.csv
 output_dir: runs  # Parent folder; each invocation gets a dated child folder.
 limit: 5  # Also the maximum number of provider requests.
 

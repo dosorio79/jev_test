@@ -3,12 +3,12 @@
 Run an experiment to get a report you can open, edit, and re-render locally:
 
 ```bash
-uv run cx-sentiment run experiment.yaml
+uv run cx-sentiment run experiments/mock.yaml
 ```
 
 The supplied mock experiment makes no provider calls. Open
 the printed `report.html` path in your browser. Each YAML invocation creates a
-new dated folder under `runs/`, containing its resolved `experiment.yaml` and results. Its styles and plots are embedded,
+new dated folder under `experiments/runs/`, containing its resolved `experiment.yaml` and results. Its styles and plots are embedded,
 so this HTML file can be shared on its own and viewed offline.
 
 ## One-time setup
@@ -108,7 +108,7 @@ uv run quarto preview report.qmd
 These commands execute only the report's local Python blocks. The supplied
 documents read saved JSON and make no provider calls. Re-rendering also works
 without API credentials. Quarto may create intermediate notebook and `_files`
-artifacts; keep those under the ignored `runs/` or `outputs/` folders.
+artifacts; keep those under the ignored `experiments/runs/` or `outputs/` folders.
 
 For changes that should apply to future experiments, edit the packaged sources:
 

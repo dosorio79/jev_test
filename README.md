@@ -92,9 +92,9 @@ Copy `.env.example` to `.env` and export it in your shell. The CLI does not load
 set -a; . ./.env; set +a
 ```
 
-OpenAI uses the official Python SDK and Responses API structured output with one enum label. Scores and confidence remain null because the adapter does not invent probabilities. Set `OPENAI_MODEL` explicitly. If all three dated rate-card variables are supplied, actual token usage is converted to a USD estimate.
+OpenAI uses the official Python SDK and Responses API structured output with one enum label. Scores and confidence remain null because the adapter does not invent probabilities. Set `OPENAI_MODEL` explicitly. Actual token usage is converted to a USD estimate using the model's dated rate card in `pricing.py`; no model prices are needed in `.env`.
 
-The built-in standard short-context rate table, checked on 2026-10-15, covers `gpt-6-astra` ($10 input/$50 output), `gpt-6.1-sol` ($2/$10), and `gpt-6-luna` ($0.10/$0.50), all per million tokens. Environment rate variables override the table for another model or processing tier. The source URL is stored with every rate card.
+The built-in standard short-context rate table, checked on 2026-10-15, covers `gpt-6-astra` ($10 input/$50 output), `gpt-6.1-sol` ($2/$10), and `gpt-6-luna` ($0.10/$0.50), all per million tokens. The source URL is stored with every rate card. Add a verified dated rate card in `pricing.py` before using another model or processing tier.
 
 Jev uses TypeSafe's official `https://api.typesafe.ai/v1/systemone` endpoint and a typed `choice` question. The default model is pinned to `jev-1.13.0` so calibrated thresholds do not move with an alias. Its probability vector remains separate from provider confidence. TypeSafe lists Jev 1.13 and 1.14 at $0.042 per million input tokens with output tokens free; the dated table in `pricing.py` converts actual usage to USD. Override the URL or model only when the issuer of your key documents a different contract.
 

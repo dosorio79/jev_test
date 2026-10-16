@@ -8,7 +8,7 @@ from pathlib import Path
 
 import polars as pl
 
-from cx_sentiment.budget import LiveSafety, PriceCard
+from cx_sentiment.budget import LiveSafety
 from cx_sentiment.cache import PredictionCache, RawResponseStore
 from cx_sentiment.config import load_config
 from cx_sentiment.data import audit_dataset, create_validation_sample, load_dataset
@@ -81,24 +81,9 @@ def _provider_from_environment(name: str) -> SentimentProvider:
         model = os.getenv("OPENAI_MODEL")
         if not model:
             raise ValueError("OPENAI_MODEL is required")
-        rate_values = (
-            os.getenv("OPENAI_INPUT_USD_PER_MILLION"),
-            os.getenv("OPENAI_OUTPUT_USD_PER_MILLION"),
-            os.getenv("OPENAI_PRICE_AS_OF"),
+        return OpenAIProvider(
+            model=model, price_card=get_openai_price_card(model), raw_store=raw_store
         )
-        if any(rate_values) and not all(rate_values):
-            raise ValueError("all three OPENAI rate-card variables must be supplied together")
-        input_rate, output_rate, rate_date = rate_values
-        price_card = None
-        if input_rate is not None and output_rate is not None and rate_date is not None:
-            price_card = PriceCard(
-                input_usd_per_million=float(input_rate),
-                output_usd_per_million=float(output_rate),
-                as_of=rate_date,
-            )
-        if price_card is None:
-            price_card = get_openai_price_card(model)
-        return OpenAIProvider(model=model, price_card=price_card, raw_store=raw_store)
     api_key = os.getenv("JEV_API_KEY")
     if not api_key:
         raise ValueError("JEV_API_KEY is required")

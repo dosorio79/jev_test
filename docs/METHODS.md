@@ -12,7 +12,7 @@ The source corpus was generated from 108 seed sentences with templated variation
 
 ## Prediction contract
 
-Each result records provider, actual model ID, prompt version, canonical label, genuine class probabilities when available, provider confidence when available, its definition, latency, tokens, credits, USD estimate when a user-supplied rate card exists, failure category, a response hash, and sample ID. Missing probabilities remain missing. Customer text is marked as untrusted data and is never given the gold label or source metadata.
+Each result records provider, actual model ID, prompt version, canonical label, genuine class probabilities when available, provider confidence when available, its definition, latency, tokens, credits, USD estimate when a dated rate card exists, failure category, a response hash, and sample ID. CLI runs select rate cards from `pricing.py` by model ID. Missing probabilities remain missing. Customer text is marked as untrusted data and is never given the gold label or source metadata.
 
 Provider failures remain in the denominator. Routing falls back on decision-provider failure or when the chosen signal is below the threshold. If fallback also fails, the record is unresolved. Sequential hybrid latency is the sum of the decision and fallback calls for routed records; simulations must be labeled as simulated rather than measured wall-clock runtime.
 

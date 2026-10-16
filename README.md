@@ -126,6 +126,31 @@ can be run again; their absolute paths preserve the input and output parent, and
 replaying creates a new sibling run. Models continue to come from the environment;
 successful reports record their actual model IDs in the run metadata.
 
+## Compare saved runs
+
+Edit [`experiments/compare-smoke.yaml`](experiments/compare-smoke.yaml) to list
+two or more saved run folders, then generate a combined report:
+
+```bash
+uv run cx-sentiment compare experiments/compare-smoke.yaml
+```
+
+This reads saved predictions without credentials or provider calls. It writes a
+new dated `experiments/runs/*-comparison/` folder containing `comparison.yaml`,
+`comparison.json`, `report.qmd`, and a standalone `report.html`. Source runs stay
+unchanged. The supplied example references local smoke runs; run both provider
+smoke experiments first and update the paths on a fresh checkout.
+
+The report compares quality, coverage, request latency, token usage, USD estimates,
+language results, and prediction disagreements. Runs must cover the same selected
+source records and have exactly one prediction per sample ID; order may differ.
+New runs save a selected-dataset fingerprint to detect changed inputs. Older runs
+without fingerprints show an explicit warning: their historical input contents
+cannot be verified. Five-record smoke results check the pipeline, not model quality.
+
+See [comparison configuration and reports](docs/REPORTING.md#compare-saved-runs)
+for the YAML format and re-rendering instructions.
+
 ## Validation sample
 
 The source archive is available and its SHA256 matches the starter manifest. The generated validation sample is balanced at 600 records with no normalized exact cross-split overlap. Regenerate it with:

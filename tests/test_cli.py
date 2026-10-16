@@ -7,6 +7,8 @@ import pytest
 import yaml
 
 from cx_sentiment.cli import main
+from cx_sentiment.comparison import dataset_fingerprint
+from cx_sentiment.data import load_dataset
 from cx_sentiment.providers.mock import MockProvider
 
 
@@ -66,6 +68,12 @@ def test_yaml_run_resolves_paths_relative_to_config(tmp_path: Path, monkeypatch)
     assert main(["run", str(config)]) == 0
     metrics = json.loads(next((tmp_path / "results").glob("*/metrics.json")).read_text())
     assert metrics["support"] == 3
+    metadata = json.loads(
+        next((tmp_path / "results").glob("*/report_metadata.json")).read_text()
+    )["metadata"]
+    assert metadata["dataset_sha256"] == dataset_fingerprint(
+        load_dataset(tmp_path / "data.csv").head(3)
+    )
 
 
 def test_yaml_live_provider_defaults_to_preview(tmp_path: Path, monkeypatch, capsys) -> None:

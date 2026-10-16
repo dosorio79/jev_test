@@ -1,0 +1,195 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import polars as pl
+import pytest
+import yaml
+
+from cx_sentiment.comparison import compare_runs, dataset_fingerprint, load_comparison_config
+from cx_sentiment.data import load_dataset
+from cx_sentiment.models import Prediction, SentimentLabel
+
+
+@pytest.fixture
+def saved_runs(tmp_path: Path) -> Path:
+    source = Path("data/cx_sentiment_test_600.csv").resolve()
+    frame = load_dataset(source).head(3)
+    for name in ("first", "second"):
+        run = tmp_path / name
+        run.mkdir()
+        (run / "experiment.yaml").write_text(
+            yaml.safe_dump(
+                {
+                    "provider": "mock",
+                    "input": str(source),
+                    "limit": 3,
+                }
+            )
+        )
+        predictions = [
+            Prediction(
+                provider="mock",
+                model_id="fixture",
+                prompt_version="test",
+                sample_id=sample_id,
+                predicted_label=SentimentLabel(truth),
+                latency_ms=10,
+                cost_usd_estimate=0,
+            )
+            for sample_id, truth in frame.select("sample_id", "sentiment").iter_rows()
+        ]
+        (run / "predictions.jsonl").write_text(
+            "".join(p.model_dump_json() + "\n" for p in predictions)
+        )
+        (run / "report_metadata.json").write_text(
+            json.dumps(
+                {
+                    "metadata": {"dataset_sha256": dataset_fingerprint(frame)},
+                }
+            )
+        )
+    path = tmp_path / "compare.yaml"
+    path.write_text("title: Example\nruns: [first, second]\n")
+    return path
+
+
+def test_comparison_aligns_predictions_and_recalculates_metrics(saved_runs: Path) -> None:
+    predictions = saved_runs.parent / "second/predictions.jsonl"
+    rows = predictions.read_text().splitlines()
+    changed = json.loads(rows[0])
+    changed["predicted_label"] = (
+        "neutral" if changed["predicted_label"] != "neutral" else "positive"
+    )
+    rows[0] = json.dumps(changed)
+    predictions.write_text("\n".join(reversed(rows)) + "\n")
+    result = compare_runs(load_comparison_config(saved_runs))
+    assert result["runs"][0]["metrics"]["accuracy"] == 1
+    assert result["runs"][1]["metrics"]["accuracy"] == pytest.approx(2 / 3)
+    assert len(result["disagreements"]) == 1
+    assert result["warnings"] == []
+    assert result["historical_inputs_verified"] is True
+
+
+@pytest.mark.parametrize("change", ["duplicate", "missing", "foreign"])
+def test_comparison_rejects_invalid_prediction_ids(saved_runs: Path, change: str) -> None:
+    path = saved_runs.parent / "second/predictions.jsonl"
+    rows = path.read_text().splitlines()
+    if change == "duplicate":
+        rows[1] = rows[0]
+    elif change == "missing":
+        rows.pop()
+    else:
+        item = json.loads(rows[0])
+        item["sample_id"] = "foreign"
+        rows[0] = json.dumps(item)
+    path.write_text("\n".join(rows))
+    with pytest.raises(ValueError, match="sample IDs"):
+        compare_runs(load_comparison_config(saved_runs))
+
+
+def test_comparison_rejects_changed_source_data(saved_runs: Path) -> None:
+    run = saved_runs.parent / "second"
+    frame = load_dataset(Path("data/cx_sentiment_test_600.csv")).head(3)
+    altered = frame.with_columns(pl.lit("Changed input").alias("text"))
+    source = saved_runs.parent / "changed.csv"
+    altered.write_csv(source)
+    (run / "experiment.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "provider": "mock",
+                "input": str(source),
+                "limit": 3,
+            }
+        )
+    )
+    with pytest.raises(ValueError, match=r"fingerprint|source records"):
+        compare_runs(load_comparison_config(saved_runs))
+
+
+def test_comparison_rejects_fingerprint_mismatch(saved_runs: Path) -> None:
+    path = saved_runs.parent / "first/report_metadata.json"
+    path.write_text('{"metadata": {"dataset_sha256": "different"}}')
+    with pytest.raises(ValueError, match="fingerprint"):
+        compare_runs(load_comparison_config(saved_runs))
+
+
+def test_legacy_runs_have_explicit_historical_warning(saved_runs: Path) -> None:
+    for name in ("first", "second"):
+        (saved_runs.parent / name / "report_metadata.json").write_text('{"metadata": {}}')
+    result = compare_runs(load_comparison_config(saved_runs))
+    assert not result["historical_inputs_verified"]
+    assert len(result["warnings"]) == 2
+    assert "historical" in result["warnings"][0]
+
+
+@pytest.mark.parametrize(
+    "settings",
+    ["runs: [first]", "runs: [first, first]", "runs: [first, second]\nsecret: value", "[]"],
+)
+def test_invalid_comparison_settings(tmp_path: Path, settings: str) -> None:
+    path = tmp_path / "compare.yaml"
+    path.write_text(settings)
+    with pytest.raises(ValueError):
+        load_comparison_config(path)
+
+
+def test_preview_is_not_a_completed_run(saved_runs: Path) -> None:
+    (saved_runs.parent / "first/predictions.jsonl").unlink()
+    with pytest.raises(ValueError, match="cannot read"):
+        compare_runs(load_comparison_config(saved_runs))
+
+
+def test_compare_cli_renders_without_providers(saved_runs: Path, monkeypatch, capsys) -> None:
+    from cx_sentiment.cli import main
+
+    def unexpected_provider(*args, **kwargs):
+        raise AssertionError("comparison must not construct providers")
+
+    monkeypatch.setattr("cx_sentiment.cli._provider_from_environment", unexpected_provider)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("JEV_API_KEY", raising=False)
+    # Exercise incomplete costs and an unresolved prediction in an actual render.
+    originals = {}
+    for name in ("first", "second"):
+        path = saved_runs.parent / name / "predictions.jsonl"
+        rows = [json.loads(line) for line in path.read_text().splitlines()]
+        for row in rows:
+            row["cost_usd_estimate"] = None
+        if name == "second":
+            rows[0]["predicted_label"] = None
+            rows[0]["error_kind"] = "timeout"
+        path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+        originals[path] = path.read_bytes()
+    saved_runs.write_text('title: "<img src=x onerror=alert(1)>"\nruns: [first, second]\n')
+    assert main(["compare", str(saved_runs)]) == 0
+    output = next((saved_runs.parent / "runs").glob("*-comparison"))
+    result = json.loads((output / "comparison.json").read_text())
+    assert result["runs"][0]["metrics"]["cost_usd_total"] is None
+    assert result["runs"][1]["metrics"]["operational_coverage"] == pytest.approx(2 / 3)
+    assert result["disagreements"][0]["Run 2"] == "unresolved"
+    html = (output / "report.html").read_text()
+    assert "Quality versus cost and latency" in html
+    assert "plotly" in html.lower()
+    assert "&lt;img" in html
+    assert "<img src=x onerror=alert(1)>" not in html
+    assert (output / "report.qmd").is_file()
+    replay = load_comparison_config(output / "comparison.yaml")
+    assert replay.output_dir == saved_runs.parent / "runs"
+    assert replay.runs == load_comparison_config(saved_runs).runs
+    assert all(path.read_bytes() == content for path, content in originals.items())
+    assert "no provider calls" in capsys.readouterr().out
+
+
+def test_compare_cli_reports_readable_errors(tmp_path: Path, capsys) -> None:
+    from cx_sentiment.cli import main
+
+    path = tmp_path / "compare.yaml"
+    path.write_text("runs: [missing-one, missing-two]\n")
+    with pytest.raises(SystemExit) as error:
+        main(["compare", str(path)])
+    assert error.value.code == 2
+    message = capsys.readouterr().err
+    assert "cannot read" in message
+    assert "Traceback" not in message

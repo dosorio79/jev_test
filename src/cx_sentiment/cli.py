@@ -10,6 +10,12 @@ import polars as pl
 
 from cx_sentiment.budget import LiveSafety
 from cx_sentiment.cache import PredictionCache, RawResponseStore
+from cx_sentiment.comparison import (
+    compare_runs,
+    create_comparison_directory,
+    dataset_fingerprint,
+    load_comparison_config,
+)
 from cx_sentiment.config import create_run_directory, load_config
 from cx_sentiment.data import audit_dataset, create_validation_sample, load_dataset
 from cx_sentiment.metrics import evaluate_predictions
@@ -19,7 +25,13 @@ from cx_sentiment.providers.base import SentimentProvider
 from cx_sentiment.providers.jev import DEFAULT_JEV_BASE_URL, DEFAULT_JEV_MODEL, JevProvider
 from cx_sentiment.providers.mock import MockProvider
 from cx_sentiment.providers.openai_provider import OpenAIProvider
-from cx_sentiment.reporting import ReportError, require_quarto, write_report, write_selection_report
+from cx_sentiment.reporting import (
+    ReportError,
+    require_quarto,
+    write_comparison_report,
+    write_report,
+    write_selection_report,
+)
 from cx_sentiment.routing import select_threshold
 from cx_sentiment.runner import run_predictions
 
@@ -68,6 +80,7 @@ def _write_run(
             "model": provider.model_id,
             "prompt_version": provider.prompt_version,
             "simulated": provider.provider_name == "mock",
+            "dataset_sha256": dataset_fingerprint(frame),
         },
     )
     print(f"Report: {output_dir / 'report.html'}")
@@ -100,6 +113,8 @@ def _provider_from_environment(name: str) -> SentimentProvider:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="cx-sentiment")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    compare = subparsers.add_parser("compare", help="Compare saved runs without provider calls")
+    compare.add_argument("config", type=Path, help="Comparison YAML file")
     audit = subparsers.add_parser("audit")
     audit.add_argument("--input", type=Path, required=True)
     audit.add_argument("--split", choices=["train", "validation", "test"])
@@ -146,9 +161,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _execute(args)
     except ReportError as exc:
         parser.error(str(exc))
+    except ValueError as exc:
+        if args.command != "compare":
+            raise
+        parser.error(str(exc))
 
 
 def _execute(args: argparse.Namespace) -> int:
+    if args.command == "compare":
+        config = load_comparison_config(args.config)
+        comparison = compare_runs(config)
+        require_quarto()
+        output_dir = create_comparison_directory(config)
+        write_comparison_report(output_dir, comparison)
+        print(f"Report: {output_dir / 'report.html'} (no provider calls)")
+        return 0
     if args.command == "audit":
         audit = audit_dataset(load_dataset(args.input, expected_split=args.split))
         print(json.dumps(audit.__dict__, indent=2))

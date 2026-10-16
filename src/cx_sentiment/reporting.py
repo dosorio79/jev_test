@@ -10,6 +10,7 @@ from collections.abc import Sequence
 from dataclasses import asdict
 from importlib.resources import files
 from pathlib import Path
+from typing import Any
 
 from cx_sentiment.metrics import EvaluationMetrics
 from cx_sentiment.models import Prediction
@@ -122,5 +123,16 @@ def write_selection_report(path: Path, selection: ThresholdSelection) -> None:
     source = path.with_suffix(".qmd")
     source.write_text(
         files("cx_sentiment").joinpath("reports/selection.qmd").read_text(), encoding="utf-8"
+    )
+    render_quarto(source)
+
+
+def write_comparison_report(output_dir: Path, comparison: dict[str, Any]) -> None:
+    (output_dir / "comparison.json").write_text(
+        json.dumps(comparison, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    source = output_dir / "report.qmd"
+    source.write_text(
+        files("cx_sentiment").joinpath("reports/comparison.qmd").read_text(), encoding="utf-8"
     )
     render_quarto(source)

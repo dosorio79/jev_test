@@ -1,0 +1,175 @@
+---
+title: "CX sentiment provider comparison"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: true
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  daemon: false
+---
+
+```{python}
+import json
+from html import escape
+from pathlib import Path
+
+import plotly.express as px
+import polars as pl
+from great_tables import GT
+from IPython.display import display
+
+comparison = json.loads(Path("comparison.json").read_text(encoding="utf-8"))
+runs = comparison["runs"]
+
+
+def show_table(frame):
+    table = GT(frame)
+    strings = [name for name, dtype in frame.schema.items() if dtype == pl.String]
+    numbers = [name for name, dtype in frame.schema.items() if dtype.is_float()]
+    if strings:
+        table = table.fmt(escape, columns=strings)
+    if numbers:
+        table = table.fmt_number(columns=numbers, decimals=4)
+    costs = [name for name in ("USD total", "Known USD") if name in frame.columns]
+    if costs:
+        table = table.fmt_number(columns=costs, decimals=6)
+    display(table)
+
+
+show_table(pl.DataFrame({"Comparison": [comparison["title"]]}))
+```
+
+This report reads saved predictions and makes no provider calls. It compares the
+same selected source records across runs. It does not select prompts or routing
+thresholds, or establish statistical significance. Mock runs test the pipeline.
+
+## Data compatibility
+
+```{python}
+print(f"Selected records per run: {runs[0]['metrics']['support']}")
+print(f"Selected dataset SHA256: {comparison['dataset_sha256']}")
+if comparison["historical_inputs_verified"]:
+    print("Historical inputs verified: current selected data match every run's saved fingerprint.")
+else:
+    print("Historical inputs unverified for legacy runs:")
+    for warning in comparison["warnings"]:
+        print(warning)
+if runs[0]["metrics"]["support"] < 30:
+    print("Small smoke sample: use these results to check the pipeline, not to rank model quality.")
+```
+
+## Overall comparison
+
+Accuracy and macro F1 include unresolved predictions in their denominators.
+Coverage is the fraction with a resolved prediction. Latency reflects recorded
+provider requests, including the original timing when predictions came from cache;
+it is not the elapsed time of generating this report.
+
+```{python}
+summary = pl.DataFrame([
+    {
+        "Run": run["label"], "Provider": run["provider"], "Model": run["model"],
+        "Simulated": run["simulated"], "Records": run["metrics"]["support"],
+        "Accuracy": run["metrics"]["accuracy"],
+        "Macro F1": run["metrics"]["macro_f1"],
+        "Coverage": run["metrics"]["operational_coverage"],
+        "P50 ms": run["metrics"]["latency_p50_ms"],
+        "P95 ms": run["metrics"]["latency_p95_ms"],
+        "USD total": run["metrics"]["cost_usd_total"],
+        "USD per 1,000": run["metrics"]["cost_usd_per_1000"],
+        "Priced fraction": run["metrics"]["cost_priced_fraction"],
+    }
+    for run in runs
+], schema_overrides={"USD total": pl.Float64, "USD per 1,000": pl.Float64})
+show_table(summary.select("Run", "Provider", "Model", "Records", "Accuracy", "Macro F1", "Coverage"))
+```
+
+## Latency and cost
+
+```{python}
+show_table(summary.select("Run", "P50 ms", "P95 ms", "USD total", "USD per 1,000", "Priced fraction"))
+```
+
+Costs are token-based USD estimates, not billing statements or additional spend
+from this comparison. A null total means pricing is incomplete; it does not mean
+zero cost. The plots below exclude runs with an incomplete cost estimate.
+
+## Quality versus cost and latency
+
+```{python}
+priced = summary.filter(pl.col("USD per 1,000").is_not_null())
+if priced.height:
+    fig = px.scatter(
+        priced, x="USD per 1,000", y="Macro F1", color="Run",
+        hover_data=["Provider", "Model", "Accuracy", "Coverage", "Records"],
+        title="Macro F1 versus estimated cost",
+    )
+    fig.update_traces(marker_size=14)
+    fig.show(renderer="notebook")
+else:
+    print("Cost plot unavailable: no completely priced runs.")
+
+fig = px.scatter(
+    summary, x="P50 ms", y="Macro F1", color="Run",
+    hover_data=["Provider", "Model", "Accuracy", "Coverage", "P95 ms", "Records"],
+    title="Macro F1 versus median request latency",
+)
+fig.update_traces(marker_size=14)
+fig.show(renderer="notebook")
+```
+
+## Language results
+
+```{python}
+languages = pl.DataFrame([
+    {"Run": run["label"], "Language": language, **values}
+    for run in runs
+    for language, values in run["metrics"]["by_language"].items()
+])
+show_table(languages)
+```
+
+## Prediction disagreements
+
+Only records where the runs predict different labels are shown. `unresolved`
+means a provider failed to return a label. Agreement can include shared mistakes;
+it is not a substitute for comparing against reference labels.
+
+```{python}
+if comparison["disagreements"]:
+    show_table(pl.DataFrame(comparison["disagreements"]))
+else:
+    print("No prediction disagreements on these records.")
+```
+
+## Usage and provenance
+
+```{python}
+show_table(pl.DataFrame([
+    {
+        "Run": run["label"],
+        "Input tokens": run["metrics"]["usage_input_tokens_total"],
+        "Output tokens": run["metrics"]["usage_output_tokens_total"],
+        "Usage fraction": run["metrics"]["usage_records_fraction"],
+        "Known USD": run["metrics"]["cost_usd_known_total"],
+    }
+    for run in runs
+]))
+show_table(pl.DataFrame([
+    {
+        "Run": run["label"], "Source folder": run["path"],
+        "Prompt": run["prompt_version"],
+        "Simulated": run["simulated"],
+        "Historical input verified": run["historical_input_verified"],
+    }
+    for run in runs
+]))
+```
+
+Token totals sum known usage; missing usage does not imply a free request. These
+results use synthetic financial feedback with template variations. Exact
+matching does not establish independence or real-world generalization.

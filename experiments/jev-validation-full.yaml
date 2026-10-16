@@ -1,0 +1,7 @@
+# Uses JEV_API_KEY and the configured JEV_MODEL (default: jev-1.13.0).
+provider: jev
+input: ../data/validation_600.csv
+output_dir: runs
+limit: 600
+budget_usd: 6.00
+cost_per_request_usd: 0.01

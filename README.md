@@ -151,6 +151,68 @@ cannot be verified. Five-record smoke results check the pipeline, not model qual
 See [comparison configuration and reports](docs/REPORTING.md#compare-saved-runs)
 for the YAML format and re-rendering instructions.
 
+## Metrics and how to read them
+
+Quality and coverage run from 0 to 1; for example, `0.80` means 80%. Latency is
+in milliseconds (`1,000 ms = 1 second`). Costs are estimates in USD.
+
+| Metric | Meaning and interpretation |
+| --- | --- |
+| Support / records | Number of evaluated records, including failed predictions. Check this before comparing scores. |
+| Accuracy | Fraction of all records classified correctly. Higher is better; unresolved predictions count as incorrect. |
+| Precision | For a class, how often a prediction of that class is correct. Low precision means many false positives. |
+| Recall | For a class, how many reference examples of that class were found. Low recall means many missed examples. |
+| F1 / macro F1 | F1 balances precision and recall. Macro F1 averages the three class F1 scores equally, including classes absent from a small sample, whose F1 is zero. Higher is better. |
+| Operational coverage | Fraction of records with a resolved label. A wrong label still counts as resolved; read coverage alongside accuracy. |
+| P50 latency | The 50th percentile, or median: the middle of the recorded request times. Describes a typical request. Lower is faster. |
+| P95 latency | The 95th percentile: approximately 95% of recorded request times are at or below it. Describes slower requests. Lower is faster. |
+| USD total / known USD | Total estimated cost is available only when every prediction is priced. Known USD sums available estimates; a missing total is not zero cost. |
+| USD per 1,000 | Total estimated cost divided by support, multiplied by 1,000. A normalized comparison, not a forecast or actual 1,000-request bill. |
+| Priced fraction | Fraction of predictions with a cost estimate. Below 100%, total cost is incomplete and the run is excluded from the comparison cost plot. |
+| Input / output tokens | Sums of recorded usage. Usage fraction measures records with at least one token count available; it does not guarantee both counts are present. |
+| Reported credits | Provider-reported units, kept separate from USD estimates. |
+| 95% bootstrap interval | Uncertainty estimated by resampling these records. Narrow intervals on tiny or repetitive samples do not establish generalization. |
+| ECE / Brier score | Probability-quality measures; lower is better. Available only when every prediction provides class probabilities. Provider confidence alone is insufficient. |
+
+For example, **P50 = 1,400 ms and P95 = 1,800 ms** means a typical recorded
+request took about 1.4 seconds and the slower end was around 1.8 seconds. P95 is
+not the maximum, a timeout, or a guarantee about future requests. Percentiles use
+interpolation; with only five records, P95 is close to the slowest observation
+and is a weak estimate of production tail latency.
+
+Latency is measured per provider request, not for the entire experiment or HTML
+render. Cached predictions retain their original latency and cost estimates;
+reusing them does not incur that spend again. Failed calls currently record
+zero latency, so low coverage can make latency look artificially good.
+
+Read the report in this order:
+
+1. **Check comparability:** same records, input verification status, model IDs,
+   prompt versions, and whether a run is simulated. Legacy input warnings mean
+   the original dataset contents cannot be verified.
+2. **Check coverage and support:** failures must not disappear from the score;
+   a five-record smoke run establishes pipeline behavior, not a model ranking.
+3. **Inspect quality:** compare accuracy and macro F1, then per-language/class
+   support and confusion matrices. Matrix rows are reference labels and columns
+   are predicted labels; diagonal counts are correct. Unresolved predictions
+   affect scores but sit outside the three displayed prediction columns.
+4. **Inspect tradeoffs:** in quality-versus-cost or latency plots, higher F1
+   with lower cost or latency is preferable. Compare P95 as well as P50.
+5. **Read disagreements:** check which provider matches the reference label.
+   Agreement can include shared mistakes and does not imply correctness.
+
+The first live smoke readout on **2026-10-16** was:
+
+| Provider | Correct | Coverage | P50 | P95 | Estimated USD total |
+| --- | --- | --- | --- | --- | --- |
+| OpenAI (`gpt-5.4-mini`) | 5/5 | 100% | 1,394 ms | 1,752 ms | $0.000912 |
+| Jev (`jev-1.13.0`) | 5/5 | 100% | 305 ms | 339 ms | $0.000081 |
+
+Both produced reports without provider errors. Jev was faster and cheaper on
+these five records; this sample does not establish a general quality or speed
+advantage. Both runs predate dataset fingerprints and show historical-input
+warnings in the comparison report.
+
 ## Validation sample
 
 The source archive is available and its SHA256 matches the starter manifest. The generated validation sample is balanced at 600 records with no normalized exact cross-split overlap. Regenerate it with:

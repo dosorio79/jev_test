@@ -26,7 +26,14 @@ def write_report(
     (output_dir / "metrics.json").write_text(
         metrics.model_dump_json(indent=2) + "\n", encoding="utf-8"
     )
-    with (output_dir / "metrics.csv").open("w", newline="", encoding="utf-8") as handle:
+    _write_metrics_csv(output_dir / "metrics.csv", metrics)
+    (output_dir / "report.html").write_text(
+        _render_report(metrics, title=title, metadata=metadata), encoding="utf-8"
+    )
+
+
+def _write_metrics_csv(path: Path, metrics: EvaluationMetrics) -> None:
+    with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
             fieldnames=[
@@ -61,6 +68,14 @@ def write_report(
         )
         for language, values in metrics.by_language.items():
             writer.writerow({"scope": language, **values, "coverage": ""})
+
+
+def _render_report(
+    metrics: EvaluationMetrics,
+    *,
+    title: str,
+    metadata: dict[str, object] | None,
+) -> str:
     meta_json = html.escape(json.dumps(metadata or {}, ensure_ascii=False, indent=2))
     cost_summary = (
         f"${metrics.cost_usd_total:.6f} total · ${metrics.cost_usd_per_1000:.4f} per 1,000"
@@ -96,7 +111,7 @@ def write_report(
             ("negative", "neutral", "positive"), metrics.confusion_matrix, strict=True
         )
     )
-    document = f"""<!doctype html>
+    return f"""<!doctype html>
 <html lang="en"><meta charset="utf-8"><title>{html.escape(title)}</title>
 <style>body{{font:16px system-ui;max-width:960px;margin:2rem auto;padding:0 1rem}}
 table{{border-collapse:collapse}}th,td{{border:1px solid #bbb;padding:.4rem .7rem;text-align:right}}
@@ -118,7 +133,6 @@ Cost: {cost_summary} · Credits: {metrics.reported_credits_total}</p>
 <h2>Run metadata</h2><pre>{meta_json}</pre>
 <p>Calibration metrics are emitted only when every prediction has a genuine probability vector.</p>
 </html>"""
-    (output_dir / "report.html").write_text(document, encoding="utf-8")
 
 
 def write_selection_report(path: Path, selection: ThresholdSelection) -> None:

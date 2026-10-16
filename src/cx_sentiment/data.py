@@ -251,14 +251,7 @@ def create_validation_sample(
     )
     selected = _validate_frame(selected, BenchmarkDatasetSchema, "sampled validation")
     other = pl.concat([splits["train"], splits["test"]], how="vertical")
-    audit = audit_dataset(selected)
-    exact_overlap_count = len(
-        set(_normalized_texts(selected).to_list()) & set(_normalized_texts(other).to_list())
-    )
-    if exact_overlap_count:
-        raise DataValidationError(
-            f"found {exact_overlap_count} normalized cross-split overlap records"
-        )
+    audit = audit_dataset(selected, comparison_frame=other)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     selected.write_csv(output_dir / "validation_600.csv")
@@ -272,7 +265,7 @@ def create_validation_sample(
         "sentiments": audit.sentiments,
         "strata": strata,
         "selected_source_indices_zero_based": selected_indices,
-        "normalized_cross_split_overlap_count": exact_overlap_count,
+        "normalized_cross_split_overlap_count": audit.cross_split_overlap_count,
         "known_limitation": (
             "Synthetic template variations may be semantic near-duplicates; exact normalization "
             "does not establish independent real-world generalization."

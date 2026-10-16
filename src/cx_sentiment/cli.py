@@ -165,12 +165,12 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 def _execute(args: argparse.Namespace) -> int:
     if args.command == "audit":
-        result = audit_dataset(load_dataset(args.input, expected_split=args.split))
-        print(json.dumps(result.__dict__, indent=2))
+        audit = audit_dataset(load_dataset(args.input, expected_split=args.split))
+        print(json.dumps(audit.__dict__, indent=2))
         return 0
     if args.command == "sample-validation":
-        result = create_validation_sample(args.archive, args.output_dir)
-        print(f"Created {result.frame.height} validation records")
+        sample = create_validation_sample(args.archive, args.output_dir)
+        print(f"Created {sample.frame.height} validation records")
         return 0
     if args.command == "select-threshold":
         frame = load_dataset(args.input, expected_split="validation")

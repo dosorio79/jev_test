@@ -87,6 +87,42 @@ def test_metrics_include_failures_in_denominator_and_calibration_only_with_score
     assert result.cost_priced_fraction == 0
 
 
+@pytest.mark.parametrize("decision_failed", [False, True])
+@pytest.mark.parametrize("fallback_state", ["success", "failure", "missing"])
+def test_hybrid_fallback_routes_and_accounting(decision_failed, fallback_state) -> None:
+    decision = prediction(
+        "s1",
+        None if decision_failed else SentimentLabel.positive,
+        error="timeout" if decision_failed else None,
+        cost_usd=0.001,
+    )
+    fallback = (
+        None
+        if fallback_state == "missing"
+        else prediction(
+            "s1",
+            SentimentLabel.neutral if fallback_state == "success" else None,
+            error="timeout" if fallback_state == "failure" else None,
+            provider="fallback",
+            latency_ms=100,
+            cost_usd=0.004,
+        )
+    )
+
+    result = hybrid_prediction(decision, fallback, threshold=0.7)
+
+    if fallback_state == "success":
+        assert result.prediction == fallback
+        assert result.route == ("fallback_failure" if decision_failed else "fallback_low_score")
+        assert result.effective_latency_ms == 110
+        assert result.effective_cost_usd == pytest.approx(0.005)
+    else:
+        assert result.prediction == decision
+        assert result.route == "unresolved"
+        assert result.effective_latency_ms == 10
+        assert result.effective_cost_usd == 0.001
+
+
 def test_metrics_report_latency_usage_cost_and_credits_by_provider() -> None:
     predictions = [
         prediction(

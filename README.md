@@ -19,13 +19,13 @@ uv run pyright
 
 ## Run an experiment
 
-Edit [`experiment.yaml`](experiment.yaml), then run:
+Edit [`experiments/mock.yaml`](experiments/mock.yaml), then run:
 
 ```bash
-uv run cx-sentiment run experiment.yaml
+uv run cx-sentiment run experiments/mock.yaml
 ```
 
-The supplied config uses `mock`, five records, and a new dated folder under `runs/`. It makes
+The supplied config uses `mock`, five records, and a new dated folder under `experiments/runs/`. It makes
 no network calls and writes `predictions.jsonl`, `metrics.json`, `metrics.csv`, and
 `report.html`. Mock accuracy is a pipeline test, not a model result.
 Reports also include an editable `report.qmd` and `report_metadata.json`.
@@ -34,12 +34,13 @@ and re-render saved reports without provider calls.
 
 ```yaml
 provider: mock  # mock, openai, or jev
-input: data/cx_sentiment_test_600.csv
+input: ../data/cx_sentiment_test_600.csv
 output_dir: runs
 limit: 5
 ```
 
-Paths are relative to the YAML file. Unknown settings and nonpositive limits are
+Keep reusable configs in `experiments/` and their generated history in
+`experiments/runs/`. Paths are relative to the YAML file. Unknown settings and nonpositive limits are
 rejected. `limit` also caps provider requests. `output_dir` is the parent folder
 for YAML runs; each invocation creates a child named with the UTC timestamp,
 provider, and mode (`preview`, `live`, or `offline`). Previous runs are preserved.
@@ -60,7 +61,7 @@ Preview with the same command; it writes `dry_run.json` without requiring creden
 To execute paid calls explicitly:
 
 ```bash
-uv run cx-sentiment run experiment.yaml --live
+uv run cx-sentiment run experiments/mock.yaml --live
 ```
 
 The CLI does not read credentials from YAML. OpenAI's model remains configured with
@@ -99,21 +100,25 @@ uv run cx-sentiment run experiments/jev-smoke.yaml --live
 
 The tested configuration uses `OPENAI_MODEL=gpt-5.4-mini` and `JEV_MODEL=jev-1.13.0`.
 Model selection stays in the environment. Each command prints its report or preview
-location under `runs/`. The configs use validation data,
+location under `experiments/runs/`. The configs use validation data,
 preserving the locked test set for final evaluation.
 
 A live run will have this layout (the timestamp is UTC):
 
 ```text
-runs/
-  2026-10-16T20-30-00.123456Z-openai-live/
-    experiment.yaml
-    predictions.jsonl
-    metrics.json
-    metrics.csv
-    report_metadata.json
-    report.qmd
-    report.html
+experiments/
+  mock.yaml
+  openai-smoke.yaml
+  jev-smoke.yaml
+  runs/
+    2026-10-16T20-30-00.123456Z-openai-live/
+      experiment.yaml
+      predictions.jsonl
+      metrics.json
+      metrics.csv
+      report_metadata.json
+      report.qmd
+      report.html
 ```
 
 Preview folders contain `experiment.yaml` and `dry_run.json`. Archived YAML files

@@ -38,6 +38,9 @@ chose YAML experiment configuration.
   flags with a YAML configuration.
 - Resolve input/output paths relative to the configuration file. Reject unknown
   settings, invalid providers, and nonpositive limits or cost caps.
+- Treat YAML `output_dir` as a run parent. Create a dated child for every invocation,
+  with provider/mode in its name and a resolved `experiment.yaml` beside results.
+  Preserve old runs; keep credentials out of snapshots and `runs/` out of Git.
 - Parse YAML with `safe_load` and validate it through the existing Pydantic model.
 - Give readable configuration errors without echoing configuration values or
   exposing tracebacks. Print the report or preview path after a successful run.

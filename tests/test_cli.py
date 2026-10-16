@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from cx_sentiment.cli import main
 from cx_sentiment.providers.mock import MockProvider
@@ -63,7 +64,7 @@ def test_yaml_run_resolves_paths_relative_to_config(tmp_path: Path, monkeypatch)
     monkeypatch.chdir(tmp_path.parent)
 
     assert main(["run", str(config)]) == 0
-    metrics = json.loads((tmp_path / "results/metrics.json").read_text())
+    metrics = json.loads(next((tmp_path / "results").glob("*/metrics.json")).read_text())
     assert metrics["support"] == 3
 
 
@@ -74,10 +75,11 @@ def test_yaml_live_provider_defaults_to_preview(tmp_path: Path, monkeypatch, cap
     config.write_text(f"provider: openai\ninput: {dataset}\noutput_dir: results\nlimit: 2\n")
 
     assert main(["run", str(config)]) == 0
-    plan = json.loads((tmp_path / "results/dry_run.json").read_text())
+    preview = next((tmp_path / "results").glob("*/dry_run.json"))
+    plan = json.loads(preview.read_text())
     assert plan["network_calls"] == 0
     assert plan["would_process"] == 2
-    assert str(tmp_path / "results/dry_run.json") in capsys.readouterr().out
+    assert str(preview) in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("content", ["limit: 0", "limti: 5", "[]", "live: true"])
@@ -136,7 +138,8 @@ def test_yaml_run_prints_report_location(tmp_path: Path, capsys) -> None:
     config.write_text(f"provider: mock\ninput: {dataset}\noutput_dir: results\nlimit: 1\n")
 
     assert main(["run", str(config)]) == 0
-    assert str(tmp_path / "results/report.html") in capsys.readouterr().out
+    report = next((tmp_path / "results").glob("*/report.html"))
+    assert str(report) in capsys.readouterr().out
 
 
 def test_yaml_cannot_be_mixed_with_legacy_flags(tmp_path: Path) -> None:
@@ -183,3 +186,34 @@ def test_missing_quarto_stops_before_provider_calls(tmp_path: Path, monkeypatch,
 
     assert error.value.code == 2
     assert "Quarto" in capsys.readouterr().err
+
+
+def test_yaml_invocations_keep_separate_dated_runs_with_replayable_configs(
+    tmp_path: Path, monkeypatch
+) -> None:
+    from cx_sentiment.config import load_config
+
+    monkeypatch.setenv("OPENAI_API_KEY", "private-test-key")
+    source = Path("data/cx_sentiment_test_600.csv").resolve()
+    config = tmp_path / "smoke.yaml"
+    config.write_text(f"provider: openai\ninput: {source}\noutput_dir: runs\nlimit: 5\n")
+
+    assert main(["run", str(config)]) == 0
+    assert main(["run", str(config)]) == 0
+
+    runs = sorted((tmp_path / "runs").iterdir())
+    assert len(runs) == 2
+    for run in runs:
+        assert run.name[:4].isdigit() and run.name[4] == "-"
+        assert run.name.endswith("Z-openai-preview")
+        snapshot = run / "experiment.yaml"
+        assert "private-test-key" not in snapshot.read_text()
+        archived = yaml.safe_load(snapshot.read_text())
+        assert Path(archived["input"]) == source
+        assert Path(archived["output_dir"]) == tmp_path / "runs"
+        assert load_config(snapshot).limit == 5
+        assert json.loads((run / "dry_run.json").read_text())["network_calls"] == 0
+
+    # Replaying an archived YAML still writes a new sibling run.
+    assert main(["run", str(runs[0] / "experiment.yaml")]) == 0
+    assert len(list((tmp_path / "runs").iterdir())) == 3

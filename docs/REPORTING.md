@@ -7,7 +7,8 @@ uv run cx-sentiment run experiment.yaml
 ```
 
 The supplied mock experiment makes no provider calls. Open
-`outputs/experiment/report.html` in your browser. Its styles and plots are embedded,
+the printed `report.html` path in your browser. Each YAML invocation creates a
+new dated folder under `runs/`, containing its resolved `experiment.yaml` and results. Its styles and plots are embedded,
 so this HTML file can be shared on its own and viewed offline.
 
 ## One-time setup
@@ -78,10 +79,11 @@ values as text, since Great Tables otherwise permits HTML in string cells.
 
 ## Edit and re-render a report
 
-Each experiment saves these files:
+Each dated run folder saves these files:
 
 | File | Purpose |
 | --- | --- |
+| `experiment.yaml` | Resolved experiment settings, without credentials |
 | `predictions.jsonl` | Provider predictions, one record per line |
 | `metrics.json` | Full calculated evaluation results |
 | `metrics.csv` | Overall and per-language summary |
@@ -89,22 +91,24 @@ Each experiment saves these files:
 | `report.qmd` | Editable report document |
 | `report.html` | Rendered report |
 
-Change a heading or the chart colors in `outputs/experiment/report.qmd`, then run:
+Change a heading or the chart colors in your run folder's `report.qmd`. Open a
+terminal inside that dated run folder, then render the edited document (uv finds
+the project environment in the parent repository):
 
 ```bash
-uv run quarto render outputs/experiment/report.qmd --to html
+uv run quarto render report.qmd --to html
 ```
 
 For an updating preview while you edit:
 
 ```bash
-uv run quarto preview outputs/experiment/report.qmd
+uv run quarto preview report.qmd
 ```
 
 These commands execute only the report's local Python blocks. The supplied
 documents read saved JSON and make no provider calls. Re-rendering also works
 without API credentials. Quarto may create intermediate notebook and `_files`
-artifacts; keep those under the ignored `outputs/` folder.
+artifacts; keep those under the ignored `runs/` or `outputs/` folders.
 
 For changes that should apply to future experiments, edit the packaged sources:
 
@@ -113,9 +117,11 @@ For changes that should apply to future experiments, edit the packaged sources:
 - [selection.qmd](../src/cx_sentiment/reports/selection.qmd) contains the selected
   routing policy, a cost/quality plot, and the complete threshold table.
 
-Running the benchmark or regenerating a report through `cx-sentiment report`
-copies the packaged document again, replacing local `.qmd` edits. Copy your edited
-document to another name if you want to keep it separately.
+Each YAML invocation copies the packaged document into a new dated run folder.
+Existing runs and their local `.qmd` edits are preserved. The explicit
+`cx-sentiment report` command writes to its requested output directory and replaces
+that directory's `.qmd`; copy an edited document elsewhere before using that command
+on the same folder.
 
 The Plotly charts support hover details, zooming, and image download. Their
 JavaScript is embedded in the HTML, so interaction does not need a Python server

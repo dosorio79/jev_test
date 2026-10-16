@@ -8,5 +8,6 @@
 __pycache__/
 *.py[cod]
 outputs/
+runs/
 data/validation_600.csv
 data/validation_manifest.json

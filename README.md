@@ -25,7 +25,7 @@ Edit [`experiment.yaml`](experiment.yaml), then run:
 uv run cx-sentiment run experiment.yaml
 ```
 
-The supplied config uses `mock`, five records, and `outputs/experiment`. It makes
+The supplied config uses `mock`, five records, and a new dated folder under `runs/`. It makes
 no network calls and writes `predictions.jsonl`, `metrics.json`, `metrics.csv`, and
 `report.html`. Mock accuracy is a pipeline test, not a model result.
 Reports also include an editable `report.qmd` and `report_metadata.json`.
@@ -35,13 +35,16 @@ and re-render saved reports without provider calls.
 ```yaml
 provider: mock  # mock, openai, or jev
 input: data/cx_sentiment_test_600.csv
-output_dir: outputs/experiment
+output_dir: runs
 limit: 5
 ```
 
 Paths are relative to the YAML file. Unknown settings and nonpositive limits are
-rejected. `limit` also caps provider requests. Use a separate output folder for
-each experiment you want to keep; rerunning replaces its reports.
+rejected. `limit` also caps provider requests. `output_dir` is the parent folder
+for YAML runs; each invocation creates a child named with the UTC timestamp,
+provider, and mode (`preview`, `live`, or `offline`). Previous runs are preserved.
+Each child contains `experiment.yaml` with resolved paths and the run's results.
+Only validated experiment settings are copied; credentials stay in the environment.
 The command prints the report location when finished. Configuration errors name
 the file and setting to fix.
 
@@ -72,6 +75,52 @@ Each provider returns the same `Prediction` model. `metrics.py` scores those res
 and Plotly using Polars directly. `routing.py` compares cached decision and
 fallback predictions to select a validation threshold without extra API calls.
 
+## First live pipeline test
+
+Two configs process the same first five validation records, with separate dated run
+folders and a USD 0.05 budget per provider (USD 0.01 reserved per new request).
+Use these for an initial pipeline check; five records cannot establish model quality.
+The generated `data/validation_600.csv` must exist; see validation sampling below.
+
+Preview both without credentials or network calls:
+
+```bash
+uv run cx-sentiment run experiments/openai-smoke.yaml
+uv run cx-sentiment run experiments/jev-smoke.yaml
+```
+
+When ready to execute, explicitly export `.env` in your shell and add `--live`:
+
+```bash
+set -a; . ./.env; set +a
+uv run cx-sentiment run experiments/openai-smoke.yaml --live
+uv run cx-sentiment run experiments/jev-smoke.yaml --live
+```
+
+The tested configuration uses `OPENAI_MODEL=gpt-5.4-mini` and `JEV_MODEL=jev-1.13.0`.
+Model selection stays in the environment. Each command prints its report or preview
+location under `runs/`. The configs use validation data,
+preserving the locked test set for final evaluation.
+
+A live run will have this layout (the timestamp is UTC):
+
+```text
+runs/
+  2026-10-16T20-30-00.123456Z-openai-live/
+    experiment.yaml
+    predictions.jsonl
+    metrics.json
+    metrics.csv
+    report_metadata.json
+    report.qmd
+    report.html
+```
+
+Preview folders contain `experiment.yaml` and `dry_run.json`. Archived YAML files
+can be run again; their absolute paths preserve the input and output parent, and
+replaying creates a new sibling run. Models continue to come from the environment;
+successful reports record their actual model IDs in the run metadata.
+
 ## Validation sample
 
 The source archive is available and its SHA256 matches the starter manifest. The generated validation sample is balanced at 600 records with no normalized exact cross-split overlap. Regenerate it with:
@@ -95,6 +144,10 @@ set -a; . ./.env; set +a
 OpenAI uses the official Python SDK and Responses API structured output with one enum label. Scores and confidence remain null because the adapter does not invent probabilities. Set `OPENAI_MODEL` explicitly. Actual token usage is converted to a USD estimate using the model's dated rate card in `pricing.py`; no model prices are needed in `.env`.
 
 The built-in standard short-context rate table, checked on 2026-10-15, covers `gpt-6-astra` ($10 input/$50 output), `gpt-6.1-sol` ($2/$10), and `gpt-6-luna` ($0.10/$0.50), all per million tokens. The source URL is stored with every rate card. Add a verified dated rate card in `pricing.py` before using another model or processing tier.
+
+`gpt-5.4-mini` and its `gpt-5.4-mini-2026-03-17` snapshot are also supported at
+$0.75 input/$4.50 output per million tokens, verified on 2026-10-16 against the
+[official model page](https://developers.openai.com/api/docs/models/gpt-5.4-mini).
 
 Jev uses TypeSafe's official `https://api.typesafe.ai/v1/systemone` endpoint and a typed `choice` question. The default model is pinned to `jev-1.13.0` so calibrated thresholds do not move with an alias. Its probability vector remains separate from provider confidence. TypeSafe lists Jev 1.13 and 1.14 at $0.042 per million input tokens with output tokens free; the dated table in `pricing.py` converts actual usage to USD. Override the URL or model only when the issuer of your key documents a different contract.
 

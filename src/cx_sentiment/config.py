@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 
@@ -12,7 +13,7 @@ class ExperimentConfig(BaseModel):
 
     provider: Literal["mock", "openai", "jev"] = "mock"
     input: Path = Path("data/cx_sentiment_test_600.csv")
-    output_dir: Path = Path("outputs/experiment")
+    output_dir: Path = Path("runs")
     limit: int = Field(default=5, gt=0, strict=True)
     budget_usd: float | None = Field(default=None, gt=0)
     cost_per_request_usd: float | None = Field(default=None, gt=0)
@@ -38,3 +39,16 @@ def load_config(path: Path) -> ExperimentConfig:
             "output_dir": path.parent / config.output_dir,
         }
     )
+
+
+def create_run_directory(config: ExperimentConfig, *, live: bool) -> Path:
+    root = config.output_dir.resolve()
+    timestamp = datetime.now(UTC).strftime("%Y-%m-%dT%H-%M-%S.%fZ")
+    mode = "offline" if config.provider == "mock" else "live" if live else "preview"
+    output = root / f"{timestamp}-{config.provider}-{mode}"
+    output.mkdir(parents=True)
+    snapshot = config.model_copy(update={"input": config.input.resolve(), "output_dir": root})
+    (output / "experiment.yaml").write_text(
+        yaml.safe_dump(snapshot.model_dump(mode="json"), sort_keys=False), encoding="utf-8"
+    )
+    return output

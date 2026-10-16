@@ -137,6 +137,66 @@ uv run quarto render outputs/validation-selection.qmd --to html
 The selection document finds the JSON with its own filename stem. Keep both files
 together when moving or renaming it.
 
+## Compare saved runs
+
+Put the source run paths in a separate comparison YAML. For example,
+`experiments/compare-smoke.yaml` contains:
+
+```yaml
+title: First provider comparison
+runs:
+  - runs/2026-10-16T20-29-40.101899Z-openai-live
+  - runs/2026-10-16T20-30-08.698065Z-jev-live
+output_dir: runs
+```
+
+Paths are relative to this YAML. `title` and `output_dir` are optional; the
+default output parent is `runs/` beside the config. List at least two distinct
+completed run folders. Preview folders do not contain predictions and cannot
+be compared. Example source runs are generated locally and are not in Git.
+
+```bash
+uv run cx-sentiment compare experiments/compare-smoke.yaml
+```
+
+No credentials or provider calls are needed. The command prints the new dated
+`*-comparison/report.html` location. Open it in your browser for:
+
+- Side-by-side quality, coverage, latency, costs, and usage.
+- Macro F1 versus USD per 1,000 records and median request latency.
+- Per-language results and disagreements alongside reference labels.
+- Run paths, model IDs, prompt versions, and input verification status.
+
+The reader validates the original source dataset using each run's
+`experiment.yaml`, checks identical selected records, and aligns predictions by
+sample ID. It rejects duplicates, missing/foreign IDs, mixed model identities in
+a run, changed fingerprints, and incompatible data. Metrics are recalculated from
+saved predictions, including errors in denominators. Failed and unknown-cost
+predictions are not silently dropped. Incompletely priced runs have null total
+costs and are excluded from the cost plot.
+
+New experiment reports record a SHA256 of selected source records, including
+text, labels, and provenance. The first smoke runs predate this field: they remain
+usable, but show **historical input unverified**. Matching source data now does
+not prove those files were identical when the old runs executed. Do not add a
+fingerprint retroactively to imply verification.
+
+Each comparison saves its resolved `comparison.yaml`, self-contained
+`comparison.json`, editable `report.qmd`, and standalone `report.html`. The source
+runs remain untouched. Replaying `comparison.yaml` creates another dated folder
+and revalidates its sources. Re-rendering only needs the saved comparison JSON:
+open a terminal in the comparison folder and run:
+
+```bash
+uv run quarto render report.qmd --to html
+```
+
+Future comparison styling belongs in
+[comparison.qmd](../src/cx_sentiment/reports/comparison.qmd). Small smoke samples
+do not establish a model ranking or statistical significance. Recorded costs
+estimate the original requests, including cached predictions; they are not new
+spend incurred by generating this report.
+
 ## When rendering fails
 
 - **Quarto not found:** install its CLI and check PATH. Experiment execution checks

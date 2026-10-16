@@ -42,6 +42,10 @@ chose YAML experiment configuration.
   with provider/mode in its name and a resolved `experiment.yaml` beside results.
   Preserve old runs; keep credentials out of snapshots and `experiments/runs/` out of Git.
 - Parse YAML with `safe_load` and validate it through the existing Pydantic model.
+- Keep `cx-sentiment compare FILE` offline: use saved predictions, require matching
+  selected source records and sample IDs, and preserve the original run folders.
+  Record selected-dataset fingerprints on new runs; label legacy input verification
+  as unavailable rather than inventing historical provenance.
 - Give readable configuration errors without echoing configuration values or
   exposing tracebacks. Print the report or preview path after a successful run.
 - Keep credentials in environment variables. Do not load `.env` implicitly.
@@ -60,6 +64,9 @@ chose YAML experiment configuration.
   `src/cx_sentiment/reports/`; keep data calculations in Python. See docs/REPORTING.md
   for setup and re-rendering. Use Great Tables and Plotly with Polars directly.
   Avoid pandas conversions, hand-built HTML/SVG, or a second rendering engine.
+- `comparison.py`: comparison YAML, saved-run compatibility checks, dataset
+  fingerprints, and recalculated cross-run metrics. Comparison templates read
+  their saved JSON so re-rendering does not depend on the original source folders.
 
 ## Data, evaluation, and paid calls
 

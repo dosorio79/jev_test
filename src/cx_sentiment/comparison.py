@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -87,11 +88,32 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
                 .splitlines()
                 if line.strip()
             ]
-            metadata = json.loads((directory / "report_metadata.json").read_text(encoding="utf-8"))[
-                "metadata"
-            ]
+            report = json.loads((directory / "report_metadata.json").read_text(encoding="utf-8"))
+            metadata = report["metadata"]
             if not isinstance(metadata, dict):
                 raise ValueError("metadata must be an object")
+            title = report.get("title", directory.name)
+            if not isinstance(title, str):
+                raise ValueError("title must be text")
+            for field in ("cost_and_usage_scope", "latency_scope", "collection_policy"):
+                if field in metadata and not isinstance(metadata[field], str):
+                    raise ValueError(f"{field} must be text")
+            recollection_attempts = None
+            recollection_cost = None
+            audit_path = directory / "recollection_audit.json"
+            if audit_path.exists():
+                audit = json.loads(audit_path.read_text(encoding="utf-8"))
+                if not isinstance(audit, list):
+                    raise ValueError("recollection audit must be a list")
+                costs = [attempt["fresh_cost_usd"] for attempt in audit]
+                for cost in costs:
+                    if cost is not None and (
+                        type(cost) not in (int, float) or not math.isfinite(cost) or cost < 0
+                    ):
+                        raise ValueError("invalid recollection cost")
+                recollection_attempts = len(costs)
+                if all(cost is not None for cost in costs):
+                    recollection_cost = float(sum(costs))
         except OSError as exc:
             raise ValueError(f"cannot read saved run {directory}: {exc.strerror}") from exc
         except (ValueError, KeyError, TypeError) as exc:
@@ -124,12 +146,23 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
         summaries.append(
             {
                 "label": label,
+                "title": title,
                 "path": str(directory),
                 "provider": provider,
                 "model": model,
                 "prompt_version": prompt,
                 "simulated": provider == "mock",
                 "historical_input_verified": historical_hash is not None,
+                "cost_and_usage_scope": metadata.get(
+                    "cost_and_usage_scope",
+                    "Recorded costs and usage; cached results retain original estimates.",
+                ),
+                "latency_scope": metadata.get(
+                    "latency_scope", "Recorded request times, including original cached timings."
+                ),
+                "collection_policy": metadata.get("collection_policy", "Not recorded"),
+                "recollection_attempts": recollection_attempts,
+                "recollection_cost_usd": recollection_cost,
                 "metrics": metrics.model_dump(mode="json"),
             }
         )

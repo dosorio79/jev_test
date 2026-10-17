@@ -34,13 +34,19 @@ def show_table(frame):
         table = table.fmt(escape, columns=strings)
     if numbers:
         table = table.fmt_number(columns=numbers, decimals=4)
-    costs = [name for name in ("USD total", "Known USD") if name in frame.columns]
+    costs = [name for name in ("USD total", "Known USD", "Known USD per 1,000") if name in frame.columns]
     if costs:
         table = table.fmt_number(columns=costs, decimals=6)
+    if "Additional request USD" in frame.columns:
+        table = table.fmt_number(columns="Additional request USD", decimals=9)
     display(table)
 
 
 show_table(pl.DataFrame({"Comparison": [comparison["title"]]}))
+show_table(pl.DataFrame([
+    {"Run": run["label"], "Experiment": run.get("title", run["path"])}
+    for run in runs
+]))
 ```
 
 This report reads saved predictions and makes no provider calls. It compares the
@@ -72,7 +78,8 @@ it is not the elapsed time of generating this report.
 ```{python}
 summary = pl.DataFrame([
     {
-        "Run": run["label"], "Provider": run["provider"], "Model": run["model"],
+        "Run": run["label"], "Display": f"{run['label']}: {run['provider']}",
+        "Provider": run["provider"], "Model": run["model"],
         "Simulated": run["simulated"], "Records": run["metrics"]["support"],
         "Accuracy": run["metrics"]["accuracy"],
         "Macro F1": run["metrics"]["macro_f1"],
@@ -80,6 +87,15 @@ summary = pl.DataFrame([
         "P50 ms": run["metrics"]["latency_p50_ms"],
         "P95 ms": run["metrics"]["latency_p95_ms"],
         "USD total": run["metrics"]["cost_usd_total"],
+        "Known USD": run["metrics"]["cost_usd_known_total"],
+        "Known USD per 1,000": (
+            run["metrics"]["cost_usd_known_total"] * 1000 / run["metrics"]["support"]
+        ),
+        "Cost status": (
+            "Complete" if run["metrics"]["cost_priced_fraction"] == 1
+            else "Partial (lower bound)" if run["metrics"]["cost_priced_fraction"] > 0
+            else "No pricing available"
+        ),
         "USD per 1,000": run["metrics"]["cost_usd_per_1000"],
         "Priced fraction": run["metrics"]["cost_priced_fraction"],
     }
@@ -88,33 +104,98 @@ summary = pl.DataFrame([
 show_table(summary.select("Run", "Provider", "Model", "Records", "Accuracy", "Macro F1", "Coverage"))
 ```
 
-## Latency and cost
+## Latency
 
 ```{python}
-show_table(summary.select("Run", "P50 ms", "P95 ms", "USD total", "USD per 1,000", "Priced fraction"))
+show_table(summary.select("Run", "P50 ms", "P95 ms"))
+show_table(pl.DataFrame([
+    {"Run": run["label"], "Latency scope": run.get("latency_scope", "Not recorded")}
+    for run in runs
+]))
 ```
 
-Costs are token-based USD estimates, not billing statements or additional spend
-from this comparison. A null total means pricing is incomplete; it does not mean
-zero cost. The plots below exclude runs with an incomplete cost estimate.
+## Cost accounting
+
+Known cost includes every cost estimate present in the saved predictions, including
+failed attempts when their costs were retained. A complete total requires every
+record to be priced. Missing costs are unknown, not free; a partial known cost is
+only a lower bound. Failed-call usage recovered in a separate audit is not silently
+added to the original benchmark. Recollection costs are included when recorded in
+the derived predictions, as described in each run's accounting scope below.
+
+```{python}
+show_table(summary.select("Run", "Cost status", "Known USD", "USD total", "Priced fraction"))
+show_table(pl.DataFrame([
+    {
+        "Run": run["label"],
+        "Cost and usage scope": run.get("cost_and_usage_scope", "Not recorded"),
+        "Collection policy": run.get("collection_policy", "Not recorded"),
+    }
+    for run in runs
+]))
+```
+
+```{python}
+recollections = [
+    {
+        "Run": run["label"], "Fresh attempts": run.get("recollection_attempts"),
+        "Additional request USD": run.get("recollection_cost_usd"),
+    }
+    for run in runs if run.get("recollection_attempts") is not None
+]
+if recollections:
+    show_table(pl.DataFrame(recollections, schema_overrides={"Additional request USD": pl.Float64}))
+```
+
+Additional request USD comes from the saved recollection audit. It is already
+included in the derived run's cost, not an amount to add again. A missing value
+means no complete recollection-cost total was recorded. The difference between
+run totals need not equal new spend when the original run had missing costs.
+
+These are token-based USD estimates for the saved results, not billing statements
+or new spend from generating the comparison. Runs can share cached calls and
+ancestry: **do not add their totals together to calculate new spend**.
+
+```{python}
+priced = summary.filter(pl.col("Priced fraction") > 0)
+if priced.height:
+    fig = px.bar(
+        priced, x="Display", y="Known USD per 1,000", color="Cost status",
+        labels={"Display": "Run"},
+        pattern_shape="Cost status",
+        hover_data=["Provider", "Model", "Known USD", "Priced fraction"],
+        title="Recorded cost per 1,000 records; partial bars are lower bounds",
+    )
+    fig.show(renderer="notebook")
+for row in summary.filter(pl.col("Priced fraction") == 0).iter_rows(named=True):
+    print(f"{row['Run']}: No pricing available; no zero-cost bar is shown.")
+```
 
 ## Quality versus cost and latency
 
+A partial-cost point may move to the right if missing costs are recovered. Do not
+rank it as cheaper than another run using the lower bound alone. The latency plot
+uses recorded timings; recollected runs can lack original rejected-attempt times,
+so compare their latency scopes before interpreting small differences.
+
 ```{python}
-priced = summary.filter(pl.col("USD per 1,000").is_not_null())
 if priced.height:
     fig = px.scatter(
-        priced, x="USD per 1,000", y="Macro F1", color="Run",
-        hover_data=["Provider", "Model", "Accuracy", "Coverage", "Records"],
-        title="Macro F1 versus estimated cost",
+        priced, x="Known USD per 1,000", y="Macro F1", color="Display",
+        labels={"Display": "Run"},
+        symbol="Cost status",
+        hover_data=["Provider", "Model", "Accuracy", "Coverage", "Records", "Priced fraction"],
+        symbol_map={"Complete": "circle", "Partial (lower bound)": "triangle-right"},
+        title="Macro F1 versus recorded cost; partial points are lower bounds",
     )
     fig.update_traces(marker_size=14)
     fig.show(renderer="notebook")
 else:
-    print("Cost plot unavailable: no completely priced runs.")
+    print("Cost plot unavailable: No pricing available.")
 
 fig = px.scatter(
-    summary, x="P50 ms", y="Macro F1", color="Run",
+    summary, x="P50 ms", y="Macro F1", color="Display",
+    labels={"Display": "Run"},
     hover_data=["Provider", "Model", "Accuracy", "Coverage", "P95 ms", "Records"],
     title="Macro F1 versus median request latency",
 )

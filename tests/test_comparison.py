@@ -141,7 +141,10 @@ def test_preview_is_not_a_completed_run(saved_runs: Path) -> None:
         compare_runs(load_comparison_config(saved_runs))
 
 
-def test_compare_cli_renders_without_providers(saved_runs: Path, monkeypatch, capsys) -> None:
+@pytest.mark.parametrize("pricing", ["partial", "unavailable"])
+def test_compare_cli_renders_without_providers(
+    saved_runs: Path, monkeypatch, capsys, pricing: str
+) -> None:
     from cx_sentiment.cli import main
 
     def unexpected_provider(*args, **kwargs):
@@ -156,21 +159,43 @@ def test_compare_cli_renders_without_providers(saved_runs: Path, monkeypatch, ca
         path = saved_runs.parent / name / "predictions.jsonl"
         rows = [json.loads(line) for line in path.read_text().splitlines()]
         for row in rows:
-            row["cost_usd_estimate"] = None
+            row["cost_usd_estimate"] = 0.01 if pricing == "partial" else None
         if name == "second":
+            rows[0]["cost_usd_estimate"] = None
             rows[0]["predicted_label"] = None
             rows[0]["error_kind"] = "timeout"
         path.write_text("".join(json.dumps(row) + "\n" for row in rows))
         originals[path] = path.read_bytes()
+    metadata_path = saved_runs.parent / "second/report_metadata.json"
+    metadata = json.loads(metadata_path.read_text())
+    metadata["metadata"]["cost_and_usage_scope"] = "Includes rejected attempts and recollection."
+    metadata["metadata"]["latency_scope"] = "Original rejected-attempt latency unavailable."
+    metadata_path.write_text(json.dumps(metadata))
+    (saved_runs.parent / "second/recollection_audit.json").write_text(
+        json.dumps([{"fresh_cost_usd": 0.001}])
+    )
     saved_runs.write_text('title: "<img src=x onerror=alert(1)>"\nruns: [first, second]\n')
     assert main(["compare", str(saved_runs)]) == 0
     output = next((saved_runs.parent / "runs").glob("*-comparison"))
     result = json.loads((output / "comparison.json").read_text())
-    assert result["runs"][0]["metrics"]["cost_usd_total"] is None
+    assert result["runs"][0]["metrics"]["cost_usd_total"] == (
+        pytest.approx(0.03) if pricing == "partial" else None
+    )
+    assert result["runs"][1]["metrics"]["cost_usd_total"] is None
     assert result["runs"][1]["metrics"]["operational_coverage"] == pytest.approx(2 / 3)
     assert result["disagreements"][0]["Run 2"] == "unresolved"
     html = (output / "report.html").read_text()
     assert "Quality versus cost and latency" in html
+    assert "Cost accounting" in html
+    assert "Additional request USD" in html
+    assert "Includes rejected attempts and recollection." in html
+    assert "Original rejected-attempt latency unavailable." in html
+    assert "do not add their totals together" in html
+    if pricing == "partial":
+        assert "Partial (lower bound)" in html
+        assert "Known USD per 1,000" in html
+    else:
+        assert "No pricing available" in html
     assert "plotly" in html.lower()
     assert "&lt;img" in html
     assert "<img src=x onerror=alert(1)>" not in html
@@ -193,3 +218,47 @@ def test_compare_cli_reports_readable_errors(tmp_path: Path, capsys) -> None:
     message = capsys.readouterr().err
     assert "cannot read" in message
     assert "Traceback" not in message
+
+
+def test_comparison_preserves_collection_cost_and_latency_context(saved_runs: Path) -> None:
+    path = saved_runs.parent / "second/report_metadata.json"
+    report = json.loads(path.read_text())
+    report["title"] = "Jev after bounded recollection"
+    report["metadata"].update(
+        {
+            "cost_and_usage_scope": "Includes original rejected attempts and recollection.",
+            "latency_scope": "Original rejected-attempt latency unavailable.",
+            "collection_policy": "One fresh attempt per improper output.",
+        }
+    )
+    path.write_text(json.dumps(report))
+    result = compare_runs(load_comparison_config(saved_runs))
+    run = result["runs"][1]
+    assert run["title"] == report["title"]
+    assert run["cost_and_usage_scope"] == report["metadata"]["cost_and_usage_scope"]
+    assert run["latency_scope"] == report["metadata"]["latency_scope"]
+    assert run["collection_policy"] == report["metadata"]["collection_policy"]
+
+
+def test_comparison_reports_explicit_recollection_spend(saved_runs: Path) -> None:
+    (saved_runs.parent / "second/recollection_audit.json").write_text(
+        json.dumps(
+            [
+                {"fresh_cost_usd": 0.001},
+                {"fresh_cost_usd": 0.002},
+            ]
+        )
+    )
+    result = compare_runs(load_comparison_config(saved_runs))
+    assert result["runs"][0]["recollection_cost_usd"] is None
+    assert result["runs"][1]["recollection_cost_usd"] == pytest.approx(0.003)
+    assert result["runs"][1]["recollection_attempts"] == 2
+
+
+@pytest.mark.parametrize("cost", [-1, float("nan"), "unknown", True])
+def test_comparison_rejects_invalid_recollection_cost(saved_runs: Path, cost) -> None:
+    (saved_runs.parent / "second/recollection_audit.json").write_text(
+        json.dumps([{"fresh_cost_usd": cost}])
+    )
+    with pytest.raises(ValueError, match="invalid saved"):
+        compare_runs(load_comparison_config(saved_runs))

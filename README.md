@@ -168,7 +168,7 @@ in milliseconds (`1,000 ms = 1 second`). Costs are estimates in USD.
 | P95 latency | The 95th percentile: approximately 95% of recorded request times are at or below it. Describes slower requests. Lower is faster. |
 | USD total / known USD | Total estimated cost is available only when every prediction is priced. Known USD sums available estimates; a missing total is not zero cost. |
 | USD per 1,000 | Total estimated cost divided by support, multiplied by 1,000. A normalized comparison, not a forecast or actual 1,000-request bill. |
-| Priced fraction | Fraction of predictions with a cost estimate. Below 100%, total cost is incomplete and the run is excluded from the comparison cost plot. |
+| Priced fraction | Fraction of predictions with a cost estimate. Below 100%, total cost is incomplete; comparison charts show known costs as a lower bound. Unpriced runs have no cost point or bar. |
 | Input / output tokens | Sums of recorded usage. Usage fraction measures records with at least one token count available; it does not guarantee both counts are present. |
 | Reported credits | Provider-reported units, kept separate from USD estimates. |
 | 95% bootstrap interval | Uncertainty estimated by resampling these records. Narrow intervals on tiny or repetitive samples do not establish generalization. |
@@ -196,8 +196,10 @@ Read the report in this order:
    support and confusion matrices. Matrix rows are reference labels and columns
    are predicted labels; diagonal counts are correct. Unresolved predictions
    affect scores but sit outside the three displayed prediction columns.
-4. **Inspect tradeoffs:** in quality-versus-cost or latency plots, higher F1
-   with lower cost or latency is preferable. Compare P95 as well as P50.
+4. **Inspect tradeoffs:** check pricing completeness and attempt scope before
+   comparing costs. Partial-cost bars and points are lower bounds. Runs can share
+   cached calls, so their totals are not additive new spend. Compare P95 as well
+   as P50, and check whether rejected-attempt timing is missing.
 5. **Read disagreements:** check which provider matches the reference label.
    Agreement can include shared mistakes and does not imply correctness.
 

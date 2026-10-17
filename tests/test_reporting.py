@@ -32,7 +32,21 @@ def test_report_preserves_formats_missing_costs_and_escapes_html(tmp_path: Path)
         [prediction],
         metrics,
         title="<benchmark>",
-        metadata={"note": "<script>alert(1)</script>"},
+        metadata={
+            "note": "<script>alert(1)</script>",
+            "electricity_estimate": {
+                "tariff_per_kwh": 0.18,
+                "rows": [
+                    {
+                        "Scope": "<GPU>",
+                        "Basis": "Sampled board power",
+                        "Energy kWh": 0.01,
+                        "Estimated EUR": 0.0018,
+                    }
+                ],
+                "scope_note": "GPU only; excludes other laptop components.",
+            },
+        },
     )
 
     assert (
@@ -51,7 +65,12 @@ def test_report_preserves_formats_missing_costs_and_escapes_html(tmp_path: Path)
     assert "&lt;provider&gt;" in document
     assert "&lt;script&gt;" in document
     assert "<script>alert(1)</script>" not in document
-    assert "partial ($0.000000 known; 0.0% priced)" in document
+    assert "USD cost unavailable: no verified prices were supplied." in document
+    assert "Electricity-only estimates at EUR 0.18/kWh" in document
+    assert "&lt;GPU&gt;" in document
+    assert "Estimated EUR" in document
+    assert "0.001800" in document
+    assert "GPU only; excludes other laptop components." in document
     assert (tmp_path / "report.qmd").is_file()
     assert json.loads((tmp_path / "report_metadata.json").read_text())["title"] == "<benchmark>"
     assert "Plotly.newPlot" in document

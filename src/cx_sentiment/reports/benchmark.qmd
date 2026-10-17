@@ -124,9 +124,19 @@ Credits are provider-reported units, separate from USD estimates.
 if metrics["cost_usd_total"] is not None:
     print(f"${metrics['cost_usd_total']:.6f} total; "
           f"${metrics['cost_usd_per_1000']:.4f} per 1,000")
+elif metrics["cost_priced_fraction"] == 0:
+    print("USD cost unavailable: no verified prices were supplied.")
 else:
     print(f"partial (${metrics['cost_usd_known_total']:.6f} known; "
           f"{metrics['cost_priced_fraction']:.1%} priced)")
+
+electricity = run["metadata"].get("electricity_estimate")
+if electricity:
+    print(f"Electricity-only estimates at EUR {electricity['tariff_per_kwh']:.2f}/kWh.")
+    table = pl.DataFrame(electricity["rows"])
+    display(GT(table).fmt(escape, columns=["Scope", "Basis"])
+            .fmt_number(columns=["Energy kWh", "Estimated EUR"], decimals=6))
+    print(electricity["scope_note"])
 ```
 
 Partial pricing is not a complete run cost.

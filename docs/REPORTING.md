@@ -11,6 +11,12 @@ the printed `report.html` path in your browser. Each YAML invocation creates a
 new dated folder under `experiments/runs/`, containing its resolved `experiment.yaml` and results. Its styles and plots are embedded,
 so this HTML file can be shared on its own and viewed offline.
 
+Local model runs can report quality, latency, and token usage without a USD price.
+Unpriced runs display cost as unavailable. Optional electricity estimates appear
+separately in euros, using an explicit tariff and distinguishing sampled GPU
+energy from assumed whole-computer power. These estimates exclude hardware
+amortization and do not replace provider pricing or imply that local inference is free.
+
 ## One-time setup
 
 Install the [Quarto CLI](https://quarto.org/docs/get-started/) for your operating

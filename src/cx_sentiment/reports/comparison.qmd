@@ -216,7 +216,9 @@ show_table(languages)
 
 ## Prediction disagreements
 
-Only records where the runs predict different labels are shown. `unresolved`
+Only records where the runs predict different labels are shown. The verbatim
+beside each sample ID is the original feedback from the validated dataset,
+without translation or summarization. `unresolved`
 means a provider failed to return a label. Agreement can include shared mistakes;
 it is not a substitute for comparing against reference labels.
 

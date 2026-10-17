@@ -169,14 +169,15 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
         labels_by_run[label] = {p.sample_id: p.predicted_label for p in aligned}
     assert reference is not None
     disagreements = []
-    for sample_id, language, truth in reference.select(
-        "sample_id", "language", "sentiment"
+    for sample_id, text, language, truth in reference.select(
+        "sample_id", "text", "language", "sentiment"
     ).iter_rows():
         predicted = {label: values[sample_id] for label, values in labels_by_run.items()}
         if len(set(predicted.values())) > 1:
             disagreements.append(
                 {
                     "sample_id": sample_id,
+                    "verbatim": text,
                     "language": language,
                     "truth": truth,
                     **{label: value or "unresolved" for label, value in predicted.items()},

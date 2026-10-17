@@ -257,6 +257,9 @@ def test_compare_cli_renders_without_providers(
         rows = [json.loads(line) for line in path.read_text().splitlines()]
         for row in rows:
             row["cost_usd_estimate"] = 0.01 if pricing == "partial" else None
+            if name == "second":
+                row["provider"] = "hybrid"
+                row["model_id"] = "jev-1.13.0 -> gpt-6-luna"
         if name == "second":
             rows[0]["cost_usd_estimate"] = None
             rows[0]["predicted_label"] = None
@@ -292,6 +295,11 @@ def test_compare_cli_renders_without_providers(
     assert "Quality versus cost and latency" in html
     assert "Macro F1 versus P50 latency (typical request)" in html
     assert "Macro F1 versus P95 latency (slower tail)" in html
+    assert "Jev + Luna fallback" in html
+    assert '"name":"fixture"' in html
+    assert '"name":"Jev + Luna fallback"' in html
+    assert "Run 1: mock" not in html
+    assert "Run 2: hybrid" not in html
     assert "not a paired speedup measurement" in html
     assert "Cost accounting" in html
     assert "Additional request USD" in html

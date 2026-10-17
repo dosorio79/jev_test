@@ -24,6 +24,14 @@ from IPython.display import display
 
 comparison = json.loads(Path("comparison.json").read_text(encoding="utf-8"))
 runs = comparison["runs"]
+plot_labels = {
+    run["label"]: (
+        ("Jev + Luna fallback" if run["model"] == "jev-1.13.0 -> gpt-6-luna"
+         else f"{run['model']} fallback")
+        if run["provider"] == "hybrid" else run["model"].split("@", 1)[0]
+    )
+    for run in runs
+}
 
 
 def show_table(frame):
@@ -44,7 +52,8 @@ def show_table(frame):
 
 show_table(pl.DataFrame({"Comparison": [comparison["title"]]}))
 show_table(pl.DataFrame([
-    {"Run": run["label"], "Experiment": run.get("title", run["path"])}
+    {"Run": run["label"], "Plot label": plot_labels[run["label"]],
+     "Experiment": run.get("title", run["path"])}
     for run in runs
 ]))
 ```
@@ -78,7 +87,7 @@ it is not the elapsed time of generating this report.
 ```{python}
 summary = pl.DataFrame([
     {
-        "Run": run["label"], "Display": f"{run['label']}: {run['provider']}",
+        "Run": run["label"], "Display": plot_labels[run["label"]],
         "Provider": run["provider"], "Model": run["model"],
         "Simulated": run["simulated"], "Records": run["metrics"]["support"],
         "Accuracy": run["metrics"]["accuracy"],
@@ -115,13 +124,14 @@ show_table(summary.select("Run", "Provider", "Model", "Records", "Accuracy", "Ma
 ```{python}
 show_table(summary.select("Run", "P50 ms", "P95 ms"))
 latencies = pl.DataFrame([
-    {"Run": run["label"], "Model": run["model"], "Percentile": percentile,
+    {"Display": plot_labels[run["label"]], "Model": run["model"], "Percentile": percentile,
      "Latency ms": run["metrics"][field]}
     for run in runs
     for percentile, field in (("P50", "latency_p50_ms"), ("P95", "latency_p95_ms"))
 ])
-fig = px.bar(latencies, x="Latency ms", y="Run", color="Percentile", barmode="group",
-             orientation="h", hover_data=["Model"], title="Recorded latency: all runs, full range")
+fig = px.bar(latencies, x="Latency ms", y="Display", color="Percentile", barmode="group",
+             labels={"Display": "Model"}, orientation="h", hover_data=["Model"],
+             title="Recorded latency: all runs, full range")
 fig.update_xaxes(rangemode="tozero")
 fig.show(renderer="notebook")
 show_table(pl.DataFrame([
@@ -182,7 +192,7 @@ priced = summary.filter(pl.col("Comparison USD").is_not_null())
 if priced.height:
     fig = px.bar(
         priced, x="Display", y="Comparison USD per 1,000", color="Cost status",
-        labels={"Display": "Run"},
+        labels={"Display": "Model"},
         pattern_shape="Cost status",
         hover_data=["Provider", "Model", "Known USD", "Priced fraction"],
         title="Comparison cost per 1,000 records; electricity is a ballpark estimate",
@@ -207,7 +217,7 @@ lack original rejected-attempt times; compare their latency scopes as well.
 if priced.height:
     fig = px.scatter(
         priced, x="Comparison USD per 1,000", y="Macro F1", color="Display",
-        labels={"Display": "Run"},
+        labels={"Display": "Model"},
         symbol="Cost status",
         hover_data=["Provider", "Model", "Accuracy", "Coverage", "Records", "Priced fraction"],
         symbol_map={"Complete": "circle", "Partial (lower bound)": "triangle-right",
@@ -222,7 +232,7 @@ else:
 for percentile, description in (("P50", "typical request"), ("P95", "slower tail")):
     fig = px.scatter(
         summary, x=f"{percentile} ms", y="Macro F1", color="Display",
-        labels={"Display": "Run"},
+        labels={"Display": "Model"},
         hover_data=["Provider", "Model", "Accuracy", "Coverage", "P50 ms", "P95 ms", "Records"],
         title=f"Macro F1 versus {percentile} latency ({description})",
     )

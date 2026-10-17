@@ -195,9 +195,13 @@ for row in summary.filter(pl.col("Comparison USD").is_null()).iter_rows(named=Tr
 ## Quality versus cost and latency
 
 A partial-cost point may move to the right if missing costs are recovered. Do not
-rank it as cheaper than another run using the lower bound alone. The latency plot
-uses recorded timings; recollected runs can lack original rejected-attempt times,
-so compare their latency scopes before interpreting small differences.
+rank it as cheaper than another run using the lower bound alone.
+
+Read both latency plots together: P50 describes the typical request; P95 captures
+the slower tail, where hybrid fallbacks can add time. A lower hybrid P50 in a
+separate run does not establish that routing makes Jev faster. These are recorded
+timings from separate runs, not a paired speedup measurement. Recollected runs can
+lack original rejected-attempt times; compare their latency scopes as well.
 
 ```{python}
 if priced.height:
@@ -215,14 +219,16 @@ if priced.height:
 else:
     print("Cost plot unavailable: No pricing available.")
 
-fig = px.scatter(
-    summary, x="P50 ms", y="Macro F1", color="Display",
-    labels={"Display": "Run"},
-    hover_data=["Provider", "Model", "Accuracy", "Coverage", "P95 ms", "Records"],
-    title="Macro F1 versus median request latency",
-)
-fig.update_traces(marker_size=14)
-fig.show(renderer="notebook")
+for percentile, description in (("P50", "typical request"), ("P95", "slower tail")):
+    fig = px.scatter(
+        summary, x=f"{percentile} ms", y="Macro F1", color="Display",
+        labels={"Display": "Run"},
+        hover_data=["Provider", "Model", "Accuracy", "Coverage", "P50 ms", "P95 ms", "Records"],
+        title=f"Macro F1 versus {percentile} latency ({description})",
+    )
+    fig.update_traces(marker_size=14)
+    fig.update_xaxes(rangemode="tozero")
+    fig.show(renderer="notebook")
 ```
 
 ## Language results

@@ -290,6 +290,9 @@ def test_compare_cli_renders_without_providers(
     assert result["disagreements"][0]["verbatim"] == verbatim
     html = (output / "report.html").read_text()
     assert "Quality versus cost and latency" in html
+    assert "Macro F1 versus P50 latency (typical request)" in html
+    assert "Macro F1 versus P95 latency (slower tail)" in html
+    assert "not a paired speedup measurement" in html
     assert "Cost accounting" in html
     assert "Additional request USD" in html
     assert "&lt;script&gt;" in html

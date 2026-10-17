@@ -17,6 +17,14 @@ separately in euros, using an explicit tariff and distinguishing sampled GPU
 energy from assumed whole-computer power. These estimates exclude hardware
 amortization and do not replace provider pricing or imply that local inference is free.
 
+The all-run comparison is configured in
+[`experiments/compare-validation-all.yaml`](../experiments/compare-validation-all.yaml).
+It includes the local Qwen and live hybrid snapshots. A `cost_estimates` entry can
+supply a USD electricity ballpark for an otherwise entirely unpriced run, with its
+assumptions in `basis`. Charts label it as an electricity estimate; original saved
+predictions and provider-cost metrics remain unchanged. Latency charts include
+every run on the full measured range.
+
 ## One-time setup
 
 Install the [Quarto CLI](https://quarto.org/docs/get-started/) for your operating

@@ -13,10 +13,23 @@ import polars as pl
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
-from cx_sentiment.config import load_config
 from cx_sentiment.data import load_dataset
 from cx_sentiment.metrics import evaluate_predictions
 from cx_sentiment.models import Prediction
+
+
+class CostEstimate(BaseModel):
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+
+    usd_total: float = Field(ge=0)
+    basis: str = Field(min_length=1)
+
+
+class SavedRunInput(BaseModel):
+    """Only input selection is needed to compare already collected predictions."""
+
+    input: Path
+    limit: int = Field(gt=0, strict=True)
 
 
 class ComparisonConfig(BaseModel):
@@ -25,6 +38,7 @@ class ComparisonConfig(BaseModel):
     title: str = Field(default="CX sentiment comparison", min_length=1)
     runs: list[Path] = Field(min_length=2)
     output_dir: Path = Path("runs")
+    cost_estimates: dict[str, CostEstimate] = Field(default_factory=dict)
 
 
 def load_comparison_config(path: Path) -> ComparisonConfig:
@@ -40,6 +54,9 @@ def load_comparison_config(path: Path) -> ComparisonConfig:
     runs = [(path.parent / run).resolve() for run in config.runs]
     if len(set(runs)) != len(runs):
         raise ValueError(f"comparison requires distinct run folders in {path}")
+    labels = {f"Run {index}" for index in range(1, len(runs) + 1)}
+    if set(config.cost_estimates) - labels:
+        raise ValueError(f"cost estimates reference unknown run labels in {path}")
     return config.model_copy(
         update={
             "runs": runs,
@@ -71,8 +88,13 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
     reference_hash: str | None = None
     labels_by_run: dict[str, dict[str, str | None]] = {}
     for index, directory in enumerate(config.runs, start=1):
-        experiment = load_config(directory / "experiment.yaml")
-        frame = load_dataset(experiment.input).head(experiment.limit).sort("sample_id")
+        try:
+            experiment = SavedRunInput.model_validate(
+                yaml.safe_load((directory / "experiment.yaml").read_text(encoding="utf-8"))
+            )
+        except (OSError, ValueError, yaml.YAMLError) as exc:
+            raise ValueError(f"cannot read saved run input settings in {directory}") from exc
+        frame = load_dataset(directory / experiment.input).head(experiment.limit).sort("sample_id")
         if frame.is_empty():
             raise ValueError(f"no source records in {directory}")
         fingerprint = dataset_fingerprint(frame)
@@ -142,6 +164,9 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
             languages=frame["language"].to_list(),
         )
         label = f"Run {index}"
+        estimate = config.cost_estimates.get(label)
+        if estimate is not None and metrics.cost_priced_fraction > 0:
+            raise ValueError(f"cost estimates require a completely unpriced run: {directory}")
         provider, model, prompt = next(iter(identities))
         summaries.append(
             {
@@ -153,6 +178,18 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
                 "prompt_version": prompt,
                 "simulated": provider == "mock",
                 "historical_input_verified": historical_hash is not None,
+                "cost_estimate": estimate.model_dump() if estimate is not None else None,
+                "comparison_cost_usd": (
+                    estimate.usd_total
+                    if estimate is not None
+                    else metrics.cost_usd_known_total
+                    if metrics.cost_priced_fraction > 0
+                    else None
+                ),
+                "electricity_estimate": metadata.get("electricity_estimate"),
+                "reasoning_effort": metadata.get("reasoning_effort"),
+                "think": metadata.get("think"),
+                "threshold": metadata.get("threshold"),
                 "cost_and_usage_scope": metadata.get(
                     "cost_and_usage_scope",
                     "Recorded costs and usage; cached results retain original estimates.",

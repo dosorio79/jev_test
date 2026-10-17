@@ -173,7 +173,18 @@ sample ID. It rejects duplicates, missing/foreign IDs, mixed model identities in
 a run, changed fingerprints, and incompatible data. Metrics are recalculated from
 saved predictions, including errors in denominators. Failed and unknown-cost
 predictions are not silently dropped. Incompletely priced runs have null total
-costs and are excluded from the cost plot.
+costs. The cost table shows known USD, complete totals when available, and the
+priced fraction. When `recollection_audit.json` exists, the report also shows
+the number of fresh attempts and their additional request USD separately; those
+costs are already included in the derived run total. Partially priced runs remain visible as lower-bound bars and
+points; fully unpriced runs are explicitly listed without a zero-cost bar.
+
+The report displays source titles, cost/usage scope, collection policy, and
+latency scope from run metadata. Recollected results can include both original
+rejected attempts and fresh requests. Original rejected-attempt latency may be
+unavailable. Compare these scopes before ranking runs; do not add totals across
+runs that share cached predictions or ancestry to estimate additional spend.
+Separate raw-usage audits are not silently incorporated into original runs.
 
 New experiment reports record a SHA256 of selected source records, including
 text, labels, and provenance. The first smoke runs predate this field: they remain

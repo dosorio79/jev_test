@@ -164,7 +164,9 @@ No credentials or provider calls are needed. The command prints the new dated
 
 - Side-by-side quality, coverage, latency, costs, and usage.
 - Macro F1 versus USD per 1,000 records and median request latency.
-- Per-language results and disagreements alongside reference labels.
+- Per-language results and disagreements with the sample ID, original feedback
+  verbatim, reference label, and each run's predicted label. Saved comparison
+  JSON and HTML include that feedback text; tables display it as escaped text.
 - Run paths, model IDs, prompt versions, and input verification status.
 
 The reader validates the original source dataset using each run's

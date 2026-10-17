@@ -68,6 +68,10 @@ def test_comparison_aligns_predictions_and_recalculates_metrics(saved_runs: Path
     assert result["runs"][0]["metrics"]["accuracy"] == 1
     assert result["runs"][1]["metrics"]["accuracy"] == pytest.approx(2 / 3)
     assert len(result["disagreements"]) == 1
+    disagreement = result["disagreements"][0]
+    reference = load_dataset(Path("data/cx_sentiment_test_600.csv"))
+    expected = reference.filter(pl.col("sample_id") == disagreement["sample_id"])["text"][0]
+    assert disagreement["verbatim"] == expected
     assert result["warnings"] == []
     assert result["historical_inputs_verified"] is True
 
@@ -153,6 +157,26 @@ def test_compare_cli_renders_without_providers(
     monkeypatch.setattr("cx_sentiment.cli._provider_from_environment", unexpected_provider)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("JEV_API_KEY", raising=False)
+    # Keep source feedback exact, including Unicode, newlines, and HTML-like text.
+    verbatim = "Feedback <script>alert('verbatim')</script>\nSecond line — ação"
+    frame = load_dataset(Path("data/cx_sentiment_test_600.csv")).head(3)
+    frame = frame.with_columns(
+        pl.when(pl.col("sample_id") == frame["sample_id"][0])
+        .then(pl.lit(verbatim))
+        .otherwise(pl.col("text"))
+        .alias("text")
+    )
+    source = saved_runs.parent / "feedback.csv"
+    frame.write_csv(source)
+    for name in ("first", "second"):
+        experiment_path = saved_runs.parent / name / "experiment.yaml"
+        experiment = yaml.safe_load(experiment_path.read_text())
+        experiment["input"] = str(source)
+        experiment_path.write_text(yaml.safe_dump(experiment))
+        metadata_path = saved_runs.parent / name / "report_metadata.json"
+        metadata = json.loads(metadata_path.read_text())
+        metadata["metadata"]["dataset_sha256"] = dataset_fingerprint(frame)
+        metadata_path.write_text(json.dumps(metadata))
     # Exercise incomplete costs and an unresolved prediction in an actual render.
     originals = {}
     for name in ("first", "second"):
@@ -184,10 +208,14 @@ def test_compare_cli_renders_without_providers(
     assert result["runs"][1]["metrics"]["cost_usd_total"] is None
     assert result["runs"][1]["metrics"]["operational_coverage"] == pytest.approx(2 / 3)
     assert result["disagreements"][0]["Run 2"] == "unresolved"
+    assert result["disagreements"][0]["verbatim"] == verbatim
     html = (output / "report.html").read_text()
     assert "Quality versus cost and latency" in html
     assert "Cost accounting" in html
     assert "Additional request USD" in html
+    assert "&lt;script&gt;" in html
+    assert "Second line" in html
+    assert "<script>alert('verbatim')</script>" not in html
     assert "Includes rejected attempts and recollection." in html
     assert "Original rejected-attempt latency unavailable." in html
     assert "do not add their totals together" in html

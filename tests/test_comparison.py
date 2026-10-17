@@ -7,7 +7,12 @@ import polars as pl
 import pytest
 import yaml
 
-from cx_sentiment.comparison import compare_runs, dataset_fingerprint, load_comparison_config
+from cx_sentiment.comparison import (
+    CostEstimate,
+    compare_runs,
+    dataset_fingerprint,
+    load_comparison_config,
+)
 from cx_sentiment.data import load_dataset
 from cx_sentiment.models import Prediction, SentimentLabel
 
@@ -74,6 +79,74 @@ def test_comparison_aligns_predictions_and_recalculates_metrics(saved_runs: Path
     assert disagreement["verbatim"] == expected
     assert result["warnings"] == []
     assert result["historical_inputs_verified"] is True
+
+
+@pytest.mark.parametrize("provider", ["ollama", "hybrid"])
+def test_comparison_reads_saved_experiment_snapshots(saved_runs: Path, provider: str) -> None:
+    run = saved_runs.parent / "second"
+    snapshot = yaml.safe_load((run / "experiment.yaml").read_text())
+    snapshot.update(provider=provider, model="local-model", think=False, threshold=0.72)
+    (run / "experiment.yaml").write_text(yaml.safe_dump(snapshot))
+    electricity = {
+        "tariff_per_kwh": 0.18,
+        "rows": [
+            {"Scope": "GPU only", "Basis": "Sampled", "Energy kWh": 0.01, "Estimated EUR": 0.0018}
+        ],
+        "scope_note": "GPU only; excludes the rest of the computer.",
+    }
+    report = json.loads((run / "report_metadata.json").read_text())
+    report["metadata"].update(electricity_estimate=electricity, think=False, threshold=0.72)
+    (run / "report_metadata.json").write_text(json.dumps(report))
+    predictions = [
+        Prediction.model_validate_json(line).model_copy(
+            update={"provider": provider, "cost_usd_estimate": None}
+        )
+        for line in (run / "predictions.jsonl").read_text().splitlines()
+    ]
+    (run / "predictions.jsonl").write_text("".join(p.model_dump_json() + "\n" for p in predictions))
+
+    result = compare_runs(load_comparison_config(saved_runs))
+
+    assert result["historical_inputs_verified"] is True
+    assert result["runs"][1]["provider"] == provider
+    assert result["runs"][1]["metrics"]["cost_usd_total"] is None
+    assert result["runs"][1]["electricity_estimate"] == electricity
+    assert result["runs"][1]["think"] is False
+    assert result["runs"][1]["threshold"] == 0.72
+
+
+def test_comparison_cost_estimate_preserves_unpriced_predictions(saved_runs: Path) -> None:
+    path = saved_runs.parent / "second/predictions.jsonl"
+    predictions = [
+        Prediction.model_validate_json(line).model_copy(update={"cost_usd_estimate": None})
+        for line in path.read_text().splitlines()
+    ]
+    path.write_text("".join(p.model_dump_json() + "\n" for p in predictions))
+    original = path.read_bytes()
+    config = load_comparison_config(saved_runs).model_copy(
+        update={
+            "cost_estimates": {"Run 2": CostEstimate(usd_total=0.007, basis="Electricity ballpark")}
+        }
+    )
+
+    result = compare_runs(config)
+
+    run = result["runs"][1]
+    assert run["metrics"]["cost_usd_total"] is None
+    assert run["metrics"]["cost_priced_fraction"] == 0
+    assert run["comparison_cost_usd"] == 0.007
+    assert run["cost_estimate"]["basis"] == "Electricity ballpark"
+    assert path.read_bytes() == original
+
+
+def test_comparison_rejects_estimate_for_priced_run(saved_runs: Path) -> None:
+    config = load_comparison_config(saved_runs).model_copy(
+        update={
+            "cost_estimates": {"Run 2": CostEstimate(usd_total=0.007, basis="Electricity ballpark")}
+        }
+    )
+    with pytest.raises(ValueError, match="completely unpriced"):
+        compare_runs(config)
 
 
 @pytest.mark.parametrize("change", ["duplicate", "missing", "foreign"])
@@ -145,7 +218,7 @@ def test_preview_is_not_a_completed_run(saved_runs: Path) -> None:
         compare_runs(load_comparison_config(saved_runs))
 
 
-@pytest.mark.parametrize("pricing", ["partial", "unavailable"])
+@pytest.mark.parametrize("pricing", ["partial", "unavailable", "electricity"])
 def test_compare_cli_renders_without_providers(
     saved_runs: Path, monkeypatch, capsys, pricing: str
 ) -> None:
@@ -199,6 +272,12 @@ def test_compare_cli_renders_without_providers(
         json.dumps([{"fresh_cost_usd": 0.001}])
     )
     saved_runs.write_text('title: "<img src=x onerror=alert(1)>"\nruns: [first, second]\n')
+    if pricing == "electricity":
+        with saved_runs.open("a") as handle:
+            handle.write(
+                "cost_estimates:\n  Run 2:\n    usd_total: 0.007\n"
+                "    basis: Electricity ballpark\n"
+            )
     assert main(["compare", str(saved_runs)]) == 0
     output = next((saved_runs.parent / "runs").glob("*-comparison"))
     result = json.loads((output / "comparison.json").read_text())
@@ -221,7 +300,12 @@ def test_compare_cli_renders_without_providers(
     assert "do not add their totals together" in html
     if pricing == "partial":
         assert "Partial (lower bound)" in html
-        assert "Known USD per 1,000" in html
+        assert "Comparison USD per 1,000" in html
+    elif pricing == "electricity":
+        assert "Electricity estimate" in html
+        assert "0.007000" in html
+        assert result["runs"][1]["comparison_cost_usd"] == 0.007
+        assert result["runs"][1]["metrics"]["cost_usd_total"] is None
     else:
         assert "No pricing available" in html
     assert "plotly" in html.lower()

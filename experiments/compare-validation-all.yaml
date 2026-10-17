@@ -1,0 +1,12 @@
+title: "Full validation: hosted providers, live hybrid, and local Qwen baseline"
+runs:
+  - runs/2026-10-16T21-18-26.674414Z-openai-live
+  - runs/2026-10-16T21-40-13.961344Z-jev-live
+  - runs/2026-10-17T09-38-55.678883Z-openai-live
+  - runs/2026-10-17T10-01-51.524341Z-hybrid-live
+  - runs/2026-10-17T10-16-23.050239Z-ollama-live
+output_dir: runs
+cost_estimates:
+  Run 5:
+    usd_total: 0.007
+    basis: "Electricity ballpark: 100 W average, 20.6 minutes, EUR 0.18/kWh, assumed USD 1.10/EUR; excludes hardware amortization."

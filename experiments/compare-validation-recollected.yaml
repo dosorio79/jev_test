@@ -1,0 +1,6 @@
+title: "Full validation: original Jev, Jev after recollection, and GPT"
+runs:
+  - runs/2026-10-16T21-18-26.674414Z-openai-live
+  - runs/2026-10-16T21-14-58.859755Z-jev-live
+  - runs/2026-10-16T21-40-13.961344Z-jev-live
+output_dir: runs

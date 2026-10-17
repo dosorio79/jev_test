@@ -90,6 +90,14 @@ chose YAML experiment configuration.
 
 ## Jev probabilities and hybrid policy
 
+- Validation failures are improper outputs, eligible for fresh collection; a valid
+  but incorrect sentiment label is a scored prediction and must not be recollected
+  to improve accuracy. Prefer bounded recollection over adding normalization.
+- Recollection requires the existing live authorization and budget guards. Make
+  at most one fresh attempt per rejected record unless further attempts are
+  authorized. Bypass cached failures and use a distinct request identity so
+  idempotency does not replay the rejected response. Preserve the original run,
+  record all attempt costs, and keep remaining failures unresolved for fallback.
 - Use the [official Choice docs](https://docs.typesafe.ai/primitives/choice) and
   [Python SDK response reference](https://docs.typesafe.ai/sdk/python/api/types/responses).
   As checked on 2026-10-16, they describe sums of 1 and approximately 1,
@@ -100,9 +108,10 @@ chose YAML experiment configuration.
   vectors or fill missing classes. No Jev rounding workaround is implemented yet.
 - Preserve raw responses and provider-reported confidence. Keep normalized scores
   and any derived confidence distinguishable; their thresholds use different scales.
-- Before freezing a hybrid policy, settle and record score interpretation, routing
-  signal, and threshold. Reprocess retained responses offline into a new derived
-  run; preserve original runs and prevent reuse of incompatible cached results.
+- Before freezing a hybrid policy, settle and record score interpretation,
+  recollection limit, routing signal, and threshold. If interpretation changes,
+  reprocess retained responses offline into a new derived run; preserve original
+  runs and prevent reuse of incompatible cached results.
 - Retain available usage and measured latency even when label/score validation
   fails in future adapter work. Never invent missing historical measurements.
   See [README research notes](README.md#jev-probability-precision-and-hybrid-policy)

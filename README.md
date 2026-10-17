@@ -286,16 +286,40 @@ to a confidence of `0.415` under that formula. A threshold on `p_max` cannot be
 copied unchanged to provider confidence. Preserve the returned confidence as its
 own field, even if a future adapter normalizes the probability vector.
 
-Before freezing a hybrid policy:
+Our collection policy keeps the strict validator: **validation failures are improper
+outputs and should be collected again**, within an explicitly authorized attempt
+limit and budget. A valid but incorrect sentiment label is an ordinary scored
+prediction, not grounds for recollection. Make one fresh attempt per rejected
+record, preserve the original run, and record both attempts' costs in the derived
+result. If that attempt is still improper, keep it unresolved for hybrid fallback.
+Do not repeat requests indefinitely until a preferred output appears.
 
-1. Specify the accepted discrepancy, its evidence or mathematical justification,
-   and whether routing uses normalized maximum probability or provider confidence.
-   No additional Jev-specific rounding tolerance is implemented today.
-2. Keep normalization in the Jev adapter and the shared prediction contract strict.
+The normal runner currently reuses cached failures. Explicit recollection must
+bypass those entries and use a new request identity to avoid replay through HTTP
+idempotency. Valid recollected responses can replace failed cache entries; retain
+the original failure and attempt audit in the new run. Cached successful responses
+describe their latest attempt; the recollection report separately includes the
+original rejected attempts' costs and usage.
+
+On 2026-10-16, one fresh request for each of the two rejected records recovered
+the Portuguese response; the German response again summed to 0.99. The derived
+run therefore has **575/600 correct and 99.83% coverage**, after **$0.000032298**
+of additional estimated spend. The original 574/600 result remains unchanged.
+Original rejected-attempt latency was not saved, so the derived latency metrics
+include only the fresh attempt for those records, not complete retry latency.
+
+Before freezing a hybrid policy or changing score interpretation:
+
+1. Record the strict validation rule, bounded recollection policy, routing signal,
+   and threshold. No additional Jev-specific rounding tolerance is implemented;
+   normalization is an optional future change, not required for recollection.
+2. If normalization is introduced, first justify an explicit discrepancy bound.
+   Keep it in the Jev adapter and the shared prediction contract strict.
    Require exactly the canonical classes, finite values in `[0, 1]`, a positive
    total, and an explicitly bounded discrepancy. Reject malformed distributions.
-3. Test exact sums, accepted and rejected boundary cases, missing classes,
-   negative/nonfinite values, and routing decisions close to the threshold.
+3. For a normalization change, test exact sums, accepted and rejected boundary
+   cases, missing classes, negative/nonfinite values, and routing decisions close
+   to the threshold.
 4. Preserve original responses and runs. Reprocess available saved responses
    offline into a new, identified derived run with its interpretation recorded;
    ensure old error-cache entries do not bypass the new interpretation. Re-select
@@ -308,8 +332,8 @@ measurements even when score validation fails. The saved raw responses allowed
 a separate usage audit to supplement Jev's known cost from **$0.00968058** to
 **$0.009712878** for this run; the original report still marks total cost incomplete.
 Unrecorded historical latency cannot be recovered from token usage or invented.
-This research update changes documentation only; it does not normalize scores,
-reclassify failures, overwrite caches, or change the selected hybrid policy.
+Recollection does not normalize scores or alter the original benchmark. It
+creates a separate result; the normal runner has no automatic recollection loop.
 
 ## Scientific boundary
 

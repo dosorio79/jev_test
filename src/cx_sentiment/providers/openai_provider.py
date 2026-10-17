@@ -5,6 +5,7 @@ import time
 from typing import Any
 
 from openai import OpenAI
+from openai.types.shared import ReasoningEffort
 from pydantic import BaseModel
 
 from cx_sentiment.budget import PriceCard
@@ -30,8 +31,10 @@ class OpenAIProvider:
         timeout_seconds: float = 30,
         price_card: PriceCard | None = None,
         raw_store: RawResponseStore | None = None,
+        reasoning_effort: ReasoningEffort = None,
     ) -> None:
         self.model_id = model
+        self.reasoning_effort = reasoning_effort
         self._client = client or OpenAI(timeout=timeout_seconds, max_retries=2)
         self._price_card = price_card
         self._raw_store = raw_store
@@ -46,6 +49,9 @@ class OpenAIProvider:
         )
         user_input = f"Language: {language}\nCustomer feedback:\n<feedback>{text}</feedback>"
         started = time.perf_counter()
+        options: dict[str, Any] = {}
+        if self.reasoning_effort is not None:
+            options["reasoning"] = {"effort": self.reasoning_effort}
         try:
             response = self._client.responses.parse(
                 model=self.model_id,
@@ -53,6 +59,7 @@ class OpenAIProvider:
                 input=user_input,
                 text_format=SentimentResponse,
                 store=False,
+                **options,
             )
             parsed = response.output_parsed
             if parsed is None:

@@ -7,6 +7,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import polars as pl
+from openai.types.shared import ReasoningEffort
 
 from cx_sentiment.budget import LiveSafety
 from cx_sentiment.cache import PredictionCache, RawResponseStore
@@ -57,12 +58,13 @@ def _write_run(
     max_cost_per_request_usd: float = 0,
 ) -> None:
     require_quarto()
+    reasoning_effort = getattr(provider, "reasoning_effort", None)
     predictions = run_predictions(
         provider,
         _records(frame),
         cache=PredictionCache(Path(".cache/cx_sentiment")),
         safety=safety,
-        settings={},
+        settings={"reasoning_effort": reasoning_effort} if reasoning_effort is not None else {},
         next_request_upper_bound_usd=max_cost_per_request_usd,
     )
     metrics = evaluate_predictions(
@@ -80,13 +82,16 @@ def _write_run(
             "model": provider.model_id,
             "prompt_version": provider.prompt_version,
             "simulated": provider.provider_name == "mock",
+            "reasoning_effort": reasoning_effort,
             "dataset_sha256": dataset_fingerprint(frame),
         },
     )
     print(f"Report: {output_dir / 'report.html'}")
 
 
-def _provider_from_environment(name: str) -> SentimentProvider:
+def _provider_from_environment(
+    name: str, *, reasoning_effort: ReasoningEffort = None
+) -> SentimentProvider:
     raw_store = RawResponseStore(Path(".cache/cx_sentiment/raw"))
     if name == "openai":
         if not os.getenv("OPENAI_API_KEY"):
@@ -95,7 +100,10 @@ def _provider_from_environment(name: str) -> SentimentProvider:
         if not model:
             raise ValueError("OPENAI_MODEL is required")
         return OpenAIProvider(
-            model=model, price_card=get_openai_price_card(model), raw_store=raw_store
+            model=model,
+            price_card=get_openai_price_card(model),
+            raw_store=raw_store,
+            reasoning_effort=reasoning_effort,
         )
     api_key = os.getenv("JEV_API_KEY")
     if not api_key:
@@ -230,7 +238,9 @@ def _execute(args: argparse.Namespace) -> int:
         max_requests=args.max_requests,
         max_estimated_cost_usd=args.max_estimated_cost_usd,
     )
-    provider = _provider_from_environment(args.provider)
+    provider = _provider_from_environment(
+        args.provider, reasoning_effort=getattr(args, "reasoning_effort", None)
+    )
     _write_run(
         frame,
         provider,
@@ -275,6 +285,7 @@ def _apply_run_config(args: argparse.Namespace, parser: argparse.ArgumentParser)
     args.max_requests = config.limit
     args.max_estimated_cost_usd = config.budget_usd
     args.max_cost_per_request_usd = config.cost_per_request_usd
+    args.reasoning_effort = config.reasoning_effort
 
 
 if __name__ == "__main__":

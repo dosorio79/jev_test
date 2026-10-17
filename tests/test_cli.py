@@ -2,14 +2,70 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
+import polars as pl
 import pytest
 import yaml
 
+from cx_sentiment.budget import LiveSafety
 from cx_sentiment.cli import main
 from cx_sentiment.comparison import dataset_fingerprint
+from cx_sentiment.config import load_config
 from cx_sentiment.data import load_dataset
 from cx_sentiment.providers.mock import MockProvider
+from cx_sentiment.providers.openai_provider import OpenAIProvider
+
+
+def test_reasoning_effort_is_loaded_from_yaml(tmp_path: Path) -> None:
+    config = tmp_path / "experiment.yaml"
+    config.write_text("provider: openai\nreasoning_effort: none\n")
+    assert load_config(config).reasoning_effort == "none"
+    config.write_text("provider: openai\nreasoning_effort: unknown\n")
+    with pytest.raises(ValueError, match="reasoning_effort"):
+        load_config(config)
+
+
+def test_reasoning_effort_separates_cached_runs(tmp_path: Path, monkeypatch) -> None:
+    from cx_sentiment import cli
+
+    calls = []
+    reports = []
+
+    def parse(**kwargs):
+        calls.append(kwargs.get("reasoning"))
+        return SimpleNamespace(
+            output_parsed=SimpleNamespace(label="neutral"),
+            model="gpt-6-luna",
+            usage=None,
+        )
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "require_quarto", lambda: None)
+    monkeypatch.setattr(cli, "write_report", lambda *args, **kwargs: reports.append(kwargs))
+    frame = pl.DataFrame(
+        {
+            "sample_id": ["s1"],
+            "language": ["en"],
+            "text": ["A statement."],
+            "sentiment": ["neutral"],
+        }
+    )
+    for effort in (None, "none", "none"):
+        provider = OpenAIProvider(
+            client=SimpleNamespace(responses=SimpleNamespace(parse=parse)),
+            model="gpt-6-luna",
+            reasoning_effort=effort,
+        )
+        cli._write_run(
+            frame,
+            provider,
+            tmp_path / "report",
+            LiveSafety(live=True, max_requests=1, max_estimated_cost_usd=1),
+        )
+
+    assert calls == [None, {"effort": "none"}]
+    assert [report["metadata"]["reasoning_effort"] for report in reports] == [None, "none", "none"]
 
 
 def test_offline_demo_writes_predictions_metrics_and_html_without_network(
@@ -161,7 +217,8 @@ def test_yaml_live_run_passes_explicit_caps_to_runner(tmp_path: Path, monkeypatc
     dataset = Path("data/cx_sentiment_test_600.csv").resolve()
     config = tmp_path / "experiment.yaml"
     config.write_text(
-        f"provider: jev\ninput: {dataset}\nlimit: 2\nbudget_usd: 0.05\ncost_per_request_usd: 0.01\n"
+        f"provider: openai\ninput: {dataset}\nlimit: 2\nbudget_usd: 0.05\n"
+        "cost_per_request_usd: 0.01\nreasoning_effort: none\n"
     )
     calls = []
 
@@ -173,7 +230,12 @@ def test_yaml_live_run_passes_explicit_caps_to_runner(tmp_path: Path, monkeypatc
         assert safety.max_estimated_cost_usd == 0.05
         assert max_cost_per_request_usd == 0.01
 
-    monkeypatch.setattr("cx_sentiment.cli._provider_from_environment", lambda name: MockProvider())
+    def capture_provider(name, *, reasoning_effort):
+        assert name == "openai"
+        assert reasoning_effort == "none"
+        return MockProvider()
+
+    monkeypatch.setattr("cx_sentiment.cli._provider_from_environment", capture_provider)
     monkeypatch.setattr("cx_sentiment.cli._write_run", capture_run)
     assert main(["run", str(config), "--live"]) == 0
     assert len(calls) == 1

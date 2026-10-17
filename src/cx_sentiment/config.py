@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
+from openai.types.shared import ReasoningEffort
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 
@@ -17,6 +18,7 @@ class ExperimentConfig(BaseModel):
     limit: int = Field(default=5, gt=0, strict=True)
     budget_usd: float | None = Field(default=None, gt=0)
     cost_per_request_usd: float | None = Field(default=None, gt=0)
+    reasoning_effort: ReasoningEffort = None
 
 
 def load_config(path: Path) -> ExperimentConfig:

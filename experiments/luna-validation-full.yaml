@@ -1,0 +1,9 @@
+# Export OPENAI_MODEL=gpt-6-luna after loading credentials into the environment.
+# Same validation records and prompt as the existing GPT-5.4 mini benchmark.
+provider: openai
+input: ../data/validation_600.csv
+output_dir: runs
+limit: 600
+budget_usd: 6.00
+cost_per_request_usd: 0.01
+reasoning_effort: none

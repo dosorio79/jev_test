@@ -103,6 +103,20 @@ Model selection stays in the environment. Each command prints its report or prev
 location under `experiments/runs/`. The configs use validation data,
 preserving the locked test set for final evaluation.
 
+To benchmark GPT-6 Luna alone on the same 600 validation records, override the
+model after exporting your credentials:
+
+```bash
+OPENAI_MODEL=gpt-6-luna uv run cx-sentiment run experiments/luna-validation-full.yaml --live
+```
+
+This uses the existing prompt, cache, and budget guards. Compare its measured
+quality, latency, and cost before choosing it for a hybrid policy.
+The Luna YAML explicitly sets `reasoning_effort: none` for this classification
+baseline. When set, reasoning effort is sent to OpenAI, recorded in the run YAML
+and report metadata, and included in the prediction cache key. Omitting it keeps
+the model's default behavior and existing cache identity.
+
 A live run will have this layout (the timestamp is UTC):
 
 ```text

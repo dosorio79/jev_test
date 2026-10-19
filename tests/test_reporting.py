@@ -150,3 +150,35 @@ def test_quarto_failure_preserves_saved_results(tmp_path: Path, monkeypatch, fai
     assert (tmp_path / "predictions.jsonl").is_file()
     assert (tmp_path / "metrics.json").is_file()
     assert (tmp_path / "report.qmd").is_file()
+
+
+def test_rerender_preserves_incomplete_status_and_separates_invocation_cost(tmp_path: Path) -> None:
+    from cx_sentiment.reporting import checkpoint_run
+    from cx_sentiment.runner import RecordExecution, RunAccounting
+
+    prediction = Prediction(
+        provider="mock",
+        model_id="v1",
+        prompt_version="v1",
+        sample_id="s1",
+        predicted_label=SentimentLabel.positive,
+        latency_ms=12,
+        cost_usd_estimate=0.5,
+    )
+    accounting = RunAccounting(ledger=[RecordExecution(sample_id="s1", status="cache_hit")])
+    checkpoint_run(
+        tmp_path, [prediction], accounting, title="Partial", metadata={"format_version": 2}
+    )
+    metrics = evaluate_predictions(
+        ["positive"], [prediction], languages=["en"], bootstrap_samples=0
+    )
+    write_report(tmp_path, [prediction], metrics, title="Partial", metadata={"complete": True})
+    assert (
+        json.loads((tmp_path / "report_metadata.json").read_text())["metadata"]["complete"] is False
+    )
+    document = (tmp_path / "report.html").read_text()
+    assert "INCOMPLETE RUN" in document
+    assert "Known estimated spend USD" in document
+    assert "Budget reservations are conservative guards" in document
+    assert "Historical prediction cost" in document
+    assert "Cache hits: 1" in document

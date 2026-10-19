@@ -163,6 +163,26 @@ show_table(pl.DataFrame([
 ]))
 ```
 
+### Source invocation accounting
+
+These values describe new API calls made while collecting each source run.
+Historical prediction costs above can include cache hits. Reservations are budget
+guards, not billed spend. Legacy runs may have no invocation accounting.
+
+```{python}
+invocations = []
+for run in runs:
+    accounting = run.get("invocation_accounting")
+    invocations.append({
+        "Run": run["label"],
+        "New API requests": accounting["request_count"] if accounting else None,
+        "Known invocation USD": accounting["known_spend_usd"] if accounting else None,
+        "Unknown-cost attempts": accounting["unknown_cost_attempts"] if accounting else None,
+        "Budget reservations USD": accounting["reserved_spend_usd"] if accounting else None,
+    })
+show_table(pl.DataFrame(invocations))
+```
+
 ```{python}
 recollections = [
     {

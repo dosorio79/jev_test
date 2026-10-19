@@ -32,10 +32,10 @@ def test_reasoning_effort_separates_cached_runs(tmp_path: Path, monkeypatch) -> 
     calls = []
     reports = []
 
-    def parse(**kwargs):
+    def create(**kwargs):
         calls.append(kwargs.get("reasoning"))
         return SimpleNamespace(
-            output_parsed=SimpleNamespace(label="neutral"),
+            output_text='{"label":"neutral"}',
             model="gpt-6-luna",
             usage=None,
         )
@@ -53,7 +53,7 @@ def test_reasoning_effort_separates_cached_runs(tmp_path: Path, monkeypatch) -> 
     )
     for effort in (None, "none", "none"):
         provider = OpenAIProvider(
-            client=SimpleNamespace(responses=SimpleNamespace(parse=parse)),
+            client=SimpleNamespace(responses=SimpleNamespace(create=create)),
             model="gpt-6-luna",
             reasoning_effort=effort,
         )
@@ -124,9 +124,9 @@ def test_yaml_run_resolves_paths_relative_to_config(tmp_path: Path, monkeypatch)
     assert main(["run", str(config)]) == 0
     metrics = json.loads(next((tmp_path / "results").glob("*/metrics.json")).read_text())
     assert metrics["support"] == 3
-    metadata = json.loads(
-        next((tmp_path / "results").glob("*/report_metadata.json")).read_text()
-    )["metadata"]
+    metadata = json.loads(next((tmp_path / "results").glob("*/report_metadata.json")).read_text())[
+        "metadata"
+    ]
     assert metadata["dataset_sha256"] == dataset_fingerprint(
         load_dataset(tmp_path / "data.csv").head(3)
     )
@@ -287,3 +287,207 @@ def test_yaml_invocations_keep_separate_dated_runs_with_replayable_configs(
     # Replaying an archived YAML still writes a new sibling run.
     assert main(["run", str(runs[0] / "experiment.yaml")]) == 0
     assert len(list((tmp_path / "runs").iterdir())) == 3
+
+
+def test_stopped_run_checkpoints_results_and_invocation_costs(tmp_path: Path, monkeypatch) -> None:
+    from cx_sentiment import cli
+    from cx_sentiment.budget import BudgetExceeded
+    from cx_sentiment.models import Prediction, SentimentLabel
+
+    output = tmp_path / "run"
+    calls = []
+
+    class Provider:
+        provider_name = "fixture"
+        model_id = "requested-model"
+        prompt_version = "v1"
+        requires_network = True
+
+        def __init__(self):
+            self.effective_settings = {"max_retries": 0, "price_card": {"as_of": "2026-10-18"}}
+
+        def predict(self, text, language, sample_id):
+            execution = json.loads((output / "execution.json").read_text())
+            assert execution["complete"] is False
+            assert execution["ledger"][len(calls)]["status"] == "running"
+            assert (
+                json.loads((output / "report_metadata.json").read_text())["metadata"]["complete"]
+                is False
+            )
+            calls.append(sample_id)
+            return Prediction(
+                provider=self.provider_name,
+                model_id="returned-model",
+                returned_model_id="returned-model",
+                prompt_version="v1",
+                predicted_label=SentimentLabel.neutral,
+                latency_ms=17,
+                sample_id=sample_id,
+                cost_usd_estimate=0.01,
+            )
+
+    frame = pl.DataFrame(
+        {
+            "sample_id": ["s1", "s2"],
+            "language": ["en", "en"],
+            "text": ["First", "Second"],
+            "sentiment": ["neutral", "neutral"],
+        }
+    )
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "require_quarto", lambda: None)
+    with pytest.raises(BudgetExceeded):
+        cli._write_run(
+            frame,
+            Provider(),
+            output,
+            LiveSafety(live=True, max_requests=1, max_estimated_cost_usd=1),
+            max_cost_per_request_usd=0.02,
+        )
+    rows = (output / "predictions.jsonl").read_text().splitlines()
+    assert len(rows) == 1
+    execution = json.loads((output / "execution.json").read_text())
+    assert execution["complete"] is False
+    assert execution["stop_reason"] == "budget_exceeded"
+    assert [row["status"] for row in execution["ledger"]] == ["success", "skipped"]
+    assert execution["request_count"] == 1
+    assert execution["known_spend_usd"] == 0.01
+    assert execution["reserved_spend_usd"] == 0.02
+    metadata = json.loads((output / "report_metadata.json").read_text())["metadata"]
+    assert metadata["requested_model"] == "requested-model"
+    assert metadata["returned_models"] == ["returned-model"]
+    assert metadata["returned_model_unknown_records"] == 0
+    assert metadata["pricing"]["as_of"] == "2026-10-18"
+    assert metadata["package_version"]
+    assert len(metadata["git_commit"]) == 40
+    assert isinstance(metadata["git_dirty"], bool)
+    assert metadata["complete"] is False
+    assert not (output / "metrics.json").exists()
+
+
+@pytest.mark.parametrize("failure", ["dataset", "credentials", "pricing"])
+def test_expected_run_errors_are_sanitized(tmp_path: Path, monkeypatch, capsys, failure) -> None:
+    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    if failure == "dataset":
+        dataset = tmp_path / "invalid.csv"
+        dataset.write_text("private-test-value\nsecret-input\n")
+    config = tmp_path / "experiment.yaml"
+    config.write_text(
+        f"provider: openai\ninput: {dataset}\nbudget_usd: 1\ncost_per_request_usd: 0.1\n"
+    )
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    if failure == "pricing":
+        monkeypatch.setenv("OPENAI_API_KEY", "private-test-value")
+        monkeypatch.setenv("OPENAI_MODEL", "private-test-value")
+    with pytest.raises(SystemExit) as error:
+        main(["run", str(config), "--live"])
+    assert error.value.code == 2
+    message = capsys.readouterr().err
+    assert "private-test-value" not in message
+    assert "Traceback" not in message
+    assert {"dataset": "dataset", "credentials": "OPENAI_API_KEY", "pricing": "rate card"}[
+        failure
+    ] in message
+
+
+def test_keyboard_interrupt_preserves_completed_results(tmp_path: Path, monkeypatch) -> None:
+    from cx_sentiment import cli
+    from cx_sentiment.models import Prediction, SentimentLabel
+
+    class Provider:
+        provider_name = "fixture"
+        model_id = "fixture"
+        prompt_version = "v1"
+        requires_network = True
+
+        def predict(self, text, language, sample_id):
+            if sample_id == "s2":
+                raise KeyboardInterrupt
+            return Prediction(
+                provider="fixture",
+                model_id="fixture",
+                prompt_version="v1",
+                predicted_label=SentimentLabel.neutral,
+                latency_ms=7,
+                sample_id=sample_id,
+                cost_usd_estimate=0.01,
+            )
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "require_quarto", lambda: None)
+    frame = pl.DataFrame(
+        {
+            "sample_id": ["s1", "s2", "s3"],
+            "language": ["en"] * 3,
+            "text": ["First", "Second", "Third"],
+            "sentiment": ["neutral"] * 3,
+        }
+    )
+    with pytest.raises(KeyboardInterrupt):
+        cli._write_run(
+            frame,
+            Provider(),
+            tmp_path / "run",
+            LiveSafety(live=True, max_requests=3, max_estimated_cost_usd=1),
+            max_cost_per_request_usd=0.02,
+        )
+    execution = json.loads((tmp_path / "run/execution.json").read_text())
+    assert execution["complete"] is False
+    assert execution["stop_reason"] == "interrupted"
+    assert execution["request_count"] == 2
+    assert execution["unknown_cost_attempts"] == 1
+    assert [row["status"] for row in execution["ledger"]] == ["success", "failure", "skipped"]
+    assert len((tmp_path / "run/predictions.jsonl").read_text().splitlines()) == 1
+
+
+def test_cache_hits_keep_historical_cost_out_of_invocation_spend(
+    tmp_path: Path, monkeypatch
+) -> None:
+    from cx_sentiment import cli
+    from cx_sentiment.models import Prediction, SentimentLabel
+
+    class Provider:
+        provider_name = "fixture"
+        model_id = "fixture"
+        prompt_version = "v1"
+        requires_network = True
+
+        def predict(self, text, language, sample_id):
+            return Prediction(
+                provider="fixture",
+                model_id="fixture",
+                prompt_version="v1",
+                predicted_label=SentimentLabel.neutral,
+                latency_ms=7,
+                sample_id=sample_id,
+                cost_usd_estimate=0.01,
+            )
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "require_quarto", lambda: None)
+    monkeypatch.setattr(cli, "write_report", lambda *args, **kwargs: None)
+    frame = pl.DataFrame(
+        {
+            "sample_id": ["s1"],
+            "language": ["en"],
+            "text": ["First"],
+            "sentiment": ["neutral"],
+        }
+    )
+    for name in ("first", "second"):
+        cli._write_run(
+            frame,
+            Provider(),
+            tmp_path / name,
+            LiveSafety(live=True, max_requests=1, max_estimated_cost_usd=1),
+            max_cost_per_request_usd=0.02,
+        )
+    execution = json.loads((tmp_path / "second/execution.json").read_text())
+    assert execution["complete"] is True
+    assert execution["request_count"] == 0
+    assert execution["known_spend_usd"] == 0
+    assert execution["reserved_spend_usd"] == 0
+    assert execution["ledger"][0]["status"] == "cache_hit"
+    saved = json.loads((tmp_path / "second/predictions.jsonl").read_text())
+    assert saved["cost_usd_estimate"] == 0.01
+    assert saved["latency_ms"] == 7

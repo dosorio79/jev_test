@@ -8,33 +8,40 @@ from pathlib import Path
 
 import polars as pl
 from openai.types.shared import ReasoningEffort
+from pydantic import ValidationError
 
-from cx_sentiment.budget import LiveSafety
+from cx_sentiment.budget import BudgetExceeded, LiveSafety, PriceCard
 from cx_sentiment.cache import PredictionCache, RawResponseStore
 from cx_sentiment.comparison import (
     compare_runs,
     create_comparison_directory,
-    dataset_fingerprint,
     load_comparison_config,
 )
 from cx_sentiment.config import create_run_directory, load_config
-from cx_sentiment.data import audit_dataset, create_validation_sample, load_dataset
+from cx_sentiment.data import (
+    DataValidationError,
+    audit_dataset,
+    create_validation_sample,
+    load_dataset,
+)
 from cx_sentiment.metrics import evaluate_predictions
 from cx_sentiment.models import Prediction
 from cx_sentiment.pricing import get_jev_price_card, get_openai_price_card
+from cx_sentiment.provenance import run_metadata
 from cx_sentiment.providers.base import SentimentProvider
 from cx_sentiment.providers.jev import DEFAULT_JEV_BASE_URL, DEFAULT_JEV_MODEL, JevProvider
 from cx_sentiment.providers.mock import MockProvider
 from cx_sentiment.providers.openai_provider import OpenAIProvider
 from cx_sentiment.reporting import (
     ReportError,
+    checkpoint_run,
     require_quarto,
     write_comparison_report,
     write_report,
     write_selection_report,
 )
 from cx_sentiment.routing import select_threshold
-from cx_sentiment.runner import run_predictions
+from cx_sentiment.runner import RunAccounting, run_predictions
 
 
 def _records(frame: pl.DataFrame) -> list[tuple[str, str, str]]:
@@ -58,6 +65,17 @@ def _write_run(
     max_cost_per_request_usd: float = 0,
 ) -> None:
     require_quarto()
+    title = "Offline benchmark" if provider.provider_name == "mock" else "Live smoke test"
+    metadata = run_metadata(frame, provider)
+    metadata["execution_limits"] = {
+        **safety.model_dump(),
+        "cost_per_request_usd": max_cost_per_request_usd,
+    }
+    accounting = RunAccounting()
+
+    def save_progress(predictions: list[Prediction], state: RunAccounting) -> None:
+        checkpoint_run(output_dir, predictions, state, title=title, metadata=metadata)
+
     reasoning_effort = getattr(provider, "reasoning_effort", None)
     predictions = run_predictions(
         provider,
@@ -66,6 +84,8 @@ def _write_run(
         safety=safety,
         settings={"reasoning_effort": reasoning_effort} if reasoning_effort is not None else {},
         next_request_upper_bound_usd=max_cost_per_request_usd,
+        accounting=accounting,
+        on_progress=save_progress,
     )
     metrics = evaluate_predictions(
         frame["sentiment"].to_list(),
@@ -76,15 +96,8 @@ def _write_run(
         output_dir,
         predictions,
         metrics,
-        title="Offline benchmark" if provider.provider_name == "mock" else "Live smoke test",
-        metadata={
-            "provider": provider.provider_name,
-            "model": provider.model_id,
-            "prompt_version": provider.prompt_version,
-            "simulated": provider.provider_name == "mock",
-            "reasoning_effort": reasoning_effort,
-            "dataset_sha256": dataset_fingerprint(frame),
-        },
+        title=title,
+        metadata=metadata,
     )
     print(f"Report: {output_dir / 'report.html'}")
 
@@ -101,7 +114,7 @@ def _provider_from_environment(
             raise ValueError("OPENAI_MODEL is required")
         return OpenAIProvider(
             model=model,
-            price_card=get_openai_price_card(model),
+            price_card=_price_card("openai", model),
             raw_store=raw_store,
             reasoning_effort=reasoning_effort,
         )
@@ -114,8 +127,18 @@ def _provider_from_environment(
         base_url=os.getenv("JEV_BASE_URL", DEFAULT_JEV_BASE_URL),
         model=model,
         raw_store=raw_store,
-        price_card=get_jev_price_card(model),
+        price_card=_price_card("jev", model),
     )
+
+
+def _price_card(provider: str, model: str) -> PriceCard:
+    try:
+        return get_openai_price_card(model) if provider == "openai" else get_jev_price_card(model)
+    except KeyError:
+        raise ValueError(
+            f"No verified {provider} rate card; select a supported model or add a dated rate card "
+            "in pricing.py."
+        ) from None
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -163,16 +186,30 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if args.command == "run":
-        _apply_run_config(args, parser)
     try:
+        if args.command == "run":
+            _apply_run_config(args, parser)
         return _execute(args)
     except ReportError as exc:
         parser.error(str(exc))
+    except DataValidationError:
+        parser.error("invalid or unreadable dataset; check its columns, values, and selected split")
+    except BudgetExceeded:
+        parser.error(
+            f"execution stopped at a request or USD budget limit; incomplete results saved in "
+            f"{args.output_dir}"
+        )
+    except KeyboardInterrupt:
+        print("Execution interrupted; completed results remain in the run folder.")
+        return 130
     except ValueError as exc:
-        if args.command != "compare":
-            raise
+        # Pydantic errors can contain input values; keep only field locations.
+        if isinstance(exc, ValidationError):
+            fields = ", ".join(".".join(map(str, e["loc"])) or "settings" for e in exc.errors())
+            parser.error(f"invalid settings: {fields}")
         parser.error(str(exc))
+    except OSError:
+        parser.error("cannot read or write experiment files; check paths and permissions")
 
 
 def _execute(args: argparse.Namespace) -> int:
@@ -215,6 +252,8 @@ def _execute(args: argparse.Namespace) -> int:
         write_report(args.output_dir, predictions, metrics, title=args.title)
         return 0
     frame = load_dataset(args.input).head(args.limit)
+    if frame.is_empty():
+        raise DataValidationError("selected dataset is empty")
     if args.command == "offline-demo" or args.provider == "mock":
         _write_run(frame, MockProvider(), args.output_dir, LiveSafety())
         return 0

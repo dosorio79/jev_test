@@ -29,6 +29,35 @@ run = json.loads(Path("report_metadata.json").read_text(encoding="utf-8"))
 display(GT(pl.DataFrame({"Run": [run["title"]]})).fmt(escape, columns="Run"))
 ```
 
+## Execution and invocation costs
+
+Historical prediction costs and timings include the original measurements of
+cache hits. They do not measure new API spend for this invocation.
+
+```{python}
+if run["metadata"].get("complete") is False:
+    print("INCOMPLETE RUN: excluded from normal comparisons.")
+execution_path = Path("execution.json")
+if execution_path.exists():
+    execution = json.loads(execution_path.read_text(encoding="utf-8"))
+    print("Complete" if execution["complete"] else "Incomplete")
+    display(GT(pl.DataFrame({
+        "Invocation metric": ["New API requests", "Known estimated spend USD",
+                              "Unknown-cost attempts", "Budget reservations USD"],
+        "Value": [str(execution["request_count"]),
+                  f"{execution['known_spend_usd']:.6f}",
+                  str(execution["unknown_cost_attempts"]),
+                  f"{execution['reserved_spend_usd']:.6f}"],
+    }), rowname_col="Invocation metric"))
+    print("Budget reservations are conservative guards, not billed spend.")
+    statuses = [record["status"] for record in execution["ledger"]]
+    print(f"Cache hits: {statuses.count('cache_hit')}; "
+          f"fresh successes: {statuses.count('success')}; "
+          f"failures: {statuses.count('failure')}; skipped: {statuses.count('skipped')}")
+else:
+    print("Invocation accounting unavailable for this legacy report.")
+```
+
 ## Overall performance
 
 Accuracy and macro F1 include failed predictions in their denominators.
@@ -118,7 +147,7 @@ display(GT(pl.DataFrame({
 Token totals sum known usage; a missing usage record does not imply a free request.
 Credits are provider-reported units, separate from USD estimates.
 
-## Cost
+## Historical prediction cost
 
 ```{python}
 if metrics["cost_usd_total"] is not None:

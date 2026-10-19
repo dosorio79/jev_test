@@ -8,7 +8,7 @@ class BudgetExceeded(RuntimeError):
 
 
 class PriceCard(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, allow_inf_nan=False)
 
     input_usd_per_million: float = Field(ge=0)
     output_usd_per_million: float = Field(ge=0)
@@ -22,6 +22,8 @@ class PriceCard(BaseModel):
 
 
 class LiveSafety(BaseModel):
+    model_config = ConfigDict(allow_inf_nan=False)
+
     live: bool = False
     max_requests: int | None = Field(default=None, ge=1)
     max_estimated_cost_usd: float | None = Field(default=None, gt=0)

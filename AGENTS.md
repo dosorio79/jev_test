@@ -113,7 +113,8 @@ chose YAML experiment configuration.
   reprocess retained responses offline into a new derived run; preserve original
   runs and prevent reuse of incompatible cached results.
 - Retain available usage and measured latency even when label/score validation
-  fails in future adapter work. Never invent missing historical measurements.
+  fails. Preserve independently valid response references, credits, and cost estimates;
+  never invent missing historical measurements.
   See [README research notes](README.md#jev-probability-precision-and-hybrid-policy)
   for evidence, routing implications, and current limitations.
 

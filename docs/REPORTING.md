@@ -98,12 +98,28 @@ Each dated run folder saves these files:
 | File | Purpose |
 | --- | --- |
 | `experiment.yaml` | Resolved experiment settings, without credentials |
-| `predictions.jsonl` | Provider predictions, one record per line |
+| `predictions.jsonl` | Completed provider predictions, checkpointed after each result |
+| `execution.json` | Per-record status, invocation requests, known spend, unknown costs, and reservations |
 | `metrics.json` | Full calculated evaluation results |
 | `metrics.csv` | Overall and per-language summary |
-| `report_metadata.json` | Run title and supplied metadata |
+| `report_metadata.json` | Completion status, code/package version, model/settings, pricing, and dataset provenance |
 | `report.qmd` | Editable report document |
 | `report.html` | Rendered report |
+
+Execution checkpoints exist before provider calls and after each completed result.
+A budget stop or interruption leaves an incomplete run with its completed
+predictions, execution ledger, and metadata; skipped records receive no fabricated
+timings or predictions. Metrics and HTML are generated only after all selected
+records finish. Normal comparisons reject incomplete runs. Legacy runs remain
+readable, with unavailable invocation accounting labeled explicitly.
+
+Reports separate historical prediction costs (including original cached costs)
+from this invocation's new API requests and known estimated spend. Unknown-cost
+attempts remain unknown, and budget reservations are guards rather than billed
+amounts. Provenance includes non-secret effective settings and dated pricing;
+reproducing YAML alone does not restore environment-based model or endpoint choices.
+Returned model identities are recorded only when observed; absent response models
+and legacy predictions stay explicitly unknown.
 
 Change a heading or the chart colors in your run folder's `report.qmd`. Open a
 terminal inside that dated run folder, then render the edited document (uv finds
@@ -135,7 +151,8 @@ Each YAML invocation copies the packaged document into a new dated run folder.
 Existing runs and their local `.qmd` edits are preserved. The explicit
 `cx-sentiment report` command writes to its requested output directory and replaces
 that directory's `.qmd`; copy an edited document elsewhere before using that command
-on the same folder.
+on the same folder. Rewriting a report in the same folder preserves its saved
+incomplete marker; it does not certify an interrupted run as completed.
 
 The Plotly charts support hover details, zooming, and image download. Their
 JavaScript is embedded in the HTML, so interaction does not need a Python server

@@ -23,6 +23,7 @@ class PredictionCache:
         settings: dict[str, Any],
     ) -> str:
         payload = {
+            "cache_format_version": 2,
             "provider": provider,
             "model_id": model_id,
             "prompt_version": prompt_version,

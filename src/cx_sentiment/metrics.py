@@ -48,8 +48,8 @@ def _point_metrics(
     accuracy = float(accuracy_score(truth, predicted))
     per_class: dict[str, dict[str, float | int]] = {}
     f1_values: list[float] = []
+    pairs = list(zip(truth, predicted, strict=True))
     for label in LABELS:
-        pairs = list(zip(truth, predicted, strict=True))
         true_positive = sum(t == label and p == label for t, p in pairs)
         false_positive = sum(t != label and p == label for t, p in pairs)
         false_negative = sum(t == label and p != label for t, p in pairs)

@@ -1,0 +1,8 @@
+# Uses OPENAI_API_KEY and OPENAI_MODEL from the exported environment.
+# The tested model is gpt-5.4-mini; its dated rate card is in pricing.py.
+provider: openai
+input: ../data/validation_600.csv
+output_dir: runs
+limit: 5
+budget_usd: 0.05
+cost_per_request_usd: 0.01

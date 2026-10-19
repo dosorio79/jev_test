@@ -21,6 +21,48 @@ def workflow_python(name: str, step_name: str) -> str:
 
 
 class WorkflowGuards(unittest.TestCase):
+    def test_changed_whitespace_ignores_unchanged_legacy_bytes(self) -> None:
+        script = Path(__file__).with_name("check_changed_whitespace.sh")
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=repository, check=True)
+            subprocess.run(
+                ["git", "config", "user.email", "ci@example.invalid"],
+                cwd=repository,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "CI fixture"], cwd=repository, check=True
+            )
+            (repository / "locked.txt").write_bytes(b"legacy trailing space \r\n")
+            subprocess.run(["git", "add", "locked.txt"], cwd=repository, check=True)
+            subprocess.run(["git", "commit", "-qm", "legacy"], cwd=repository, check=True)
+            base = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=repository,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            (repository / "clean.txt").write_text("clean\n")
+            subprocess.run(["git", "add", "clean.txt"], cwd=repository, check=True)
+            subprocess.run(["git", "commit", "-qm", "clean"], cwd=repository, check=True)
+            head = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=repository,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            completed = subprocess.run(
+                ["bash", script],
+                cwd=repository,
+                env={**os.environ, "BASE_SHA": base, "GITHUB_SHA": head},
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr.decode())
+
     def test_aggregators_fail_closed(self) -> None:
         for filename, step in (
             ("ci.yml", "Require every dependency to succeed"),

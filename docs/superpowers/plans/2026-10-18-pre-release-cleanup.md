@@ -1,7 +1,8 @@
 # Pre-release cleanup, BYOK usability, and repository automation
 
 **Recorded:** 2026-10-18.
-**Status:** Implementation in progress on `feat/pre-release-cleanup`.
+**Status:** Local implementation complete on `feat/pre-release-cleanup`; remote
+bootstrap and hosted acceptance remain pending separate authorization.
 **Authority:** User authorized implementation with Superpowers multiagent on 2026-10-18. Remote pushes and bootstrap activation require separate authorization.
 
 ## 1. Release goal and boundaries
@@ -164,3 +165,31 @@ Remote GitHub settings could not be verified because API access failed during
 planning. Confirm visibility, permissions, and existing protection during
 bootstrap; do not change visibility or purchase a plan automatically. No product,
 CI, or infrastructure changes or security scans were executed during planning.
+
+## 6. Local delivery checkpoint
+
+Completed on 2026-10-19 in these reviewable commits:
+
+1. `d4d7600` - provider boundaries and request/cost accounting.
+2. `78d593d` - run provenance, incremental persistence, and reports.
+3. `37c5ce0` - BYOK guidance, licensing, and contributor documentation.
+4. `eae5a47` - CI, security scans, dependency automation, and badges.
+5. `8e85e1e` - Terraform, branch workflow, and bootstrap documentation.
+
+Final local evidence against the committed tree:
+
+- `uv run pytest`: 119 passed, including real Quarto renders.
+- `uv run ruff check .`: passed.
+- `uv run pyright`: 0 errors, warnings, or information messages.
+- `git diff --check`: passed; the worktree was clean before this checkpoint.
+- Package source/wheel build and installed entry-point smoke test: passed.
+- Actionlint and synthetic workflow guard tests: passed.
+- Terraform formatting and validation: passed.
+- Gitleaks scanned committed history with redaction and found no leaks.
+- `pip-audit` found no known vulnerabilities in the frozen export.
+- Bandit found no medium/high-severity issues.
+- Locked test and source archive SHA-256 values remained unchanged.
+
+No provider calls, push, pull request, Terraform plan/apply, branch creation, or
+GitHub settings mutation was performed. Hosted CI, remote branch creation,
+required-check enforcement, and post-apply GitHub acceptance remain bootstrap work.

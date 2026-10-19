@@ -140,6 +140,26 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
             raise ValueError(f"cannot read saved run {directory}: {exc.strerror}") from exc
         except (ValueError, KeyError, TypeError) as exc:
             raise ValueError(f"invalid saved predictions or metadata in {directory}") from exc
+        execution_path = directory / "execution.json"
+        execution = None
+        if execution_path.exists():
+            try:
+                execution = json.loads(execution_path.read_text(encoding="utf-8"))
+                if not isinstance(execution, dict) or type(execution.get("complete")) is not bool:
+                    raise ValueError("invalid execution status")
+            except (OSError, ValueError) as exc:
+                raise ValueError(f"invalid saved execution status in {directory}") from exc
+        if metadata.get("complete") is False or (
+            execution is not None and execution["complete"] is False
+        ):
+            raise ValueError(
+                f"incomplete run cannot be compared: {directory}; "
+                "execution stopped before all selected records were processed"
+            )
+        if metadata.get("format_version", 0) >= 2 and (
+            metadata.get("complete") is not True or execution is None
+        ):
+            raise ValueError(f"incomplete run status or missing execution ledger: {directory}")
         ids = [prediction.sample_id for prediction in predictions]
         if len(set(ids)) != len(ids) or set(ids) != set(frame["sample_id"].to_list()):
             raise ValueError(
@@ -198,6 +218,7 @@ def compare_runs(config: ComparisonConfig) -> dict[str, Any]:
                     "latency_scope", "Recorded request times, including original cached timings."
                 ),
                 "collection_policy": metadata.get("collection_policy", "Not recorded"),
+                "invocation_accounting": execution,
                 "recollection_attempts": recollection_attempts,
                 "recollection_cost_usd": recollection_cost,
                 "metrics": metrics.model_dump(mode="json"),

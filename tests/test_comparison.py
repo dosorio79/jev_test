@@ -230,6 +230,17 @@ def test_compare_cli_renders_without_providers(
     monkeypatch.setattr("cx_sentiment.cli._provider_from_environment", unexpected_provider)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("JEV_API_KEY", raising=False)
+    (saved_runs.parent / "first/execution.json").write_text(
+        json.dumps(
+            {
+                "complete": True,
+                "request_count": 2,
+                "known_spend_usd": 0.001,
+                "unknown_cost_attempts": 1,
+                "reserved_spend_usd": 0.02,
+            }
+        )
+    )
     # Keep source feedback exact, including Unicode, newlines, and HTML-like text.
     verbatim = "Feedback <script>alert('verbatim')</script>\nSecond line — ação"
     frame = load_dataset(Path("data/cx_sentiment_test_600.csv")).head(3)
@@ -278,8 +289,7 @@ def test_compare_cli_renders_without_providers(
     if pricing == "electricity":
         with saved_runs.open("a") as handle:
             handle.write(
-                "cost_estimates:\n  Run 2:\n    usd_total: 0.007\n"
-                "    basis: Electricity ballpark\n"
+                "cost_estimates:\n  Run 2:\n    usd_total: 0.007\n    basis: Electricity ballpark\n"
             )
     assert main(["compare", str(saved_runs)]) == 0
     output = next((saved_runs.parent / "runs").glob("*-comparison"))
@@ -302,6 +312,9 @@ def test_compare_cli_renders_without_providers(
     assert "Run 2: hybrid" not in html
     assert "not a paired speedup measurement" in html
     assert "Cost accounting" in html
+    assert "Source invocation accounting" in html
+    assert "Known invocation USD" in html
+    assert result["runs"][0]["invocation_accounting"]["request_count"] == 2
     assert "Additional request USD" in html
     assert "&lt;script&gt;" in html
     assert "Second line" in html
@@ -384,4 +397,19 @@ def test_comparison_rejects_invalid_recollection_cost(saved_runs: Path, cost) ->
         json.dumps([{"fresh_cost_usd": cost}])
     )
     with pytest.raises(ValueError, match="invalid saved"):
+        compare_runs(load_comparison_config(saved_runs))
+
+
+@pytest.mark.parametrize("source", ["metadata", "execution"])
+def test_comparison_rejects_incomplete_runs_before_scoring(saved_runs: Path, source: str) -> None:
+    directory = saved_runs.parent / "first"
+    if source == "metadata":
+        path = directory / "report_metadata.json"
+        report = json.loads(path.read_text())
+        report["metadata"]["complete"] = False
+        path.write_text(json.dumps(report))
+    else:
+        (directory / "execution.json").write_text(json.dumps({"complete": False}))
+    (directory / "predictions.jsonl").write_text("")
+    with pytest.raises(ValueError, match="incomplete"):
         compare_runs(load_comparison_config(saved_runs))

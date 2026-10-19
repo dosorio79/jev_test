@@ -20,10 +20,11 @@ ID_TO_LABEL = {value: key for key, value in LABEL_TO_ID.items()}
 
 
 class Prediction(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, allow_inf_nan=False)
 
     provider: str
     model_id: str
+    returned_model_id: str | None = None
     prompt_version: str
     predicted_label: SentimentLabel | None
     scores_by_class: dict[SentimentLabel, float] | None = None

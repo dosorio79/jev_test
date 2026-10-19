@@ -20,6 +20,7 @@ class MockProvider:
         return Prediction(
             provider=self.provider_name,
             model_id=self.model_id,
+            returned_model_id=self.model_id,
             prompt_version=self.prompt_version,
             predicted_label=predicted,
             scores_by_class=scores,

@@ -1,0 +1,86 @@
+name: Security
+
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+    branches: [dev, main]
+  schedule:
+    - cron: '37 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: Gitleaks history
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: bash .github/scripts/install_ci_tool.sh gitleaks "$RUNNER_TEMP/bin"
+      - name: Scan fetched Git history only, with redaction
+        run: '"$RUNNER_TEMP/bin/gitleaks" git --log-opts="--all" --redact=100 --no-banner --exit-code=1 .'
+
+  dependencies:
+    name: Locked dependency audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: '0.13.1'
+          enable-cache: true
+      - name: Audit runtime and development dependencies from the lock
+        run: |
+          uv export --frozen --no-emit-project --output-file "$RUNNER_TEMP/audit-requirements.txt" > /dev/null
+          uvx --from pip-audit==2.10.1 pip-audit --require-hashes --disable-pip -r "$RUNNER_TEMP/audit-requirements.txt"
+
+  python-security:
+    name: Bandit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: '0.13.1'
+          enable-cache: true
+      - name: Reject medium and high severity findings
+        run: uvx --from bandit==1.9.4 bandit -r src/cx_sentiment -ll
+
+  security:
+    name: Security
+    if: always()
+    needs: [secrets, dependencies, python-security]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every scanner to succeed
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          python - <<'PY'
+          import json, os
+          results = json.loads(os.environ['NEEDS_JSON'])
+          assert results and all(job['result'] == 'success' for job in results.values()), results
+          PY

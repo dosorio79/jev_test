@@ -1,8 +1,20 @@
 # Multilingual CX sentiment benchmark
 
-An offline-first research POC for comparing multilingual financial customer-experience sentiment providers and selective routing. The fixed taxonomy is `negative=0`, `neutral=1`, and `positive=2` across Portuguese, English, Spanish, French, German, and Italian.
+[![CI](https://github.com/dosorio79/jev_test/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dosorio79/jev_test/actions/workflows/ci.yml)
+[![Security](https://github.com/dosorio79/jev_test/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/dosorio79/jev_test/actions/workflows/security.yml)
+[![Python 3.11 / 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](pyproject.toml)
+[![Code license: MIT](https://img.shields.io/badge/code%20license-MIT-green)](LICENSE)
+
+An offline-first BYOK (bring your own key) research toolkit for comparing multilingual financial customer-experience sentiment providers and selective routing. The fixed taxonomy is `negative=0`, `neutral=1`, and `positive=2` across Portuguese, English, Spanish, French, German, and Italian.
 
 The dataset boundary uses Polars and Dataframely, so schema, nullability, uniqueness, categorical values, and the label/sentiment relationship are validated as dataframe operations. Pydantic is reserved for provider predictions and configuration.
+
+Project code is MIT licensed; dataset redistribution rights are **unresolved**.
+Read [dataset provenance and rights](docs/DATA_LICENSE.md) before redistributing
+bundled data or publishing artifacts containing source text. This is a research
+toolkit, with synthetic-data and historical-measurement limitations described below.
+The repository is currently private; visibility changes and public publication
+are separate release steps.
 
 ## Install and verify
 
@@ -10,7 +22,7 @@ Python 3.11 or 3.12 and [uv](https://docs.astral.sh/uv/) are required. Install t
 [Quarto CLI](https://quarto.org/docs/get-started/) to generate HTML reports.
 
 ```bash
-uv sync
+uv sync --frozen
 uv run quarto check jupyter
 uv run pytest
 uv run ruff check .
@@ -49,8 +61,8 @@ Only validated experiment settings are copied; credentials stay in the environme
 The command prints the report location when finished. Configuration errors name
 the file and setting to fix.
 
-For a paid provider, change `provider`, set credentials as described below, and add
-explicit cost caps chosen for your model and input:
+For a paid provider, use the supplied smoke configurations described below.
+Live YAML needs explicit cost caps chosen for your model and input:
 
 ```yaml
 budget_usd: 0.05
@@ -58,11 +70,8 @@ cost_per_request_usd: 0.01
 ```
 
 Preview with the same command; it writes `dry_run.json` without requiring credentials.
-To execute paid calls explicitly:
-
-```bash
-uv run cx-sentiment run experiments/mock.yaml --live
-```
+Paid execution is a separate opt-in: add `--live` to a paid-provider configuration
+only after reviewing its record selection and cost caps. `mock` stays offline.
 
 The CLI does not read credentials from YAML. OpenAI's model remains configured with
 `OPENAI_MODEL`. Legacy flag-based commands still work, but cannot be mixed with YAML.
@@ -76,21 +85,36 @@ Each provider returns the same `Prediction` model. `metrics.py` scores those res
 and Plotly using Polars directly. `routing.py` compares cached decision and
 fallback predictions to select a validation threshold without extra API calls.
 
-## First live pipeline test
+## BYOK: preview first, then opt into paid calls
 
 Two configs process the same first five validation records, with separate dated run
 folders and a USD 0.05 budget per provider (USD 0.01 reserved per new request).
 Use these for an initial pipeline check; five records cannot establish model quality.
-The generated `data/validation_600.csv` must exist; see validation sampling below.
+On a fresh checkout, generate the ignored validation CSV from the bundled source
+archive (the locked test CSV remains unchanged):
 
-Preview both without credentials or network calls:
+```bash
+uv run cx-sentiment sample-validation \
+  --archive data/raw/financial_sentiment_hf_v2.zip \
+  --output-dir data
+```
+
+Preview both without credentials or provider network calls:
 
 ```bash
 uv run cx-sentiment run experiments/openai-smoke.yaml
 uv run cx-sentiment run experiments/jev-smoke.yaml
 ```
 
-When ready to execute, explicitly export `.env` in your shell and add `--live`:
+For paid execution, copy `.env.example` to the ignored `.env`, edit it locally,
+and fill in only the provider credentials you intend to use. Set `OPENAI_MODEL`
+explicitly to a model with a supported dated rate card; Jev defaults to
+`jev-1.13.0`. Alternatively, supply variables through your shell's secret manager.
+The application never loads `.env` implicitly, and YAML must contain no keys.
+Only source a file you trust: this shell command executes its contents.
+
+After reviewing the preview, explicitly export the variables and opt into the
+paid provider you want to run (each command can incur charges):
 
 ```bash
 set -a; . ./.env; set +a
@@ -128,6 +152,7 @@ experiments/
     2026-10-16T20-30-00.123456Z-openai-live/
       experiment.yaml
       predictions.jsonl
+      execution.json
       metrics.json
       metrics.csv
       report_metadata.json
@@ -139,6 +164,31 @@ Preview folders contain `experiment.yaml` and `dry_run.json`. Archived YAML file
 can be run again; their absolute paths preserve the input and output parent, and
 replaying creates a new sibling run. Models continue to come from the environment;
 successful reports record their actual model IDs in the run metadata.
+
+## Audit and reproduce a run
+
+Keep the resolved `experiment.yaml`, `report_metadata.json`, `execution.json`,
+and predictions together. Metadata records the code/package version, selected
+input fingerprint, requested and returned model identities, effective non-secret
+settings, and dated pricing provenance. YAML alone does not restore model or
+endpoint environment variables: reproduce those recorded settings explicitly,
+use your own credentials, and retain the same source revision and lockfile.
+
+`execution.json` distinguishes cached records, fresh attempts, failures, and
+records skipped when execution stops. Its invocation accounting describes new
+requests, known estimated USD spend, unknown-cost attempts, and budget
+reservations for this invocation. A reservation is a guard, not a bill.
+Prediction cost and latency describe the original request, including when a
+prediction is reused from cache; summing historical prediction costs does not
+measure new spend. A cache hit makes no new provider call. Missing costs remain
+unknown, and the provider's bill remains authoritative.
+
+Standard runs disable automatic retries. Budget stops and interruptions preserve
+completed results and mark execution incomplete; normal comparison rejects
+incomplete runs. Keep those artifacts for diagnosis and use the cache when
+starting a new invocation. Do not edit an incomplete status into a completed run.
+Legacy runs remain readable, with unavailable historical provenance labeled;
+missing past measurements cannot be invented.
 
 ## Compare saved runs
 
@@ -196,8 +246,10 @@ and is a weak estimate of production tail latency.
 
 Latency is measured per provider request, not for the entire experiment or HTML
 render. Cached predictions retain their original latency and cost estimates;
-reusing them does not incur that spend again. Failed calls currently record
-zero latency, so low coverage can make latency look artificially good.
+reusing them does not incur that spend again. Historical failed calls may have
+zero or missing latency, which can make low-coverage runs appear faster. New
+runs retain available failure measurements; missing historical timing cannot be
+reconstructed.
 
 Read the report in this order:
 
@@ -342,9 +394,9 @@ Before freezing a hybrid policy or changing score interpretation:
    thresholds on validation data before final testing. New paid calls are not
    needed just to reinterpret the retained responses.
 
-The current error path also omits usage and elapsed request time from the
-normal failed-prediction record. A future adapter correction should retain those
-measurements even when score validation fails. The saved raw responses allowed
+The historical error path omitted usage and elapsed request time from the
+normal failed-prediction record. New runs retain available measurements even
+when score validation fails; older results keep their original limitations. The saved raw responses allowed
 a separate usage audit to supplement Jev's known cost from **$0.00968058** to
 **$0.009712878** for this run; the original report still marks total cost incomplete.
 Unrecorded historical latency cannot be recovered from token usage or invented.
@@ -372,3 +424,9 @@ uv run cx-sentiment report --input data/validation_600.csv \
   --predictions outputs/jev-validation/predictions.jsonl \
   --output-dir outputs/jev-validation-report
 ```
+
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local checks and the `dev` to `main`
+release workflow. Report vulnerabilities privately using [SECURITY.md](SECURITY.md).
+Workflow badges show the last GitHub result; passing scans do not guarantee security.

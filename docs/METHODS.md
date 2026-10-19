@@ -24,6 +24,13 @@ Sweep thresholds from 0.50 through 0.99 on cached validation predictions. A scor
 
 Report accuracy, macro and per-class precision/recall/F1, support, confusion matrices, language breakdowns, and operational coverage. Use deterministic 95% bootstrap intervals over sample IDs. Report expected calibration error and multiclass Brier score only when every record has a valid three-class probability vector. Report latency P50/P95, fallback fraction, token usage, separately reported credits when present, and USD per 1,000 records from dated official or user-supplied rate cards. Point estimates alone are not evidence of statistical significance.
 
+The routing performance study uses the measurement contract in
+[`PERFORMANCE_STUDY.md`](PERFORMANCE_STUDY.md). Historical adapter timings and
+cached original timings are exploratory; controlled acceptance comparisons use
+paired, interleaved operation-level wall time collected on the same validation
+records. Thresholds remain validation-only, and the locked test set is not used
+until a policy has been frozen.
+
 ## Spend and privacy
 
 The default CLI is a dry run. Live calls require `--live`, an explicit request cap, a total USD budget, and a per-request upper bound. The first smoke test is capped at five records and concurrency one. Provided comments are synthetic, telemetry is disabled, secrets stay in environment variables, full provider bodies are excluded from outputs, and raw caches are gitignored.

@@ -41,27 +41,19 @@ def hybrid_prediction(
     signal: Literal["max_probability", "provider_confidence"] = "max_probability",
 ) -> HybridResult:
     decision_cost = decision.cost_usd_estimate
-    if decision.predicted_label is None:
-        if fallback is not None and fallback.predicted_label is not None:
-            return HybridResult(
-                fallback,
-                "fallback_failure",
-                decision.latency_ms + fallback.latency_ms,
-                _combined_cost(decision_cost, fallback.cost_usd_estimate),
-            )
-        return HybridResult(decision, "unresolved", decision.latency_ms, decision_cost)
     if signal == "max_probability":
         routing_score = (
             max(decision.scores_by_class.values()) if decision.scores_by_class is not None else None
         )
     else:
         routing_score = decision.provider_reported_confidence
-    if routing_score is not None and routing_score >= threshold:
+    decision_succeeded = decision.predicted_label is not None
+    if decision_succeeded and routing_score is not None and routing_score >= threshold:
         return HybridResult(decision, "decision", decision.latency_ms, decision_cost)
     if fallback is not None and fallback.predicted_label is not None:
         return HybridResult(
             fallback,
-            "fallback_low_score",
+            "fallback_low_score" if decision_succeeded else "fallback_failure",
             decision.latency_ms + fallback.latency_ms,
             _combined_cost(decision_cost, fallback.cost_usd_estimate),
         )

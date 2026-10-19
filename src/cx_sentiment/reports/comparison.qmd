@@ -1,0 +1,316 @@
+---
+title: "CX sentiment provider comparison"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: true
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  daemon: false
+---
+
+```{python}
+import json
+from html import escape
+from pathlib import Path
+
+import plotly.express as px
+import polars as pl
+from great_tables import GT
+from IPython.display import display
+
+comparison = json.loads(Path("comparison.json").read_text(encoding="utf-8"))
+runs = comparison["runs"]
+plot_labels = {
+    run["label"]: (
+        ("Jev + Luna fallback" if run["model"] == "jev-1.13.0 -> gpt-6-luna"
+         else f"{run['model']} fallback")
+        if run["provider"] == "hybrid" else run["model"].split("@", 1)[0]
+    )
+    for run in runs
+}
+
+
+def show_table(frame):
+    table = GT(frame)
+    strings = [name for name, dtype in frame.schema.items() if dtype == pl.String]
+    numbers = [name for name, dtype in frame.schema.items() if dtype.is_float()]
+    if strings:
+        table = table.fmt(escape, columns=strings)
+    if numbers:
+        table = table.fmt_number(columns=numbers, decimals=4)
+    costs = [name for name in ("USD total", "Known USD", "Known USD per 1,000", "Comparison USD") if name in frame.columns]
+    if costs:
+        table = table.fmt_number(columns=costs, decimals=6)
+    if "Additional request USD" in frame.columns:
+        table = table.fmt_number(columns="Additional request USD", decimals=9)
+    display(table)
+
+
+show_table(pl.DataFrame({"Comparison": [comparison["title"]]}))
+show_table(pl.DataFrame([
+    {"Run": run["label"], "Plot label": plot_labels[run["label"]],
+     "Experiment": run.get("title", run["path"])}
+    for run in runs
+]))
+```
+
+This report reads saved predictions and makes no provider calls. It compares the
+same selected source records across runs. It does not select prompts or routing
+thresholds, or establish statistical significance. Mock runs test the pipeline.
+
+## Data compatibility
+
+```{python}
+print(f"Selected records per run: {runs[0]['metrics']['support']}")
+print(f"Selected dataset SHA256: {comparison['dataset_sha256']}")
+if comparison["historical_inputs_verified"]:
+    print("Historical inputs verified: current selected data match every run's saved fingerprint.")
+else:
+    print("Historical inputs unverified for legacy runs:")
+    for warning in comparison["warnings"]:
+        print(warning)
+if runs[0]["metrics"]["support"] < 30:
+    print("Small smoke sample: use these results to check the pipeline, not to rank model quality.")
+```
+
+## Overall comparison
+
+Accuracy and macro F1 include unresolved predictions in their denominators.
+Coverage is the fraction with a resolved prediction. Latency reflects recorded
+provider requests, including the original timing when predictions came from cache;
+it is not the elapsed time of generating this report.
+
+```{python}
+summary = pl.DataFrame([
+    {
+        "Run": run["label"], "Display": plot_labels[run["label"]],
+        "Provider": run["provider"], "Model": run["model"],
+        "Simulated": run["simulated"], "Records": run["metrics"]["support"],
+        "Accuracy": run["metrics"]["accuracy"],
+        "Macro F1": run["metrics"]["macro_f1"],
+        "Coverage": run["metrics"]["operational_coverage"],
+        "P50 ms": run["metrics"]["latency_p50_ms"],
+        "P95 ms": run["metrics"]["latency_p95_ms"],
+        "USD total": run["metrics"]["cost_usd_total"],
+        "Comparison USD": run.get("comparison_cost_usd", run["metrics"]["cost_usd_total"]),
+        "Known USD": run["metrics"]["cost_usd_known_total"],
+        "Comparison USD per 1,000": (
+            run.get("comparison_cost_usd", run["metrics"]["cost_usd_known_total"]) * 1000
+            / run["metrics"]["support"]
+            if run.get("comparison_cost_usd", run["metrics"]["cost_usd_known_total"]) is not None
+            else None
+        ),
+        "Cost status": (
+            "Electricity estimate" if run.get("cost_estimate") is not None
+            else "Complete" if run["metrics"]["cost_priced_fraction"] == 1
+            else "Partial (lower bound)" if run["metrics"]["cost_priced_fraction"] > 0
+            else "No pricing available"
+        ),
+        "USD per 1,000": run["metrics"]["cost_usd_per_1000"],
+        "Priced fraction": run["metrics"]["cost_priced_fraction"],
+    }
+    for run in runs
+], schema_overrides={"USD total": pl.Float64, "USD per 1,000": pl.Float64,
+                     "Comparison USD": pl.Float64, "Comparison USD per 1,000": pl.Float64})
+show_table(summary.select("Run", "Provider", "Model", "Records", "Accuracy", "Macro F1", "Coverage"))
+```
+
+## Latency
+
+```{python}
+show_table(summary.select("Run", "P50 ms", "P95 ms"))
+latencies = pl.DataFrame([
+    {"Display": plot_labels[run["label"]], "Model": run["model"], "Percentile": percentile,
+     "Latency ms": run["metrics"][field]}
+    for run in runs
+    for percentile, field in (("P50", "latency_p50_ms"), ("P95", "latency_p95_ms"))
+])
+fig = px.bar(latencies, x="Latency ms", y="Display", color="Percentile", barmode="group",
+             labels={"Display": "Model"}, orientation="h", hover_data=["Model"],
+             title="Recorded latency: all runs, full range")
+fig.update_xaxes(rangemode="tozero")
+fig.show(renderer="notebook")
+show_table(pl.DataFrame([
+    {"Run": run["label"], "Latency scope": run.get("latency_scope", "Not recorded")}
+    for run in runs
+]))
+```
+
+## Cost accounting
+
+Known cost includes every cost estimate present in the saved predictions, including
+failed attempts when their costs were retained. A complete total requires every
+record to be priced. Missing costs are unknown, not free; a partial known cost is
+only a lower bound. Failed-call usage recovered in a separate audit is not silently
+added to the original benchmark. Recollection costs are included when recorded in
+the derived predictions, as described in each run's accounting scope below.
+
+```{python}
+show_table(summary.select("Run", "Cost status", "Comparison USD", "Known USD", "USD total", "Priced fraction"))
+show_table(pl.DataFrame([
+    {
+        "Run": run["label"],
+        "Cost and usage scope": run.get("cost_and_usage_scope", "Not recorded"),
+        "Collection policy": run.get("collection_policy", "Not recorded"),
+        "Electricity estimate basis": (run["cost_estimate"]["basis"]
+                                      if run.get("cost_estimate") else "Not applicable"),
+    }
+    for run in runs
+]))
+```
+
+### Source invocation accounting
+
+These values describe new API calls made while collecting each source run.
+Historical prediction costs above can include cache hits. Reservations are budget
+guards, not billed spend. Legacy runs may have no invocation accounting.
+
+```{python}
+invocations = []
+for run in runs:
+    accounting = run.get("invocation_accounting")
+    invocations.append({
+        "Run": run["label"],
+        "New API requests": accounting["request_count"] if accounting else None,
+        "Known invocation USD": accounting["known_spend_usd"] if accounting else None,
+        "Unknown-cost attempts": accounting["unknown_cost_attempts"] if accounting else None,
+        "Budget reservations USD": accounting["reserved_spend_usd"] if accounting else None,
+    })
+show_table(pl.DataFrame(invocations))
+```
+
+```{python}
+recollections = [
+    {
+        "Run": run["label"], "Fresh attempts": run.get("recollection_attempts"),
+        "Additional request USD": run.get("recollection_cost_usd"),
+    }
+    for run in runs if run.get("recollection_attempts") is not None
+]
+if recollections:
+    show_table(pl.DataFrame(recollections, schema_overrides={"Additional request USD": pl.Float64}))
+```
+
+Additional request USD comes from the saved recollection audit. It is already
+included in the derived run's cost, not an amount to add again. A missing value
+means no complete recollection-cost total was recorded. The difference between
+run totals need not equal new spend when the original run had missing costs.
+
+These are token-based USD estimates for the saved results, not billing statements
+or new spend from generating the comparison. Runs can share cached calls and
+ancestry: **do not add their totals together to calculate new spend**.
+
+An explicitly supplied electricity ballpark appears as `Electricity estimate` on
+the cost charts. It does not change the original run's unavailable provider costs.
+
+```{python}
+priced = summary.filter(pl.col("Comparison USD").is_not_null())
+if priced.height:
+    fig = px.bar(
+        priced, x="Display", y="Comparison USD per 1,000", color="Cost status",
+        labels={"Display": "Model"},
+        pattern_shape="Cost status",
+        hover_data=["Provider", "Model", "Known USD", "Priced fraction"],
+        title="Comparison cost per 1,000 records; electricity is a ballpark estimate",
+    )
+    fig.show(renderer="notebook")
+for row in summary.filter(pl.col("Comparison USD").is_null()).iter_rows(named=True):
+    print(f"{row['Run']}: No pricing available; no zero-cost bar is shown.")
+```
+
+## Quality versus cost and latency
+
+A partial-cost point may move to the right if missing costs are recovered. Do not
+rank it as cheaper than another run using the lower bound alone.
+
+Read both latency plots together: P50 describes the typical request; P95 captures
+the slower tail, where hybrid fallbacks can add time. A lower hybrid P50 in a
+separate run does not establish that routing makes Jev faster. These are recorded
+timings from separate runs, not a paired speedup measurement. Recollected runs can
+lack original rejected-attempt times; compare their latency scopes as well.
+
+```{python}
+if priced.height:
+    fig = px.scatter(
+        priced, x="Comparison USD per 1,000", y="Macro F1", color="Display",
+        labels={"Display": "Model"},
+        symbol="Cost status",
+        hover_data=["Provider", "Model", "Accuracy", "Coverage", "Records", "Priced fraction"],
+        symbol_map={"Complete": "circle", "Partial (lower bound)": "triangle-right",
+                    "Electricity estimate": "diamond"},
+        title="Macro F1 versus comparison cost; electricity is a ballpark estimate",
+    )
+    fig.update_traces(marker_size=14)
+    fig.show(renderer="notebook")
+else:
+    print("Cost plot unavailable: No pricing available.")
+
+for percentile, description in (("P50", "typical request"), ("P95", "slower tail")):
+    fig = px.scatter(
+        summary, x=f"{percentile} ms", y="Macro F1", color="Display",
+        labels={"Display": "Model"},
+        hover_data=["Provider", "Model", "Accuracy", "Coverage", "P50 ms", "P95 ms", "Records"],
+        title=f"Macro F1 versus {percentile} latency ({description})",
+    )
+    fig.update_traces(marker_size=14)
+    fig.update_xaxes(rangemode="tozero")
+    fig.show(renderer="notebook")
+```
+
+## Language results
+
+```{python}
+languages = pl.DataFrame([
+    {"Run": run["label"], "Language": language, **values}
+    for run in runs
+    for language, values in run["metrics"]["by_language"].items()
+])
+show_table(languages)
+```
+
+## Prediction disagreements
+
+Only records where the runs predict different labels are shown. The verbatim
+beside each sample ID is the original feedback from the validated dataset,
+without translation or summarization. `unresolved`
+means a provider failed to return a label. Agreement can include shared mistakes;
+it is not a substitute for comparing against reference labels.
+
+```{python}
+if comparison["disagreements"]:
+    show_table(pl.DataFrame(comparison["disagreements"]))
+else:
+    print("No prediction disagreements on these records.")
+```
+
+## Usage and provenance
+
+```{python}
+show_table(pl.DataFrame([
+    {
+        "Run": run["label"],
+        "Input tokens": run["metrics"]["usage_input_tokens_total"],
+        "Output tokens": run["metrics"]["usage_output_tokens_total"],
+        "Usage fraction": run["metrics"]["usage_records_fraction"],
+        "Known USD": run["metrics"]["cost_usd_known_total"],
+    }
+    for run in runs
+]))
+show_table(pl.DataFrame([
+    {
+        "Run": run["label"], "Source folder": run["path"],
+        "Prompt": run["prompt_version"],
+        "Simulated": run["simulated"],
+        "Historical input verified": run["historical_input_verified"],
+    }
+    for run in runs
+]))
+```
+
+Token totals sum known usage; missing usage does not imply a free request. These
+results use synthetic financial feedback with template variations. Exact
+matching does not establish independence or real-world generalization.

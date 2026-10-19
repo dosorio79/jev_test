@@ -1,0 +1,6 @@
+title: "Full validation: GPT-5.4 mini, Jev after recollection, GPT-6 Luna (reasoning none)"
+runs:
+  - runs/2026-10-16T21-18-26.674414Z-openai-live
+  - runs/2026-10-16T21-40-13.961344Z-jev-live
+  - runs/2026-10-17T09-38-55.678883Z-openai-live
+output_dir: runs

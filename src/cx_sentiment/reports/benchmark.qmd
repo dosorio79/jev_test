@@ -1,0 +1,193 @@
+---
+title: "CX sentiment benchmark"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: true
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  daemon: false
+---
+
+```{python}
+#| label: load-results
+import json
+from html import escape
+from pathlib import Path
+
+import plotly.express as px
+import polars as pl
+from great_tables import GT
+from IPython.display import Code, display
+
+metrics = json.loads(Path("metrics.json").read_text(encoding="utf-8"))
+run = json.loads(Path("report_metadata.json").read_text(encoding="utf-8"))
+# Great Tables accepts HTML in strings; escape values supplied by the run.
+display(GT(pl.DataFrame({"Run": [run["title"]]})).fmt(escape, columns="Run"))
+```
+
+## Execution and invocation costs
+
+Historical prediction costs and timings include the original measurements of
+cache hits. They do not measure new API spend for this invocation.
+
+```{python}
+if run["metadata"].get("complete") is False:
+    print("INCOMPLETE RUN: excluded from normal comparisons.")
+execution_path = Path("execution.json")
+if execution_path.exists():
+    execution = json.loads(execution_path.read_text(encoding="utf-8"))
+    print("Complete" if execution["complete"] else "Incomplete")
+    display(GT(pl.DataFrame({
+        "Invocation metric": ["New API requests", "Known estimated spend USD",
+                              "Unknown-cost attempts", "Budget reservations USD"],
+        "Value": [str(execution["request_count"]),
+                  f"{execution['known_spend_usd']:.6f}",
+                  str(execution["unknown_cost_attempts"]),
+                  f"{execution['reserved_spend_usd']:.6f}"],
+    }), rowname_col="Invocation metric"))
+    print("Budget reservations are conservative guards, not billed spend.")
+    statuses = [record["status"] for record in execution["ledger"]]
+    print(f"Cache hits: {statuses.count('cache_hit')}; "
+          f"fresh successes: {statuses.count('success')}; "
+          f"failures: {statuses.count('failure')}; skipped: {statuses.count('skipped')}")
+else:
+    print("Invocation accounting unavailable for this legacy report.")
+```
+
+## Overall performance
+
+Accuracy and macro F1 include failed predictions in their denominators.
+Operational coverage is the fraction of records with a resolved prediction.
+Mock results test the pipeline and do not measure a real model's quality.
+
+```{python}
+display(GT(pl.DataFrame({
+    "Metric": ["Support", "Accuracy", "Macro F1", "Operational coverage"],
+    "Value": [
+        str(metrics["support"]),
+        f"{metrics['accuracy']:.3f}",
+        f"{metrics['macro_f1']:.3f}",
+        f"{metrics['operational_coverage']:.3f}",
+    ],
+}), rowname_col="Metric"))
+
+for label, key in [("Accuracy", "accuracy_ci95"), ("Macro F1", "macro_f1_ci95")]:
+    interval = metrics[key]
+    if interval is not None:
+        print(f"{label} 95% bootstrap interval: {interval[0]:.3f} to {interval[1]:.3f}")
+```
+
+## Language breakdown
+
+```{python}
+languages = pl.DataFrame([
+    {"Language": language, **values}
+    for language, values in metrics["by_language"].items()
+])
+display(GT(languages, rowname_col="Language")
+        .fmt(escape, columns="Language")
+        .fmt_number(columns=["accuracy", "macro_f1"], decimals=3))
+```
+
+## Class performance
+
+```{python}
+classes = pl.DataFrame([
+    {"Class": label, **values}
+    for label, values in metrics["per_class"].items()
+])
+display(GT(classes, rowname_col="Class")
+        .fmt(escape, columns="Class")
+        .fmt_number(columns=["precision", "recall", "f1"], decimals=3))
+```
+
+## Confusion matrix
+
+Rows are true labels; columns are predicted labels. Unresolved predictions count
+against accuracy and recall but are outside the three displayed prediction columns.
+
+```{python}
+#| label: fig-confusion
+#| fig-cap: "Counts by true and predicted sentiment."
+labels = ["negative", "neutral", "positive"]
+matrix = metrics["confusion_matrix"]
+fig = px.imshow(
+    matrix, x=labels, y=labels, text_auto=True, color_continuous_scale="Blues",
+    labels={"x": "Predicted label", "y": "True label", "color": "Records"},
+    aspect="auto",
+)
+fig.update_layout(height=420)
+fig.show(renderer="notebook")
+```
+
+## Latency and usage
+
+```{python}
+print(f"Latency P50/P95: {metrics['latency_p50_ms']:.1f}/{metrics['latency_p95_ms']:.1f} ms")
+providers = pl.DataFrame([
+    {"Provider": provider, **values}
+    for provider, values in metrics["latency_by_provider"].items()
+])
+display(GT(providers, rowname_col="Provider")
+        .fmt(escape, columns="Provider")
+        .fmt_number(columns=["p50_ms", "p95_ms"], decimals=1))
+display(GT(pl.DataFrame({
+    "Metric": ["Input tokens", "Output tokens", "Usage records fraction", "Reported credits"],
+    "Value": [str(metrics["usage_input_tokens_total"]), str(metrics["usage_output_tokens_total"]),
+              f"{metrics['usage_records_fraction']:.1%}",
+              str(metrics["reported_credits_total"]) if metrics["reported_credits_total"] is not None
+              else "Unavailable"],
+}), rowname_col="Metric"))
+```
+
+Token totals sum known usage; a missing usage record does not imply a free request.
+Credits are provider-reported units, separate from USD estimates.
+
+## Historical prediction cost
+
+```{python}
+if metrics["cost_usd_total"] is not None:
+    print(f"${metrics['cost_usd_total']:.6f} total; "
+          f"${metrics['cost_usd_per_1000']:.4f} per 1,000")
+elif metrics["cost_priced_fraction"] == 0:
+    print("USD cost unavailable: no verified prices were supplied.")
+else:
+    print(f"partial (${metrics['cost_usd_known_total']:.6f} known; "
+          f"{metrics['cost_priced_fraction']:.1%} priced)")
+
+electricity = run["metadata"].get("electricity_estimate")
+if electricity:
+    print(f"Electricity-only estimates at EUR {electricity['tariff_per_kwh']:.2f}/kWh.")
+    table = pl.DataFrame(electricity["rows"])
+    display(GT(table).fmt(escape, columns=["Scope", "Basis"])
+            .fmt_number(columns=["Energy kWh", "Estimated EUR"], decimals=6))
+    print(electricity["scope_note"])
+```
+
+Partial pricing is not a complete run cost.
+
+## Calibration
+
+Calibration metrics are available only when every prediction has a genuine class
+probability vector. Provider-reported confidence is a separate quantity.
+
+```{python}
+if metrics["ece"] is None or metrics["brier_score"] is None:
+    print("Unavailable: complete class probability vectors were not supplied.")
+else:
+    print(f"Expected calibration error: {metrics['ece']:.4f}")
+    print(f"Multiclass Brier score: {metrics['brier_score']:.4f}")
+```
+
+## Run metadata
+
+```{python}
+display(Code(json.dumps(run["metadata"], ensure_ascii=False, indent=2), language="json"))
+```
+
+These results use synthetic financial feedback with template variations. Exact
+deduplication does not establish independence or real-world generalization.

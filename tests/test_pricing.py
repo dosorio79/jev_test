@@ -23,3 +23,44 @@ def test_jev_typesafe_rate_table_charges_input_tokens_and_free_output() -> None:
     card = get_jev_price_card("jev-1.13.0")
     assert card is JEV_TYPESAFE_RATE_CARDS["jev-1.13.0"]
     assert card.estimate(input_tokens=1_000_000, output_tokens=50_000) == pytest.approx(0.042)
+
+
+@pytest.mark.parametrize("model", ["gpt-5.4-mini", "gpt-5.4-mini-2026-03-17"])
+def test_gpt54_mini_rate_card_has_verified_rates_and_provenance(model: str) -> None:
+    card = get_openai_price_card(model)
+
+    assert card.input_usd_per_million == 0.75
+    assert card.output_usd_per_million == 4.5
+    assert card.as_of == "2026-10-16"
+    assert card.source_url == "https://developers.openai.com/api/docs/models/gpt-5.4-mini"
+    assert card.estimate(input_tokens=104, output_tokens=14) == pytest.approx(0.000141)
+
+
+@pytest.mark.parametrize("legacy_prices", ["absent", "partial", "complete"])
+def test_cli_uses_model_rate_card_without_environment_prices(
+    monkeypatch, legacy_prices: str
+) -> None:
+    from cx_sentiment.cli import _provider_from_environment
+    from cx_sentiment.providers.mock import MockProvider
+
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-6-luna")
+    monkeypatch.delenv("OPENAI_INPUT_USD_PER_MILLION", raising=False)
+    monkeypatch.delenv("OPENAI_OUTPUT_USD_PER_MILLION", raising=False)
+    monkeypatch.delenv("OPENAI_PRICE_AS_OF", raising=False)
+    if legacy_prices != "absent":
+        monkeypatch.setenv("OPENAI_INPUT_USD_PER_MILLION", "999")
+    if legacy_prices == "complete":
+        monkeypatch.setenv("OPENAI_OUTPUT_USD_PER_MILLION", "999")
+        monkeypatch.setenv("OPENAI_PRICE_AS_OF", "2000-01-01")
+    captured = {}
+
+    def create_provider(**kwargs):
+        captured.update(kwargs)
+        return MockProvider()
+
+    monkeypatch.setattr("cx_sentiment.cli.OpenAIProvider", create_provider)
+    _provider_from_environment("openai")
+
+    assert captured["model"] == "gpt-6-luna"
+    assert captured["price_card"] is get_openai_price_card("gpt-6-luna")

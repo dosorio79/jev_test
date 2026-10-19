@@ -1,0 +1,5 @@
+title: "Full validation: GPT versus Jev after recollection"
+runs:
+  - runs/2026-10-16T21-18-26.674414Z-openai-live
+  - runs/2026-10-16T21-40-13.961344Z-jev-live
+output_dir: runs

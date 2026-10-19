@@ -1,0 +1,91 @@
+---
+title: "Routing threshold frontier"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: true
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  daemon: false
+---
+
+```{python}
+#| label: load-selection
+import json
+import os
+from pathlib import Path
+
+import plotly.express as px
+import polars as pl
+from great_tables import GT
+from IPython.display import display
+
+# Each copied .qmd reads the JSON with the same filename stem beside it.
+document = Path(os.environ["QUARTO_DOCUMENT_PATH"]) / os.environ["QUARTO_DOCUMENT_FILE"]
+data_path = document.with_suffix(".json")
+selection = json.loads(data_path.read_text(encoding="utf-8"))
+frontier = pl.DataFrame(selection["frontier"])
+```
+
+## Selected policy
+
+Thresholds are compared using cached validation predictions. This report makes no
+provider calls. Costs and routing latency are simulations, not measured hybrid runs.
+
+```{python}
+if selection["threshold"] is None:
+    print("No threshold met the quality constraint.")
+else:
+    print(f"Selected threshold: {selection['threshold']:.2f}")
+    print(f"Macro F1: {selection['macro_f1']:.4f}")
+    print(f"Fallback fraction: {selection['fallback_fraction']:.1%}")
+    print(f"Expected cost (USD): ${selection['expected_cost']:.6f}")
+print(f"Baseline macro F1: {selection['baseline_macro_f1']:.4f}")
+print(f"Maximum F1 degradation: {selection['max_f1_degradation']:.4f}")
+```
+
+## Cost and quality
+
+Green points meet the predefined macro-F1 degradation constraint. The selected
+threshold minimizes cost among qualifying points; ties use the smaller threshold.
+
+```{python}
+#| label: fig-frontier
+#| fig-cap: "Expected USD cost versus macro F1 on validation data."
+if frontier.is_empty():
+    print("No thresholds were evaluated.")
+else:
+    points = frontier.with_columns(
+        pl.when(pl.col("qualifies")).then(pl.lit("Meets constraint"))
+        .otherwise(pl.lit("Below constraint")).alias("Quality")
+    )
+    fig = px.scatter(
+        points, x="expected_cost_usd", y="macro_f1", color="Quality",
+        color_discrete_map={"Meets constraint": "#167d32", "Below constraint": "#b23a2b"},
+        labels={"expected_cost_usd": "Expected cost (USD)", "macro_f1": "Macro F1"},
+        hover_data={"threshold": ":.2f", "fallback_fraction": ":.1%"},
+    )
+    fig.add_hline(
+        y=selection["baseline_macro_f1"] - selection["max_f1_degradation"],
+        line_dash="dash", annotation_text="Minimum qualifying F1",
+    )
+    fig.update_layout(height=420)
+    fig.show(renderer="notebook")
+```
+
+## Evaluated thresholds
+
+```{python}
+if not frontier.is_empty():
+    # Show every candidate, including policies that fail the quality constraint.
+    display(GT(frontier).fmt_number(
+        columns=["threshold", "macro_f1", "fallback_fraction", "coverage", "expected_cost_usd"],
+        decimals=4,
+    ))
+```
+
+Freeze the selected policy, model IDs, prompt version, and routing signal before
+the final test evaluation. Synthetic-template limitations also apply to this selection.

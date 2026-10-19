@@ -11,3 +11,27 @@ outputs/
 /experiments/runs/
 data/validation_600.csv
 data/validation_manifest.json
+
+# Local Terraform state and administration inputs; keep the provider lockfile.
+infra/github/.terraform/
+infra/github/*.tfstate
+infra/github/*.tfstate.*
+infra/github/*.tfplan
+infra/github/*.tfplan.*
+infra/github/.terraform.d/
+infra/github/credentials.tfrc.json
+infra/github/.env*
+infra/github/*.tfvars
+infra/github/*.tfvars.json
+infra/github/crash.log
+infra/github/override.tf
+infra/github/override.tf.json
+infra/github/*_override.tf
+infra/github/*_override.tf.json
+infra/github/.terraformrc
+infra/github/terraform.rc
+coverage.xml
+pytest.xml
+.coverage
+htmlcov/
+dist/

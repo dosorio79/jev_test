@@ -74,6 +74,7 @@ def test_offline_study_writes_result_without_provider_construction(
         "cx_sentiment.cli._provider_from_environment",
         lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("provider constructed")),
     )
+    monkeypatch.setattr("cx_sentiment.reporting.render_quarto", lambda _source: None)
 
     assert main(["study", str(config)]) == 0
 

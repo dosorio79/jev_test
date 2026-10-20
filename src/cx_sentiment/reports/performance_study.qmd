@@ -1,0 +1,115 @@
+---
+title: "Routing latency-quality-cost study"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: true
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  daemon: false
+---
+
+```{python}
+import html
+import json
+from pathlib import Path
+
+import plotly.express as px
+import polars as pl
+from great_tables import GT
+from IPython.display import display
+
+study = json.loads(Path("study.json").read_text(encoding="utf-8"))
+thresholds = pl.read_csv("thresholds.csv")
+languages = pl.read_csv("languages.csv")
+
+
+def show(frame):
+    table = GT(frame)
+    strings = [name for name, dtype in frame.schema.items() if dtype == pl.String]
+    if strings:
+        table = table.fmt(html.escape, columns=strings)
+    display(table)
+```
+
+## Measurement audit
+
+Provider-call latency, complete-operation wall time, scheduler wait, cache state,
+and collection condition are separate measurements. Existing saved timings are
+not relabeled as controlled live evidence.
+
+## Historical exploratory values
+
+Historical runs supplied the immutable predictions used by this simulation.
+Their request timings were collected at different times and are excluded from
+controlled latency acceptance decisions.
+
+## Offline threshold simulation
+
+All thresholds use aligned validation records. The locked test set is not used.
+
+```{python}
+if thresholds.is_empty():
+    print("No thresholds were evaluated.")
+else:
+    show(thresholds.filter(pl.col("non_dominated")).select(
+        "threshold", "macro_f1", "fallback_fraction", "jev_coverage",
+        "cost_usd_per_1000", "qualifies_quality", "qualifies_languages"
+    ))
+    px.line(thresholds, x="jev_coverage", y="macro_f1", hover_data=["threshold"],
+            title="Risk-quality coverage curve").show(renderer="notebook")
+    px.line(thresholds, x="fallback_fraction", y="macro_f1", hover_data=["threshold"],
+            title="Macro F1 versus fallback rate").show(renderer="notebook")
+    priced = thresholds.filter(pl.col("cost_usd_per_1000").is_not_null())
+    if not priced.is_empty():
+        px.scatter(priced, x="cost_usd_per_1000", y="macro_f1", color="non_dominated",
+                   hover_data=["threshold", "fallback_fraction"],
+                   title="Validation cost-quality frontier").show(renderer="notebook")
+        px.line(priced, x="threshold", y="fallback_fraction",
+                title="Threshold versus fallback rate").show(renderer="notebook")
+```
+
+## Conditional risk
+
+```{python}
+if not thresholds.is_empty():
+    show(thresholds.select("threshold", "accepted_error_rate", "deferred_error_rate"))
+```
+
+## Controlled live measurements
+
+No controlled live measurements are included unless a separately authorized,
+completed benchmark is attached. P50/P90/P95/P99, ECDF, throughput-latency, and
+quality-P95-cost charts remain unavailable for this offline-only report.
+
+## Language slices
+
+```{python}
+if languages.is_empty():
+    print("No language rows are available.")
+else:
+    show(languages)
+    px.line(languages, x="threshold", y="macro_f1", color="language",
+            title="Macro F1 by language").show(renderer="notebook")
+    px.line(languages, x="threshold", y="jev_coverage", color="language",
+            title="Jev coverage by language").show(renderer="notebook")
+```
+
+## Recommendation status
+
+```{python}
+print(html.escape(study["recommendation_status"]))
+print("Candidate thresholds:", ", ".join(f"{value:.2f}" for value in study["candidate_thresholds"]))
+```
+
+Candidate policies come from validation quality and cost simulation. A final
+operating recommendation requires controlled matched latency evidence.
+
+## Limitations
+
+Bootstrap intervals are paired by record, not by latent template cluster. P99 is
+descriptive for small pilots. Missing costs and timings remain unknown. Sequential
+fallback adds OpenAI latency to deferred requests, and no final-test claim is made.

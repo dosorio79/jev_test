@@ -40,6 +40,7 @@ from cx_sentiment.reporting import (
     write_comparison_report,
     write_report,
     write_selection_report,
+    write_study_report,
 )
 from cx_sentiment.routing import select_threshold
 from cx_sentiment.runner import RunAccounting, run_predictions
@@ -224,10 +225,8 @@ def _execute(args: argparse.Namespace) -> int:
         output_dir = create_study_directory(config)
         if config.mode == "offline":
             result = analyze_saved_validation(config)
-            (output_dir / "study.json").write_text(
-                result.model_dump_json(indent=2) + "\n", encoding="utf-8"
-            )
-            print(f"Study: {output_dir / 'study.json'} (no provider calls)")
+            write_study_report(output_dir, result)
+            print(f"Report: {output_dir / 'report.html'} (no provider calls)")
             return 0
         assert config.live is not None
         maximum_requests = config.live.sample_size * config.live.repetitions * 4

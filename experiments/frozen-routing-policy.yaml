@@ -1,0 +1,29 @@
+status: frozen_for_final_test
+frozen_at: 2026-10-20
+source_split: validation
+decision_provider:
+  provider: jev
+  model: jev-1.13.0
+  prompt_version: jev-choice-v1
+  routing_signal: max_probability
+  threshold: 0.72
+  improper_output_recollection_attempts: 1
+fallback_provider:
+  provider: openai
+  model: gpt-6-luna
+  prompt_version: cx-sentiment-v1
+locked_test:
+  path: ../data/cx_sentiment_test_600.csv
+  sha256: 8fcf0f32af008e3f3620b41558faf9b63aa7d09408243e8435e43fab0df93f94
+  records: 600
+  evaluate_once: true
+  retune_after_evaluation: false
+authorization_gate:
+  maximum_provider_requests: 1800
+  maximum_estimated_cost_usd: 2.00
+  concurrency: 1
+  paid_calls_authorized: false
+evidence:
+  offline_study: runs/2026-10-20T20-55-19.316181Z-routing-study-offline/study.json
+  controlled_pilot: runs/2026-10-20T21-06-34.457502Z-routing-study-live/benchmark.json
+  decision_report: runs/2026-10-20T21-06-34.457502Z-routing-study-live/report.html

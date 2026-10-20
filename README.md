@@ -435,6 +435,14 @@ creates a separate result; the normal runner has no automatic recollection loop.
 
 Threshold selection belongs exclusively on the generated validation set. Cache both providers' validation predictions once, then simulate thresholds from cached results. Freeze the prompt version, model IDs, routing signal, and chosen threshold before the one-time test evaluation. See [METHODS.md](docs/METHODS.md) for the protocol and limitations.
 
+The current validation-selected policy is recorded in
+`experiments/frozen-routing-policy.yaml`: Jev 1.13.0 first, using maximum class
+probability at threshold 0.72, with GPT-6 Luna as fallback. The file also pins
+the prompt versions and locked-test hash. Its authorization section is a preview
+only: paid calls remain disabled until the user explicitly approves the stated
+request and USD caps. After the one-time locked-test evaluation, do not retune
+the policy from those results.
+
 After live validation prediction files exist, select and persist the policy without making new API calls:
 
 ```bash

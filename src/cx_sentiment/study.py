@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict
 from cx_sentiment.benchmark import BenchmarkRun
 from cx_sentiment.comparison import SavedRunInput, dataset_fingerprint
 from cx_sentiment.data import load_dataset
-from cx_sentiment.metrics import evaluate_predictions
+from cx_sentiment.metrics import LABELS, UNRESOLVED, evaluate_predictions
 from cx_sentiment.models import Prediction, SentimentLabel
 from cx_sentiment.routing import HybridResult, hybrid_prediction
 from cx_sentiment.study_config import StudyConfig
@@ -154,7 +154,6 @@ def _read_saved_run(
 
 def _paired_delta_interval(
     truth: list[str],
-    languages: list[str],
     hybrid: list[Prediction],
     fallback: list[Prediction],
     *,
@@ -164,25 +163,38 @@ def _paired_delta_interval(
     if samples <= 0 or len(truth) < 2:
         return None
     rng = random.Random(seed)
+    hybrid_labels = [
+        item.predicted_label.value if item.predicted_label is not None else UNRESOLVED
+        for item in hybrid
+    ]
+    fallback_labels = [
+        item.predicted_label.value if item.predicted_label is not None else UNRESOLVED
+        for item in fallback
+    ]
     deltas: list[float] = []
     for _ in range(samples):
         indices = [rng.randrange(len(truth)) for _ in truth]
         sample_truth = [truth[index] for index in indices]
-        sample_languages = [languages[index] for index in indices]
-        hybrid_score = evaluate_predictions(
-            sample_truth,
-            [hybrid[index] for index in indices],
-            languages=sample_languages,
-            bootstrap_samples=0,
-        ).macro_f1
-        fallback_score = evaluate_predictions(
-            sample_truth,
-            [fallback[index] for index in indices],
-            languages=sample_languages,
-            bootstrap_samples=0,
-        ).macro_f1
+        hybrid_score = _macro_f1(sample_truth, [hybrid_labels[index] for index in indices])
+        fallback_score = _macro_f1(
+            sample_truth, [fallback_labels[index] for index in indices]
+        )
         deltas.append(hybrid_score - fallback_score)
     return float(np.quantile(deltas, 0.025)), float(np.quantile(deltas, 0.975))
+
+
+def _macro_f1(truth: list[str], predicted: list[str]) -> float:
+    scores: list[float] = []
+    for label in LABELS:
+        pairs = zip(truth, predicted, strict=True)
+        true_positive = sum(t == label and p == label for t, p in pairs)
+        pairs = zip(truth, predicted, strict=True)
+        false_positive = sum(t != label and p == label for t, p in pairs)
+        pairs = zip(truth, predicted, strict=True)
+        false_negative = sum(t == label and p != label for t, p in pairs)
+        denominator = 2 * true_positive + false_positive + false_negative
+        scores.append(2 * true_positive / denominator if denominator else 0.0)
+    return sum(scores) / len(scores)
 
 
 def _error_rate(
@@ -282,7 +294,6 @@ def analyze_saved_validation(config: StudyConfig) -> OfflineStudyResult:
                 macro_f1_delta_from_openai=metrics.macro_f1 - openai_metrics.macro_f1,
                 macro_f1_delta_ci95=_paired_delta_interval(
                     truth,
-                    languages,
                     hybrid,
                     openai,
                     samples=config.bootstrap_samples,

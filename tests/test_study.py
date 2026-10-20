@@ -5,8 +5,14 @@ import polars as pl
 import pytest
 import yaml
 
+from cx_sentiment.benchmark import BenchmarkAttempt, BenchmarkOperation, BenchmarkRun, Strategy
 from cx_sentiment.models import Prediction, SentimentLabel
-from cx_sentiment.study import analyze_saved_validation
+from cx_sentiment.study import (
+    ParetoPoint,
+    analyze_saved_validation,
+    pareto_frontier,
+    summarize_benchmark,
+)
 from cx_sentiment.study_config import OfflineInputs, StudyConfig
 
 
@@ -128,3 +134,88 @@ def test_analysis_rejects_mismatched_ids_and_missing_probabilities(tmp_path: Pat
     config = StudyConfig(inputs=OfflineInputs(jev_run=jev, openai_run=openai))
     with pytest.raises(ValueError, match="probability"):
         analyze_saved_validation(config)
+
+
+def _operation(strategy: Strategy, duration: float, *, failed: bool = False) -> BenchmarkOperation:
+    attempt = BenchmarkAttempt(
+        sample_id=f"{strategy}-{duration}",
+        strategy=strategy,
+        stage="jev" if strategy == "jev" else "openai",
+        repetition=1,
+        condition="warm",
+        order_index=int(duration),
+        stage_wall_ms=duration - 1,
+        outcome="failure" if failed else "success",
+        error_kind="rate_limit" if failed else None,
+    )
+    return BenchmarkOperation(
+        sample_id=attempt.sample_id,
+        strategy=strategy,
+        repetition=1,
+        condition="warm",
+        order_index=attempt.order_index,
+        scheduler_wait_ms=0,
+        operation_wall_ms=duration,
+        outcome=attempt.outcome,
+        predicted_label=None if failed else "positive",
+        attempts=(attempt,),
+    )
+
+
+def test_summarize_benchmark_includes_failures_and_tail_quantiles() -> None:
+    run = BenchmarkRun(
+        measurement_scope="controlled",
+        complete=True,
+        planned_operations=4,
+        requests_made=4,
+        estimated_spend_usd=0.04,
+        operations=tuple(
+            _operation("jev", duration, failed=duration == 40)
+            for duration in (10, 20, 30, 40)
+        ),
+    )
+
+    summary = summarize_benchmark(run, bootstrap_samples=20, seed=3)
+
+    latency = summary.latency[0]
+    assert latency.strategy == "jev"
+    assert latency.p50_ms == 25
+    assert latency.p90_ms == pytest.approx(37)
+    assert latency.p95_ms == pytest.approx(38.5)
+    assert latency.p99_ms == pytest.approx(39.7)
+    assert latency.failure_count == 1
+    assert latency.rate_limit_count == 1
+    assert latency.p50_ci95_ms is not None
+    assert summary.throughput[0].operations_per_second == pytest.approx(40)
+    assert latency.p99_exploratory is True
+
+
+def test_summarize_benchmark_rejects_incomplete_or_cached_evidence() -> None:
+    run = BenchmarkRun(
+        measurement_scope="controlled",
+        complete=False,
+        planned_operations=1,
+        requests_made=0,
+        estimated_spend_usd=0,
+    )
+    with pytest.raises(ValueError, match="complete"):
+        summarize_benchmark(run)
+
+    operation = _operation("jev", 10)
+    cached_attempt = operation.attempts[0].model_copy(update={"cache_status": "hit"})
+    cached_operation = operation.model_copy(update={"attempts": (cached_attempt,)})
+    run = run.model_copy(update={"complete": True, "operations": (cached_operation,)})
+    with pytest.raises(ValueError, match="cache"):
+        summarize_benchmark(run)
+
+
+def test_pareto_frontier_uses_quality_latency_and_cost() -> None:
+    points = [
+        ParetoPoint(name="dominating", macro_f1=0.90, p95_ms=100, cost_usd_per_1000=2),
+        ParetoPoint(name="dominated", macro_f1=0.89, p95_ms=110, cost_usd_per_1000=3),
+        ParetoPoint(name="unknown", macro_f1=0.95, p95_ms=None, cost_usd_per_1000=1),
+    ]
+
+    result = pareto_frontier(points)
+
+    assert [point.name for point in result] == ["dominating"]

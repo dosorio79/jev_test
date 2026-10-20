@@ -9,6 +9,7 @@ import polars as pl
 import yaml
 from pydantic import BaseModel, ConfigDict
 
+from cx_sentiment.benchmark import BenchmarkRun
 from cx_sentiment.comparison import SavedRunInput, dataset_fingerprint
 from cx_sentiment.data import load_dataset
 from cx_sentiment.metrics import evaluate_predictions
@@ -63,6 +64,49 @@ class OfflineStudyResult(BaseModel):
     thresholds: tuple[ThresholdPoint, ...]
     candidate_thresholds: tuple[float, ...]
     recommendation_status: str
+
+
+class LatencySummary(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    strategy: str
+    support: int
+    p50_ms: float
+    p90_ms: float
+    p95_ms: float
+    p99_ms: float
+    p50_ci95_ms: tuple[float, float] | None
+    p95_ci95_ms: tuple[float, float] | None
+    p99_exploratory: bool
+    failure_count: int
+    retry_count: int
+    rate_limit_count: int
+    stage_p50_ms: dict[str, float]
+
+
+class ThroughputSummary(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    strategy: str
+    operations: int
+    operations_per_second: float
+
+
+class BenchmarkSummary(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    latency: tuple[LatencySummary, ...]
+    throughput: tuple[ThroughputSummary, ...]
+
+
+class ParetoPoint(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    macro_f1: float | None
+    p95_ms: float | None
+    cost_usd_per_1000: float | None
+    language_constraint_met: bool = True
 
 
 def _read_saved_run(
@@ -279,3 +323,117 @@ def analyze_saved_validation(config: StudyConfig) -> OfflineStudyResult:
             else "no recommendation because constraints or required costs are unavailable"
         ),
     )
+
+
+def _quantile_interval(
+    values: list[float], quantile: float, *, samples: int, seed: int
+) -> tuple[float, float] | None:
+    if samples <= 0 or len(values) < 2:
+        return None
+    rng = random.Random(seed)
+    estimates = [
+        float(
+            np.quantile(
+                [values[rng.randrange(len(values))] for _ in values],
+                quantile,
+                method="linear",
+            )
+        )
+        for _ in range(samples)
+    ]
+    return float(np.quantile(estimates, 0.025)), float(np.quantile(estimates, 0.975))
+
+
+def summarize_benchmark(
+    run: BenchmarkRun, *, bootstrap_samples: int = 1000, seed: int = 20261020
+) -> BenchmarkSummary:
+    if run.measurement_scope != "controlled" or not run.complete:
+        raise ValueError("benchmark summary requires a complete controlled run")
+    if not run.operations:
+        raise ValueError("benchmark summary requires operation evidence")
+    if any(not operation.attempts for operation in run.operations):
+        raise ValueError("benchmark operation is missing stage evidence")
+    if any(
+        attempt.cache_status != "bypassed"
+        for operation in run.operations
+        for attempt in operation.attempts
+    ):
+        raise ValueError("controlled benchmark cannot contain cache hits")
+
+    latency: list[LatencySummary] = []
+    throughput: list[ThroughputSummary] = []
+    for strategy in sorted({operation.strategy for operation in run.operations}):
+        operations = [item for item in run.operations if item.strategy == strategy]
+        values = [item.operation_wall_ms for item in operations]
+        attempts = [attempt for item in operations for attempt in item.attempts]
+        stage_p50 = {
+            stage: float(
+                np.quantile(
+                    [item.stage_wall_ms for item in attempts if item.stage == stage],
+                    0.5,
+                    method="linear",
+                )
+            )
+            for stage in sorted({item.stage for item in attempts})
+        }
+        latency.append(
+            LatencySummary(
+                strategy=strategy,
+                support=len(values),
+                p50_ms=float(np.quantile(values, 0.5, method="linear")),
+                p90_ms=float(np.quantile(values, 0.9, method="linear")),
+                p95_ms=float(np.quantile(values, 0.95, method="linear")),
+                p99_ms=float(np.quantile(values, 0.99, method="linear")),
+                p50_ci95_ms=_quantile_interval(
+                    values, 0.5, samples=bootstrap_samples, seed=seed
+                ),
+                p95_ci95_ms=_quantile_interval(
+                    values, 0.95, samples=bootstrap_samples, seed=seed + 1
+                ),
+                p99_exploratory=len(values) < 100,
+                failure_count=sum(item.outcome == "failure" for item in operations),
+                retry_count=sum(item.attempt_number > 1 for item in attempts),
+                rate_limit_count=sum(
+                    item.error_kind is not None and "rate" in item.error_kind.casefold()
+                    for item in attempts
+                ),
+                stage_p50_ms=stage_p50,
+            )
+        )
+        elapsed_seconds = sum(values) / 1000
+        throughput.append(
+            ThroughputSummary(
+                strategy=strategy,
+                operations=len(values),
+                operations_per_second=(len(values) / elapsed_seconds),
+            )
+        )
+    return BenchmarkSummary(latency=tuple(latency), throughput=tuple(throughput))
+
+
+def pareto_frontier(points: list[ParetoPoint]) -> tuple[ParetoPoint, ...]:
+    comparable = [
+        point
+        for point in points
+        if point.macro_f1 is not None
+        and point.p95_ms is not None
+        and point.cost_usd_per_1000 is not None
+        and point.language_constraint_met
+    ]
+    frontier: list[ParetoPoint] = []
+    for candidate in comparable:
+        dominated = any(
+            other.name != candidate.name
+            and other.macro_f1 >= candidate.macro_f1  # type: ignore[operator]
+            and other.p95_ms <= candidate.p95_ms  # type: ignore[operator]
+            and other.cost_usd_per_1000 <= candidate.cost_usd_per_1000  # type: ignore[operator]
+            and (
+                other.macro_f1 > candidate.macro_f1  # type: ignore[operator]
+                or other.p95_ms < candidate.p95_ms  # type: ignore[operator]
+                or other.cost_usd_per_1000 < candidate.cost_usd_per_1000  # type: ignore[operator]
+            )
+            for other in comparable
+        )
+        if not dominated:
+            frontier.append(candidate)
+    return tuple(frontier)

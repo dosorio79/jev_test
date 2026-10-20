@@ -18,7 +18,7 @@ Provider failures remain in the denominator. Routing falls back on decision-prov
 
 ## Threshold selection
 
-Sweep thresholds from 0.50 through 0.99 on cached validation predictions. A score equal to the threshold is accepted by the decision provider. Select the lowest expected-cost policy whose macro F1 is no more than 0.02 below the cached OpenAI-only baseline. If none qualifies, record no selected threshold. Freeze the selected policy and configuration before final test evaluation.
+Sweep thresholds from 0.40 through 0.99 on cached validation predictions. A score equal to the threshold is accepted by the decision provider. Shortlist non-dominated policies whose macro F1 is within the configured quality tolerance, initially 0.01, of the cached OpenAI-only baseline and whose per-language macro F1 is within 0.03. Missing costs do not become zero and prevent categorical Pareto ranking. Freeze one policy and its configuration before final test evaluation.
 
 ## Metrics
 

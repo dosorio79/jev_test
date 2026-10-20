@@ -48,6 +48,27 @@ Live collection requires `--live`, explicit request and USD caps, and fresh user
 authorization for the stated envelope. Preview and offline analysis construct no
 provider clients and make no network calls.
 
+## Reproducible workflow
+
+Run the supplied offline validation study first:
+
+```bash
+uv run cx-sentiment study experiments/routing-study.yaml
+```
+
+For a proposed live YAML, omit `--live` to write a zero-call preview. Before any
+paid collection, review and explicitly authorize all of the following:
+
+- selected validation sample size and random seed;
+- repetitions and warm/cold condition;
+- frozen routing threshold;
+- concurrency, initially one;
+- maximum provider requests;
+- total USD budget and per-request USD reservation.
+
+Authorization for the concurrency-one pilot does not authorize concurrency 5/10,
+additional repetitions, a larger sample, or use of the locked test set.
+
 ## Data boundary
 
 Threshold selection and calibration use only data marked `validation`. The

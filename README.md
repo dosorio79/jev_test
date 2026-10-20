@@ -215,6 +215,34 @@ cannot be verified. Five-record smoke results check the pipeline, not model qual
 See [comparison configuration and reports](docs/REPORTING.md#compare-saved-runs)
 for the YAML format and re-rendering instructions.
 
+## Optimize selective routing
+
+The routing study reuses complete Jev and OpenAI validation runs. It aligns their
+saved predictions, evaluates thresholds from 0.40 through 0.99, and writes an
+offline quality–coverage–cost report without credentials or provider calls:
+
+```bash
+uv run cx-sentiment study experiments/routing-study.yaml
+```
+
+The report separates historical exploratory timing from offline simulations and
+controlled measurements. Candidate thresholds are selected on validation data;
+the locked test set remains untouched until one policy is frozen.
+
+A live study YAML adds `sample_size`, `repetitions`, `concurrency`,
+`routing_threshold`, `max_requests`, `budget_usd`, and
+`cost_per_request_usd`. Run it without `--live` first to produce a zero-call
+request and cost preview:
+
+```bash
+uv run cx-sentiment study experiments/my-live-routing-study.yaml
+```
+
+Do not add `--live` until the exact sample, repetitions, threshold, maximum
+requests, and maximum USD budget have been reviewed and explicitly authorized.
+The first authorized pilot is concurrency one; concurrency 5/10 and the locked
+test set are separate gates. See [the performance-study protocol](docs/PERFORMANCE_STUDY.md).
+
 ## Metrics and how to read them
 
 Quality and coverage run from 0 to 1; for example, `0.80` means 80%. Latency is

@@ -401,7 +401,7 @@ def summarize_benchmark(
                 p95_ci95_ms=_quantile_interval(
                     values, 0.95, samples=bootstrap_samples, seed=seed + 1
                 ),
-                p99_exploratory=len(values) < 100,
+                p99_exploratory=len(values) < 1000,
                 failure_count=sum(item.outcome == "failure" for item in operations),
                 retry_count=sum(item.attempt_number > 1 for item in attempts),
                 rate_limit_count=sum(

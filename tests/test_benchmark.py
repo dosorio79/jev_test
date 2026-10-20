@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 import polars as pl
@@ -116,6 +117,34 @@ def test_live_records_attempt_and_operation_evidence(tmp_path: Path) -> None:
     assert all(item.attempt_number == 1 for item in hybrid.attempts)
     assert (tmp_path / "attempts.jsonl").is_file()
     assert (tmp_path / "operations.jsonl").is_file()
+
+
+def test_operation_timing_excludes_incremental_ledger_writes(
+    tmp_path: Path, monkeypatch
+) -> None:
+    from cx_sentiment import benchmark
+
+    original_append = benchmark._append_jsonl
+
+    def slow_append(path: Path, model) -> None:
+        time.sleep(0.02)
+        original_append(path, model)
+
+    monkeypatch.setattr(benchmark, "_append_jsonl", slow_append)
+    result = run_live_benchmark(
+        _records().head(1),
+        jev=FakeProvider("jev", SentimentLabel.negative, 0.9),
+        openai=FakeProvider("openai", SentimentLabel.positive),
+        threshold=0.8,
+        output_dir=tmp_path,
+        safety=LiveSafety(live=True, max_requests=3, max_estimated_cost_usd=1),
+        sample_size=1,
+        repetitions=1,
+        seed=1,
+        cost_per_request_usd=0.1,
+    )
+
+    assert max(item.operation_wall_ms for item in result.operations) < 10
 
 
 def test_live_budget_stop_checkpoints_incomplete_run(tmp_path: Path) -> None:

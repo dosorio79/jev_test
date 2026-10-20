@@ -155,7 +155,7 @@ def run_live_benchmark(
 
     def call(
         provider: SentimentProvider, item: ScheduledOperation, stage: Literal["jev", "openai"]
-    ) -> tuple[Prediction | None, BenchmarkAttempt]:
+    ) -> tuple[Prediction | None, BenchmarkAttempt, float]:
         nonlocal requests_made, spend
         safety.assert_can_call(requests_made, spend, cost_per_request_usd)
         row = rows[item.sample_id]
@@ -190,22 +190,28 @@ def run_live_benchmark(
             cost_usd=actual_cost,
             error_kind=error_kind,
         )
+        persistence_started = time.perf_counter()
         _append_jsonl(output_dir / "attempts.jsonl", attempt)
-        return prediction, attempt
+        persistence_ms = (time.perf_counter() - persistence_started) * 1000
+        return prediction, attempt, persistence_ms
 
     try:
         for item in schedule:
             operation_started = time.perf_counter()
+            persistence_ms = 0.0
             attempts: list[BenchmarkAttempt] = []
             prediction: Prediction | None
             if item.strategy == "jev":
-                prediction, attempt = call(jev, item, "jev")
+                prediction, attempt, written_ms = call(jev, item, "jev")
+                persistence_ms += written_ms
                 attempts.append(attempt)
             elif item.strategy == "openai":
-                prediction, attempt = call(openai, item, "openai")
+                prediction, attempt, written_ms = call(openai, item, "openai")
+                persistence_ms += written_ms
                 attempts.append(attempt)
             else:
-                prediction, attempt = call(jev, item, "jev")
+                prediction, attempt, written_ms = call(jev, item, "jev")
+                persistence_ms += written_ms
                 attempts.append(attempt)
                 confidence = (
                     max(prediction.scores_by_class.values())
@@ -219,7 +225,8 @@ def run_live_benchmark(
                     or confidence < threshold
                 )
                 if needs_fallback:
-                    prediction, attempt = call(openai, item, "openai")
+                    prediction, attempt, written_ms = call(openai, item, "openai")
+                    persistence_ms += written_ms
                     attempts.append(attempt)
             operation = BenchmarkOperation(
                 sample_id=item.sample_id,
@@ -228,7 +235,8 @@ def run_live_benchmark(
                 condition=item.condition,
                 order_index=item.order_index,
                 scheduler_wait_ms=0,
-                operation_wall_ms=(time.perf_counter() - operation_started) * 1000,
+                operation_wall_ms=(time.perf_counter() - operation_started) * 1000
+                - persistence_ms,
                 outcome=(
                     "success"
                     if prediction is not None and prediction.predicted_label is not None

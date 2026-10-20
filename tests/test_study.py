@@ -190,6 +190,21 @@ def test_summarize_benchmark_includes_failures_and_tail_quantiles() -> None:
     assert latency.p99_exploratory is True
 
 
+def test_p99_remains_exploratory_for_a_120_record_pilot() -> None:
+    run = BenchmarkRun(
+        measurement_scope="controlled",
+        complete=True,
+        planned_operations=120,
+        requests_made=120,
+        estimated_spend_usd=1,
+        operations=tuple(_operation("jev", float(index + 1)) for index in range(120)),
+    )
+
+    summary = summarize_benchmark(run, bootstrap_samples=0)
+
+    assert summary.latency[0].p99_exploratory is True
+
+
 def test_summarize_benchmark_rejects_incomplete_or_cached_evidence() -> None:
     run = BenchmarkRun(
         measurement_scope="controlled",

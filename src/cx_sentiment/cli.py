@@ -10,6 +10,7 @@ import polars as pl
 from openai.types.shared import ReasoningEffort
 from pydantic import ValidationError
 
+from cx_sentiment.benchmark import run_live_benchmark
 from cx_sentiment.budget import BudgetExceeded, LiveSafety, PriceCard
 from cx_sentiment.cache import PredictionCache, RawResponseStore
 from cx_sentiment.comparison import (
@@ -42,6 +43,8 @@ from cx_sentiment.reporting import (
 )
 from cx_sentiment.routing import select_threshold
 from cx_sentiment.runner import RunAccounting, run_predictions
+from cx_sentiment.study import _read_saved_run, analyze_saved_validation
+from cx_sentiment.study_config import create_study_directory, load_study_config
 
 
 def _records(frame: pl.DataFrame) -> list[tuple[str, str, str]]:
@@ -180,6 +183,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--max-requests", type=int, help=argparse.SUPPRESS)
     run.add_argument("--max-estimated-cost-usd", type=float, help=argparse.SUPPRESS)
     run.add_argument("--max-cost-per-request-usd", type=float, help=argparse.SUPPRESS)
+    study = subparsers.add_parser("study", help="Analyze or preview a routing study")
+    study.add_argument("config", type=Path, help="Study YAML file")
+    study.add_argument("--live", action="store_true", help="Allow paid benchmark calls")
     return parser
 
 
@@ -213,6 +219,57 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def _execute(args: argparse.Namespace) -> int:
+    if args.command == "study":
+        config = load_study_config(args.config)
+        output_dir = create_study_directory(config)
+        if config.mode == "offline":
+            result = analyze_saved_validation(config)
+            (output_dir / "study.json").write_text(
+                result.model_dump_json(indent=2) + "\n", encoding="utf-8"
+            )
+            print(f"Study: {output_dir / 'study.json'} (no provider calls)")
+            return 0
+        assert config.live is not None
+        maximum_requests = config.live.sample_size * config.live.repetitions * 4
+        if not args.live:
+            preview = {
+                "measurement_scope": "preview",
+                "sample_size": config.live.sample_size,
+                "repetitions": config.live.repetitions,
+                "planned_operations": config.live.sample_size
+                * config.live.repetitions
+                * 3,
+                "maximum_provider_requests": maximum_requests,
+                "configured_request_cap": config.live.max_requests,
+                "configured_budget_usd": config.live.budget_usd,
+                "network_calls": 0,
+            }
+            (output_dir / "preview.json").write_text(
+                json.dumps(preview, indent=2) + "\n", encoding="utf-8"
+            )
+            print(f"Preview: {output_dir / 'preview.json'} (no provider calls)")
+            return 0
+        if config.live.concurrency != 1:
+            raise ValueError("the first authorized live benchmark requires concurrency: 1")
+        records, _ = _read_saved_run(config.inputs.jev_run, "jev")
+        result = run_live_benchmark(
+            records,
+            jev=_provider_from_environment("jev"),
+            openai=_provider_from_environment("openai"),
+            threshold=config.live.routing_threshold,
+            output_dir=output_dir,
+            safety=LiveSafety(
+                live=True,
+                max_requests=config.live.max_requests,
+                max_estimated_cost_usd=config.live.budget_usd,
+            ),
+            sample_size=config.live.sample_size,
+            repetitions=config.live.repetitions,
+            seed=config.seed,
+            cost_per_request_usd=config.live.cost_per_request_usd,
+        )
+        print(f"Benchmark: {output_dir / 'benchmark.json'} ({result.requests_made} calls)")
+        return 0
     if args.command == "compare":
         config = load_comparison_config(args.config)
         comparison = compare_runs(config)

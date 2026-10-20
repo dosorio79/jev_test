@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal, Self
 
@@ -23,6 +24,7 @@ class LiveBenchmarkConfig(BaseModel):
     max_requests: int = Field(gt=0, strict=True)
     budget_usd: float = Field(gt=0)
     cost_per_request_usd: float = Field(gt=0)
+    routing_threshold: float = Field(ge=0, le=1)
 
 
 class StudyConfig(BaseModel):
@@ -79,3 +81,15 @@ def load_study_config(path: Path) -> StudyConfig:
     return config.model_copy(
         update={"inputs": inputs, "output_dir": parent / config.output_dir}
     )
+
+
+def create_study_directory(config: StudyConfig) -> Path:
+    root = config.output_dir.resolve()
+    timestamp = datetime.now(UTC).strftime("%Y-%m-%dT%H-%M-%S.%fZ")
+    output = root / f"{timestamp}-routing-study-{config.mode}"
+    output.mkdir(parents=True)
+    snapshot = config.model_copy(update={"output_dir": root})
+    (output / "study.yaml").write_text(
+        yaml.safe_dump(snapshot.model_dump(mode="json"), sort_keys=False), encoding="utf-8"
+    )
+    return output

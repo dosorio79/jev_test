@@ -65,6 +65,7 @@ def test_live_limits_must_be_positive(tmp_path: Path, field: str) -> None:
         "max_requests": 30,
         "budget_usd": 1,
         "cost_per_request_usd": 0.1,
+        "routing_threshold": 0.7,
     }
     live[field] = 0
     body = "\n".join(f"  {key}: {value}" for key, value in live.items())
@@ -89,6 +90,7 @@ live:
   repetitions: 1
   concurrency: 2
   max_requests: 30
+  routing_threshold: 0.7
 """,
     )
 

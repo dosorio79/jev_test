@@ -76,7 +76,7 @@ def test_offline_demo_writes_predictions_metrics_and_html_without_network(
         [
             "offline-demo",
             "--input",
-            "data/cx_sentiment_test_600.csv",
+            "examples/demo_feedback.csv",
             "--output-dir",
             str(output),
             "--limit",
@@ -100,7 +100,7 @@ def test_live_run_defaults_to_dry_run(monkeypatch, tmp_path: Path) -> None:
                 "--provider",
                 "openai",
                 "--input",
-                "data/cx_sentiment_test_600.csv",
+                "examples/demo_feedback.csv",
                 "--output-dir",
                 str(tmp_path),
                 "--limit",
@@ -115,7 +115,7 @@ def test_live_run_defaults_to_dry_run(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_yaml_run_resolves_paths_relative_to_config(tmp_path: Path, monkeypatch) -> None:
-    source = Path("data/cx_sentiment_test_600.csv").read_bytes()
+    source = Path("examples/demo_feedback.csv").read_bytes()
     (tmp_path / "data.csv").write_bytes(source)
     config = tmp_path / "experiment.yaml"
     config.write_text("provider: mock\ninput: data.csv\noutput_dir: results\nlimit: 3\n")
@@ -134,7 +134,7 @@ def test_yaml_run_resolves_paths_relative_to_config(tmp_path: Path, monkeypatch)
 
 def test_yaml_live_provider_defaults_to_preview(tmp_path: Path, monkeypatch, capsys) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    dataset = Path("examples/demo_feedback.csv").resolve()
     config = tmp_path / "experiment.yaml"
     config.write_text(f"provider: openai\ninput: {dataset}\noutput_dir: results\nlimit: 2\n")
 
@@ -164,7 +164,7 @@ def test_yaml_live_requires_budget_before_provider_creation(
     tmp_path: Path, monkeypatch, capsys, settings: str, missing_field: str
 ) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    dataset = Path("examples/demo_feedback.csv").resolve()
     config = tmp_path / "experiment.yaml"
     config.write_text(f"provider: openai\ninput: {dataset}\n{settings}")
     with pytest.raises(SystemExit) as error:
@@ -197,7 +197,7 @@ def test_yaml_missing_file_has_readable_error(tmp_path: Path, capsys) -> None:
 
 
 def test_yaml_run_prints_report_location(tmp_path: Path, capsys) -> None:
-    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    dataset = Path("examples/demo_feedback.csv").resolve()
     config = tmp_path / "experiment.yaml"
     config.write_text(f"provider: mock\ninput: {dataset}\noutput_dir: results\nlimit: 1\n")
 
@@ -214,7 +214,7 @@ def test_yaml_cannot_be_mixed_with_legacy_flags(tmp_path: Path) -> None:
 
 
 def test_yaml_live_run_passes_explicit_caps_to_runner(tmp_path: Path, monkeypatch) -> None:
-    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    dataset = Path("examples/demo_feedback.csv").resolve()
     config = tmp_path / "experiment.yaml"
     config.write_text(
         f"provider: openai\ninput: {dataset}\nlimit: 2\nbudget_usd: 0.05\n"
@@ -248,7 +248,7 @@ def test_missing_quarto_stops_before_provider_calls(tmp_path: Path, monkeypatch,
     monkeypatch.setattr("cx_sentiment.reporting.shutil.which", lambda name: None)
     monkeypatch.setattr("cx_sentiment.cli.run_predictions", unexpected_call)
     config = tmp_path / "experiment.yaml"
-    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    dataset = Path("examples/demo_feedback.csv").resolve()
     config.write_text(f"provider: mock\ninput: {dataset}\n")
 
     with pytest.raises(SystemExit) as error:
@@ -264,7 +264,7 @@ def test_yaml_invocations_keep_separate_dated_runs_with_replayable_configs(
     from cx_sentiment.config import load_config
 
     monkeypatch.setenv("OPENAI_API_KEY", "private-test-key")
-    source = Path("data/cx_sentiment_test_600.csv").resolve()
+    source = Path("examples/demo_feedback.csv").resolve()
     config = tmp_path / "smoke.yaml"
     config.write_text(f"provider: openai\ninput: {source}\noutput_dir: runs\nlimit: 5\n")
 
@@ -367,7 +367,7 @@ def test_stopped_run_checkpoints_results_and_invocation_costs(tmp_path: Path, mo
 
 @pytest.mark.parametrize("failure", ["dataset", "credentials", "pricing"])
 def test_expected_run_errors_are_sanitized(tmp_path: Path, monkeypatch, capsys, failure) -> None:
-    dataset = Path("data/cx_sentiment_test_600.csv").resolve()
+    dataset = Path("examples/demo_feedback.csv").resolve()
     if failure == "dataset":
         dataset = tmp_path / "invalid.csv"
         dataset.write_text("private-test-value\nsecret-input\n")

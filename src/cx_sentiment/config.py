@@ -13,7 +13,7 @@ class ExperimentConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
 
     provider: Literal["mock", "openai", "jev"] = "mock"
-    input: Path = Path("data/cx_sentiment_test_600.csv")
+    input: Path = Path("../examples/demo_feedback.csv")
     output_dir: Path = Path("runs")
     limit: int = Field(default=5, gt=0, strict=True)
     budget_usd: float | None = Field(default=None, gt=0)

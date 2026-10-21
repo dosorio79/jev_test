@@ -9,8 +9,7 @@ __pycache__/
 *.py[cod]
 outputs/
 /experiments/runs/
-data/validation_600.csv
-data/validation_manifest.json
+/data/
 
 # Local Terraform state and administration inputs; keep the provider lockfile.
 infra/github/.terraform/

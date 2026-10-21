@@ -1,0 +1,3739 @@
+{
+  "measurement_scope": "simulated",
+  "dataset_sha256": "f74a3d76c613e5da6a6ef85784df16c588faa59dda1cfdc431cf5c42eec2a826",
+  "support": 600,
+  "openai_macro_f1": 0.9799022655559684,
+  "thresholds": [
+    {
+      "threshold": 0.4,
+      "accuracy": 0.9616666666666667,
+      "macro_f1": 0.9610798736632701,
+      "macro_f1_delta_from_openai": -0.018822391892698298,
+      "macro_f1_delta_ci95": [
+        -0.03611272290988855,
+        -0.001979173536291231
+      ],
+      "fallback_fraction": 0.005,
+      "jev_coverage": 0.995,
+      "accepted_error_rate": 0.038525963149078725,
+      "deferred_error_rate": 0.6666666666666666,
+      "cost_usd_per_1000": 0.016356960000000004,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9175886235286113,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9274539894735646,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 1.0
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.41,
+      "accuracy": 0.96,
+      "macro_f1": 0.9593402481590515,
+      "macro_f1_delta_from_openai": -0.020562017396916876,
+      "macro_f1_delta_ci95": [
+        -0.03840604341771314,
+        -0.00517962427007867
+      ],
+      "fallback_fraction": 0.006666666666666667,
+      "jev_coverage": 0.9933333333333333,
+      "accepted_error_rate": 0.03859060402684564,
+      "deferred_error_rate": 0.5,
+      "cost_usd_per_1000": 0.016394293333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9175886235286113,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.42,
+      "accuracy": 0.96,
+      "macro_f1": 0.9593402481590515,
+      "macro_f1_delta_from_openai": -0.020562017396916876,
+      "macro_f1_delta_ci95": [
+        -0.03804944625578083,
+        -0.004009057290569022
+      ],
+      "fallback_fraction": 0.008333333333333333,
+      "jev_coverage": 0.9916666666666667,
+      "accepted_error_rate": 0.03865546218487395,
+      "deferred_error_rate": 0.4,
+      "cost_usd_per_1000": 0.016432293333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9175886235286113,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.43,
+      "accuracy": 0.96,
+      "macro_f1": 0.9593402481590515,
+      "macro_f1_delta_from_openai": -0.020562017396916876,
+      "macro_f1_delta_ci95": [
+        -0.036883482180334944,
+        -0.0050425800325361895
+      ],
+      "fallback_fraction": 0.008333333333333333,
+      "jev_coverage": 0.9916666666666667,
+      "accepted_error_rate": 0.03865546218487395,
+      "deferred_error_rate": 0.4,
+      "cost_usd_per_1000": 0.016432293333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9175886235286113,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.44,
+      "accuracy": 0.9616666666666667,
+      "macro_f1": 0.9610798736632701,
+      "macro_f1_delta_from_openai": -0.018822391892698298,
+      "macro_f1_delta_ci95": [
+        -0.03468277671559306,
+        -0.0027034957021651435
+      ],
+      "fallback_fraction": 0.01,
+      "jev_coverage": 0.99,
+      "accepted_error_rate": 0.037037037037037035,
+      "deferred_error_rate": 0.5,
+      "cost_usd_per_1000": 0.01647096,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9284705339073981,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.45,
+      "accuracy": 0.9633333333333334,
+      "macro_f1": 0.9627915578469713,
+      "macro_f1_delta_from_openai": -0.01711070770899703,
+      "macro_f1_delta_ci95": [
+        -0.03394773128543227,
+        -0.0017605423278154008
+      ],
+      "fallback_fraction": 0.011666666666666667,
+      "jev_coverage": 0.9883333333333333,
+      "accepted_error_rate": 0.03541315345699832,
+      "deferred_error_rate": 0.5714285714285714,
+      "cost_usd_per_1000": 0.016509126666666665,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9388903948676245,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.46,
+      "accuracy": 0.9633333333333334,
+      "macro_f1": 0.9627915578469713,
+      "macro_f1_delta_from_openai": -0.01711070770899703,
+      "macro_f1_delta_ci95": [
+        -0.03283555964476217,
+        -0.00038111132530018285
+      ],
+      "fallback_fraction": 0.011666666666666667,
+      "jev_coverage": 0.9883333333333333,
+      "accepted_error_rate": 0.03541315345699832,
+      "deferred_error_rate": 0.5714285714285714,
+      "cost_usd_per_1000": 0.016509126666666665,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9388903948676245,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.47,
+      "accuracy": 0.9633333333333334,
+      "macro_f1": 0.9627915578469713,
+      "macro_f1_delta_from_openai": -0.01711070770899703,
+      "macro_f1_delta_ci95": [
+        -0.03362665126453151,
+        -0.0001679374969281087
+      ],
+      "fallback_fraction": 0.011666666666666667,
+      "jev_coverage": 0.9883333333333333,
+      "accepted_error_rate": 0.03541315345699832,
+      "deferred_error_rate": 0.5714285714285714,
+      "cost_usd_per_1000": 0.016509126666666665,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9388903948676245,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.48,
+      "accuracy": 0.9633333333333334,
+      "macro_f1": 0.9627915578469713,
+      "macro_f1_delta_from_openai": -0.01711070770899703,
+      "macro_f1_delta_ci95": [
+        -0.03360842015741893,
+        -0.001387042592373678
+      ],
+      "fallback_fraction": 0.011666666666666667,
+      "jev_coverage": 0.9883333333333333,
+      "accepted_error_rate": 0.03541315345699832,
+      "deferred_error_rate": 0.5714285714285714,
+      "cost_usd_per_1000": 0.016509126666666665,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9388903948676245,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.979779411764706,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.49,
+      "accuracy": 0.9666666666666667,
+      "macro_f1": 0.9662114547743812,
+      "macro_f1_delta_from_openai": -0.013690810781587182,
+      "macro_f1_delta_ci95": [
+        -0.02883964772962228,
+        0.0012132261397672058
+      ],
+      "fallback_fraction": 0.015,
+      "jev_coverage": 0.985,
+      "accepted_error_rate": 0.032148900169204735,
+      "deferred_error_rate": 0.6666666666666666,
+      "cost_usd_per_1000": 0.016586793333333332,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9492482983531577,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9167214012041597,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.99
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": false,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 0.9683333333333334,
+      "macro_f1": 0.9679353342681835,
+      "macro_f1_delta_from_openai": -0.011966931287784921,
+      "macro_f1_delta_ci95": [
+        -0.026636054327817477,
+        0.001795410085827043
+      ],
+      "fallback_fraction": 0.018333333333333333,
+      "jev_coverage": 0.9816666666666667,
+      "accepted_error_rate": 0.030560271646859084,
+      "deferred_error_rate": 0.6363636363636364,
+      "cost_usd_per_1000": 0.016662626666666666,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9492482983531577,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9274539894735646,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.98
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.51,
+      "accuracy": 0.97,
+      "macro_f1": 0.9696388578950584,
+      "macro_f1_delta_from_openai": -0.01026340766090994,
+      "macro_f1_delta_ci95": [
+        -0.024814359858594478,
+        0.0033856940638394527
+      ],
+      "fallback_fraction": 0.021666666666666667,
+      "jev_coverage": 0.9783333333333334,
+      "accepted_error_rate": 0.027257240204429302,
+      "deferred_error_rate": 0.6923076923076923,
+      "cost_usd_per_1000": 0.016740793333333333,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9595588235294118,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.92
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9274539894735646,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.98
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.52,
+      "accuracy": 0.97,
+      "macro_f1": 0.9696388578950584,
+      "macro_f1_delta_from_openai": -0.01026340766090994,
+      "macro_f1_delta_ci95": [
+        -0.02517366746504556,
+        0.003628263505201878
+      ],
+      "fallback_fraction": 0.023333333333333334,
+      "jev_coverage": 0.9766666666666667,
+      "accepted_error_rate": 0.025597269624573378,
+      "deferred_error_rate": 0.7142857142857143,
+      "cost_usd_per_1000": 0.01678046,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9595588235294118,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9274539894735646,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.98
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.53,
+      "accuracy": 0.9716666666666667,
+      "macro_f1": 0.971357087210902,
+      "macro_f1_delta_from_openai": -0.008545178345066407,
+      "macro_f1_delta_ci95": [
+        -0.02213983696380019,
+        0.004988291856438203
+      ],
+      "fallback_fraction": 0.02666666666666667,
+      "jev_coverage": 0.9733333333333334,
+      "accepted_error_rate": 0.023972602739726026,
+      "deferred_error_rate": 0.6875,
+      "cost_usd_per_1000": 0.016855293333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9595588235294118,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.97
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.54,
+      "accuracy": 0.97,
+      "macro_f1": 0.9696856348535982,
+      "macro_f1_delta_from_openai": -0.010216630702370222,
+      "macro_f1_delta_ci95": [
+        -0.023237811480873435,
+        0.0017075787850244994
+      ],
+      "fallback_fraction": 0.03166666666666667,
+      "jev_coverage": 0.9683333333333334,
+      "accepted_error_rate": 0.022375215146299483,
+      "deferred_error_rate": 0.631578947368421,
+      "cost_usd_per_1000": 0.016971626666666666,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9596987886653688,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9273198513112574,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.96
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.55,
+      "accuracy": 0.97,
+      "macro_f1": 0.9697207219773499,
+      "macro_f1_delta_from_openai": -0.010181543578618446,
+      "macro_f1_delta_ci95": [
+        -0.022107849307912434,
+        0.0
+      ],
+      "fallback_fraction": 0.03666666666666667,
+      "jev_coverage": 0.9633333333333334,
+      "accepted_error_rate": 0.020761245674740483,
+      "deferred_error_rate": 0.5909090909090909,
+      "cost_usd_per_1000": 0.01708746,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.87
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9273198513112574,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.96
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.56,
+      "accuracy": 0.97,
+      "macro_f1": 0.9697207219773499,
+      "macro_f1_delta_from_openai": -0.010181543578618446,
+      "macro_f1_delta_ci95": [
+        -0.021937926086761716,
+        0.0015574195816372416
+      ],
+      "fallback_fraction": 0.03666666666666667,
+      "jev_coverage": 0.9633333333333334,
+      "accepted_error_rate": 0.020761245674740483,
+      "deferred_error_rate": 0.5909090909090909,
+      "cost_usd_per_1000": 0.01708746,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.87
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 1.0
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9273198513112574,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.96
+        }
+      ],
+      "qualifies_quality": false,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.57,
+      "accuracy": 0.9716666666666667,
+      "macro_f1": 0.9714118631152654,
+      "macro_f1_delta_from_openai": -0.008490402440702982,
+      "macro_f1_delta_ci95": [
+        -0.019829269155991373,
+        0.0018156332947392383
+      ],
+      "fallback_fraction": 0.04,
+      "jev_coverage": 0.96,
+      "accepted_error_rate": 0.019097222222222224,
+      "deferred_error_rate": 0.5833333333333334,
+      "cost_usd_per_1000": 0.01716512666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.87
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.990049751243781,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9273198513112574,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.96
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.58,
+      "accuracy": 0.9716666666666667,
+      "macro_f1": 0.9714118631152654,
+      "macro_f1_delta_from_openai": -0.008490402440702982,
+      "macro_f1_delta_ci95": [
+        -0.019313183088916094,
+        0.0017364161975831432
+      ],
+      "fallback_fraction": 0.043333333333333335,
+      "jev_coverage": 0.9566666666666667,
+      "accepted_error_rate": 0.01916376306620209,
+      "deferred_error_rate": 0.5384615384615384,
+      "cost_usd_per_1000": 0.017243293333333336,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.85
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.990049751243781,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9273198513112574,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.96
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.59,
+      "accuracy": 0.9716666666666667,
+      "macro_f1": 0.9714118631152654,
+      "macro_f1_delta_from_openai": -0.008490402440702982,
+      "macro_f1_delta_ci95": [
+        -0.01964346496668561,
+        0.003221285273904492
+      ],
+      "fallback_fraction": 0.04666666666666667,
+      "jev_coverage": 0.9533333333333334,
+      "accepted_error_rate": 0.019230769230769232,
+      "deferred_error_rate": 0.5,
+      "cost_usd_per_1000": 0.017317793333333335,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.85
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.990049751243781,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9273198513112574,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.95
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.6,
+      "accuracy": 0.9733333333333334,
+      "macro_f1": 0.9731373890067165,
+      "macro_f1_delta_from_openai": -0.0067648765492518415,
+      "macro_f1_delta_ci95": [
+        -0.018350439549632634,
+        0.003353323481699577
+      ],
+      "fallback_fraction": 0.04833333333333333,
+      "jev_coverage": 0.9516666666666667,
+      "accepted_error_rate": 0.017513134851138354,
+      "deferred_error_rate": 0.5172413793103449,
+      "cost_usd_per_1000": 0.01735596,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.85
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 0.990049751243781,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.99
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9380894060012247,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.94
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.61,
+      "accuracy": 0.975,
+      "macro_f1": 0.9747913268907703,
+      "macro_f1_delta_from_openai": -0.005110938665198073,
+      "macro_f1_delta_ci95": [
+        -0.015256833619098246,
+        0.004876202681761466
+      ],
+      "fallback_fraction": 0.05333333333333334,
+      "jev_coverage": 0.9466666666666667,
+      "accepted_error_rate": 0.014084507042253521,
+      "deferred_error_rate": 0.53125,
+      "cost_usd_per_1000": 0.01746796,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.85
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.93
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.62,
+      "accuracy": 0.975,
+      "macro_f1": 0.9747913268907703,
+      "macro_f1_delta_from_openai": -0.005110938665198073,
+      "macro_f1_delta_ci95": [
+        -0.015212026083338607,
+        0.003505888190347866
+      ],
+      "fallback_fraction": 0.055,
+      "jev_coverage": 0.945,
+      "accepted_error_rate": 0.014109347442680775,
+      "deferred_error_rate": 0.5151515151515151,
+      "cost_usd_per_1000": 0.017508293333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.85
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.93
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.63,
+      "accuracy": 0.9766666666666667,
+      "macro_f1": 0.9764797786489124,
+      "macro_f1_delta_from_openai": -0.0034224869070559327,
+      "macro_f1_delta_ci95": [
+        -0.01357537985322346,
+        0.005282095569578373
+      ],
+      "fallback_fraction": 0.06,
+      "jev_coverage": 0.94,
+      "accepted_error_rate": 0.010638297872340425,
+      "deferred_error_rate": 0.5277777777777778,
+      "cost_usd_per_1000": 0.017624293333333332,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9800950683303625,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.84
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.93
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.64,
+      "accuracy": 0.975,
+      "macro_f1": 0.9747913268907703,
+      "macro_f1_delta_from_openai": -0.005110938665198073,
+      "macro_f1_delta_ci95": [
+        -0.01391636061584976,
+        0.0031129293998238424
+      ],
+      "fallback_fraction": 0.065,
+      "jev_coverage": 0.935,
+      "accepted_error_rate": 0.0106951871657754,
+      "deferred_error_rate": 0.48717948717948717,
+      "cost_usd_per_1000": 0.017739460000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.93
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.65,
+      "accuracy": 0.975,
+      "macro_f1": 0.9747913268907703,
+      "macro_f1_delta_from_openai": -0.005110938665198073,
+      "macro_f1_delta_ci95": [
+        -0.014133058464122,
+        0.0033495701146963592
+      ],
+      "fallback_fraction": 0.065,
+      "jev_coverage": 0.935,
+      "accepted_error_rate": 0.0106951871657754,
+      "deferred_error_rate": 0.48717948717948717,
+      "cost_usd_per_1000": 0.017739460000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.93
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.66,
+      "accuracy": 0.975,
+      "macro_f1": 0.9747913268907703,
+      "macro_f1_delta_from_openai": -0.005110938665198073,
+      "macro_f1_delta_ci95": [
+        -0.014132937095006157,
+        0.0034531080439826026
+      ],
+      "fallback_fraction": 0.06833333333333333,
+      "jev_coverage": 0.9316666666666666,
+      "accepted_error_rate": 0.01073345259391771,
+      "deferred_error_rate": 0.4634146341463415,
+      "cost_usd_per_1000": 0.017815960000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9498465454001047,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.938095238095238,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.92
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.67,
+      "accuracy": 0.9783333333333334,
+      "macro_f1": 0.9781912853656399,
+      "macro_f1_delta_from_openai": -0.0017109801903284483,
+      "macro_f1_delta_ci95": [
+        -0.010168413321995256,
+        0.005229525136400376
+      ],
+      "fallback_fraction": 0.075,
+      "jev_coverage": 0.925,
+      "accepted_error_rate": 0.007207207207207207,
+      "deferred_error_rate": 0.4666666666666667,
+      "cost_usd_per_1000": 0.017967626666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.82
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9486610324814174,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.91
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.68,
+      "accuracy": 0.9766666666666667,
+      "macro_f1": 0.9765074703153518,
+      "macro_f1_delta_from_openai": -0.003394795240616588,
+      "macro_f1_delta_ci95": [
+        -0.010166154861197041,
+        0.0032661773073121977
+      ],
+      "fallback_fraction": 0.07666666666666666,
+      "jev_coverage": 0.9233333333333333,
+      "accepted_error_rate": 0.007220216606498195,
+      "deferred_error_rate": 0.45652173913043476,
+      "cost_usd_per_1000": 0.01800546,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.82
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9380894060012247,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.9
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.69,
+      "accuracy": 0.9766666666666667,
+      "macro_f1": 0.9765074703153518,
+      "macro_f1_delta_from_openai": -0.003394795240616588,
+      "macro_f1_delta_ci95": [
+        -0.010005834396977647,
+        0.0018562597746068245
+      ],
+      "fallback_fraction": 0.07833333333333334,
+      "jev_coverage": 0.9216666666666666,
+      "accepted_error_rate": 0.007233273056057866,
+      "deferred_error_rate": 0.44680851063829785,
+      "cost_usd_per_1000": 0.018045793333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9380894060012247,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.9
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.7,
+      "accuracy": 0.9766666666666667,
+      "macro_f1": 0.9765074703153518,
+      "macro_f1_delta_from_openai": -0.003394795240616588,
+      "macro_f1_delta_ci95": [
+        -0.010295300575584662,
+        0.0033667954624928857
+      ],
+      "fallback_fraction": 0.08166666666666667,
+      "jev_coverage": 0.9183333333333333,
+      "accepted_error_rate": 0.0054446460980036296,
+      "deferred_error_rate": 0.4489795918367347,
+      "cost_usd_per_1000": 0.01812262666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.92
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9380894060012247,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.89
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.71,
+      "accuracy": 0.9783333333333334,
+      "macro_f1": 0.9782230513627003,
+      "macro_f1_delta_from_openai": -0.0016792141932681082,
+      "macro_f1_delta_ci95": [
+        -0.008109026691226526,
+        0.003415734182465713
+      ],
+      "fallback_fraction": 0.08666666666666667,
+      "jev_coverage": 0.9133333333333333,
+      "accepted_error_rate": 0.0036496350364963502,
+      "deferred_error_rate": 0.4423076923076923,
+      "cost_usd_per_1000": 0.018237793333333335,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.98
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.92
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.87
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.72,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.005105548615214339,
+        0.005127311285889493
+      ],
+      "fallback_fraction": 0.09166666666666666,
+      "jev_coverage": 0.9083333333333333,
+      "accepted_error_rate": 0.001834862385321101,
+      "deferred_error_rate": 0.43636363636363634,
+      "cost_usd_per_1000": 0.018353460000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.87
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": true
+    },
+    {
+      "threshold": 0.73,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.004962816745160687,
+        0.005063668031174623
+      ],
+      "fallback_fraction": 0.09666666666666666,
+      "jev_coverage": 0.9033333333333333,
+      "accepted_error_rate": 0.0018450184501845018,
+      "deferred_error_rate": 0.41379310344827586,
+      "cost_usd_per_1000": 0.018467960000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.79
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.74,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.005120654042304437,
+        0.005026489231776385
+      ],
+      "fallback_fraction": 0.09666666666666666,
+      "jev_coverage": 0.9033333333333333,
+      "accepted_error_rate": 0.0018450184501845018,
+      "deferred_error_rate": 0.41379310344827586,
+      "cost_usd_per_1000": 0.018467960000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.79
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.75,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.004998433141726819,
+        0.00514506697290942
+      ],
+      "fallback_fraction": 0.1,
+      "jev_coverage": 0.9,
+      "accepted_error_rate": 0.001851851851851852,
+      "deferred_error_rate": 0.4,
+      "cost_usd_per_1000": 0.018543793333333336,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.79
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.97
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.76,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.004948795570793227,
+        0.004705478938581876
+      ],
+      "fallback_fraction": 0.10166666666666667,
+      "jev_coverage": 0.8983333333333333,
+      "accepted_error_rate": 0.0018552875695732839,
+      "deferred_error_rate": 0.39344262295081966,
+      "cost_usd_per_1000": 0.01858062666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.79
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.77,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.005121664198913731,
+        0.0050309162123442185
+      ],
+      "fallback_fraction": 0.105,
+      "jev_coverage": 0.895,
+      "accepted_error_rate": 0.00186219739292365,
+      "deferred_error_rate": 0.38095238095238093,
+      "cost_usd_per_1000": 0.01865712666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.9
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.78,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        -0.005039434593049522,
+        0.004989761076666091
+      ],
+      "fallback_fraction": 0.11166666666666666,
+      "jev_coverage": 0.8883333333333333,
+      "accepted_error_rate": 0.001876172607879925,
+      "deferred_error_rate": 0.3582089552238806,
+      "cost_usd_per_1000": 0.018808460000000003,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9700424770847306,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.79,
+      "accuracy": 0.9783333333333334,
+      "macro_f1": 0.9782230513627003,
+      "macro_f1_delta_from_openai": -0.0016792141932681082,
+      "macro_f1_delta_ci95": [
+        -0.005217595704561104,
+        0.0
+      ],
+      "fallback_fraction": 0.115,
+      "jev_coverage": 0.885,
+      "accepted_error_rate": 0.0018832391713747645,
+      "deferred_error_rate": 0.34782608695652173,
+      "cost_usd_per_1000": 0.018887126666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.96
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 0.9898966704936853,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.8,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.12166666666666667,
+      "jev_coverage": 0.8783333333333333,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.3424657534246575,
+      "cost_usd_per_1000": 0.019037626666666665,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.95
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.92
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.86
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.81,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.12666666666666668,
+      "jev_coverage": 0.8733333333333333,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.32894736842105265,
+      "cost_usd_per_1000": 0.019151126666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.94
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.85
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.82,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.12833333333333333,
+      "jev_coverage": 0.8716666666666667,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.3246753246753247,
+      "cost_usd_per_1000": 0.019189460000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.85
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.83,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.135,
+      "jev_coverage": 0.865,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.30864197530864196,
+      "cost_usd_per_1000": 0.01934212666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.87
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.84
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.84,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.13666666666666666,
+      "jev_coverage": 0.8633333333333333,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.3048780487804878,
+      "cost_usd_per_1000": 0.019381293333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.93
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.84
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.85,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.14333333333333334,
+      "jev_coverage": 0.8566666666666667,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.29069767441860467,
+      "cost_usd_per_1000": 0.019529793333333333,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.92
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.84
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.86,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.15,
+      "jev_coverage": 0.85,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.2777777777777778,
+      "cost_usd_per_1000": 0.019678626666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.92
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.88
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.83
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.87,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.155,
+      "jev_coverage": 0.845,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.26881720430107525,
+      "cost_usd_per_1000": 0.019792960000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.83
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.88,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.155,
+      "jev_coverage": 0.845,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.26881720430107525,
+      "cost_usd_per_1000": 0.019792960000000002,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.83
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.89,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.165,
+      "jev_coverage": 0.835,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.25252525252525254,
+      "cost_usd_per_1000": 0.02002596,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.77
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.8
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.86
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.84
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.83
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.9,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.18,
+      "jev_coverage": 0.82,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.23148148148148148,
+      "cost_usd_per_1000": 0.020372626666666668,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.76
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.84
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.82
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.81
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.91,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.18833333333333332,
+      "jev_coverage": 0.8116666666666666,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.22123893805309736,
+      "cost_usd_per_1000": 0.020563793333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.76
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.74
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.84
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.81
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.92,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.19833333333333333,
+      "jev_coverage": 0.8016666666666666,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.21008403361344538,
+      "cost_usd_per_1000": 0.020788793333333333,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.76
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.91
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.72
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.82
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.79
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.93,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.21666666666666667,
+      "jev_coverage": 0.7833333333333333,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.19230769230769232,
+      "cost_usd_per_1000": 0.021211626666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.75
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.89
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.72
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.77
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.76
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.94,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.22833333333333333,
+      "jev_coverage": 0.7716666666666666,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.18248175182481752,
+      "cost_usd_per_1000": 0.021476793333333334,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.75
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.87
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.7
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.8
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.75
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.76
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.95,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.24666666666666667,
+      "jev_coverage": 0.7533333333333333,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.16891891891891891,
+      "cost_usd_per_1000": 0.021896126666666668,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.75
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.85
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.67
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.77
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.74
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.74
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.96,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.26666666666666666,
+      "jev_coverage": 0.7333333333333333,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.15625,
+      "cost_usd_per_1000": 0.02235996,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.72
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.83
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.65
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.76
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.7
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.74
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.97,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.29333333333333333,
+      "jev_coverage": 0.7066666666666667,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.14204545454545456,
+      "cost_usd_per_1000": 0.022974626666666668,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.69
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.81
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.64
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.75
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.66
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.69
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.98,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.32,
+      "jev_coverage": 0.68,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.13020833333333334,
+      "cost_usd_per_1000": 0.023586793333333335,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.68
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.78
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.6
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.72
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.63
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.67
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    },
+    {
+      "threshold": 0.99,
+      "accuracy": 0.98,
+      "macro_f1": 0.9799022655559684,
+      "macro_f1_delta_from_openai": 0.0,
+      "macro_f1_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_fraction": 0.39,
+      "jev_coverage": 0.61,
+      "accepted_error_rate": 0.0,
+      "deferred_error_rate": 0.10683760683760683,
+      "cost_usd_per_1000": 0.025194126666666667,
+      "by_language": [
+        {
+          "language": "de",
+          "support": 100,
+          "macro_f1": 0.9701226309921962,
+          "openai_macro_f1": 0.9701226309921962,
+          "jev_coverage": 0.66
+        },
+        {
+          "language": "en",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.73
+        },
+        {
+          "language": "es",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.56
+        },
+        {
+          "language": "fr",
+          "support": 100,
+          "macro_f1": 0.9599761051373954,
+          "openai_macro_f1": 0.9599761051373954,
+          "jev_coverage": 0.59
+        },
+        {
+          "language": "it",
+          "support": 100,
+          "macro_f1": 1.0,
+          "openai_macro_f1": 1.0,
+          "jev_coverage": 0.54
+        },
+        {
+          "language": "pt",
+          "support": 100,
+          "macro_f1": 0.9487891670175342,
+          "openai_macro_f1": 0.9487891670175342,
+          "jev_coverage": 0.58
+        }
+      ],
+      "qualifies_quality": true,
+      "qualifies_languages": true,
+      "non_dominated": false
+    }
+  ],
+  "candidate_thresholds": [
+    0.53,
+    0.57,
+    0.6,
+    0.61,
+    0.63,
+    0.67,
+    0.71,
+    0.72
+  ],
+  "recommendation_status": "candidate thresholds available from validation simulation"
+}

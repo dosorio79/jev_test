@@ -1,6 +1,6 @@
 # Codex implementation task — Multilingual CX sentiment selective-routing benchmark
 
-You are implementing a **personal, reproducible research POC** in the current repository. Build and validate code; do not merely outline a design. Read the provided archive `data/raw/financial_sentiment_hf_v2.zip`, `data/cx_sentiment_test_600.csv`, `data/cx_sentiment_test_600.jsonl`, and `data/sample_manifest.json` before coding. If the archive is located elsewhere, discover it via configured path rather than assuming a fixed machine path.
+You are implementing a **personal, reproducible research POC** in the current repository. Build and validate code; do not merely outline a design. The research corpus is intentionally excluded from Git. Use locally supplied, rights-cleared paths rather than assuming the private archive or locked samples are present in a fresh checkout.
 
 ## Scientific goal
 Compare zero-shot sentiment classification of multilingual synthetic financial customer experience comments across:
@@ -13,7 +13,7 @@ Compare zero-shot sentiment classification of multilingual synthetic financial c
 Predictions: EXACT taxonomy {negative:0, neutral:1, positive:2}. Input text is in PT, EN, ES, FR, DE, IT. Classify **overall sentiment expressed by the customer**, not future churn, intensity or entity sentiment. Never translate by default. For neutral distinguish factual feedback from satisfaction and dissatisfaction. Do not introduce a 'mixed' fourth output in the main benchmark; ambiguous mixed messages may be errors and are an explicit failure-analysis segment.
 
 ## Dataset and leakage constraints
-- Main locked TEST: provided `data/cx_sentiment_test_600.csv` (source `test.csv`, original synthetic corpus). Exactly 600 rows, 100/language, 200/class. Keep test unchanged. Its `source_row_index_zero_based` and `sample_id` are traceability fields.
+- Main locked TEST: locally supplied `data/cx_sentiment_test_600.csv` (source `test.csv`, original synthetic corpus). Exactly 600 rows, 100/language, 200/class. Keep test unchanged. Its `source_row_index_zero_based` and `sample_id` are traceability fields. This file is gitignored and is not part of the public repository.
 - VALIDATION: original `validation.csv` inside the archive; create deterministic, STRATIFIED, reasonably sized `validation_600.csv` (same 100/language, 200/class) using a *different seed* than the test sampler. Persist exact selected indices, SHA256 of source, and manifest. Use only validation for prompt selection (limited/frozen before test), confidence calibration and threshold selection. Never use TEST ground truth in policy fitting, threshold tuning or prompt design.
 - Optional TRAIN: original `train.csv` only if explicitly enabling supervised training; default is NO fine-tuning.
 - Confirm counts, label mapping, text encoding, nulls, duplicates and normalized exact cross-split overlap. Record potential **semantic / template near-duplicate** leakage; do not claim real-world generalization. If testing a trainable model, audit template groups before training. The original corpus was generated from 108 seed sentences with templated variations.

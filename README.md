@@ -9,10 +9,12 @@ An offline-first BYOK (bring your own key) research toolkit for comparing multil
 
 The dataset boundary uses Polars and Dataframely, so schema, nullability, uniqueness, categorical values, and the label/sentiment relationship are validated as dataframe operations. Pydantic is reserved for provider predictions and configuration.
 
-Project code is MIT licensed; dataset redistribution rights are **unresolved**.
-Read [dataset provenance and rights](docs/DATA_LICENSE.md) before redistributing
-bundled data or publishing artifacts containing source text. This is a research
-toolkit, with synthetic-data and historical-measurement limitations described below.
+Project code is MIT licensed. The research corpus and source archives are
+intentionally excluded from Git because their redistribution rights are
+**unresolved**. Read [dataset provenance and rights](docs/DATA_LICENSE.md) before
+publishing locally supplied data or artifacts containing source text. This is a
+research toolkit, with synthetic-data and historical-measurement limitations
+described below.
 Repository visibility, report publication, and dataset redistribution are
 separate release decisions.
 
@@ -40,6 +42,8 @@ Read the [shareable final report](docs/results/cx-sentiment-routing/index.html)
 for methods, language-level results, limitations, and interpretation. The next
 useful investment is validation on privacy-reviewed, human-labeled real customer
 feedback—not further optimization against this synthetic test set.
+See [sharing the experiment](docs/SHARING.md) for the recommended public report
+URL and GitHub Pages setup.
 
 This is an independent personal project created for learning and enjoyment. I
 am not affiliated with, employed by, endorsed by, or a shareholder of Jev,
@@ -75,7 +79,7 @@ and re-render saved reports without provider calls.
 
 ```yaml
 provider: mock  # mock, openai, or jev
-input: ../data/cx_sentiment_test_600.csv
+input: ../examples/demo_feedback.csv
 output_dir: runs
 limit: 5
 ```
@@ -119,12 +123,13 @@ fallback predictions to select a validation threshold without extra API calls.
 Two configs process the same first five validation records, with separate dated run
 folders and a USD 0.05 budget per provider (USD 0.01 reserved per new request).
 Use these for an initial pipeline check; five records cannot establish model quality.
-On a fresh checkout, generate the ignored validation CSV from the bundled source
-archive (the locked test CSV remains unchanged):
+The research dataset is not included. If you have a rights-cleared source archive,
+generate the ignored validation CSV from your local copy (the locked test CSV
+remains unchanged):
 
 ```bash
 uv run cx-sentiment sample-validation \
-  --archive data/raw/financial_sentiment_hf_v2.zip \
+  --archive /path/to/financial_sentiment_hf_v2.zip \
   --output-dir data
 ```
 
@@ -339,17 +344,25 @@ these five records; this sample does not establish a general quality or speed
 advantage. Both runs predate dataset fingerprints and show historical-input
 warnings in the comparison report.
 
-## Validation sample
+## Local validation sample
 
-The source archive is available and its SHA256 matches the starter manifest. The generated validation sample is balanced at 600 records with no normalized exact cross-split overlap. Regenerate it with:
+The experiment used a source archive whose SHA256 was recorded in the private
+research evidence. Neither the archive nor its derived samples are distributed
+in this repository. With a rights-cleared local copy, regenerate the validation
+sample with:
 
 ```bash
 uv run cx-sentiment sample-validation \
-  --archive data/raw/financial_sentiment_hf_v2.zip \
+  --archive /path/to/financial_sentiment_hf_v2.zip \
   --output-dir data
 ```
 
 This creates a deterministic balanced `data/validation_600.csv` with seed `20261016` and a manifest containing the archive SHA256 and all selected source indices. It reads only `validation.csv` for the sample and checks normalized exact overlap against the archive's train and test splits. The locked test CSV is never rewritten.
+
+The `data/` directory is gitignored. The included
+[`examples/demo_feedback.csv`](examples/demo_feedback.csv) is a small,
+project-authored pipeline fixture, not part of the evaluated corpus and not
+evidence of model quality.
 
 ## Provider configuration
 

@@ -1,0 +1,102 @@
+{
+  "support": 600,
+  "accuracy": 0.9733333333333334,
+  "macro_f1": 0.9732442658923848,
+  "operational_coverage": 1.0,
+  "confusion_matrix": [
+    [
+      200,
+      0,
+      0
+    ],
+    [
+      14,
+      185,
+      1
+    ],
+    [
+      0,
+      1,
+      199
+    ]
+  ],
+  "per_class": {
+    "negative": {
+      "precision": 0.9345794392523364,
+      "recall": 1.0,
+      "f1": 0.966183574879227,
+      "support": 200
+    },
+    "neutral": {
+      "precision": 0.9946236559139785,
+      "recall": 0.925,
+      "f1": 0.9585492227979274,
+      "support": 200
+    },
+    "positive": {
+      "precision": 0.995,
+      "recall": 0.995,
+      "f1": 0.995,
+      "support": 200
+    }
+  },
+  "by_language": {
+    "de": {
+      "support": 100,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "en": {
+      "support": 100,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "es": {
+      "support": 100,
+      "accuracy": 0.96,
+      "macro_f1": 0.9594470046082949
+    },
+    "fr": {
+      "support": 100,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "it": {
+      "support": 100,
+      "accuracy": 0.94,
+      "macro_f1": 0.9388903948676245
+    },
+    "pt": {
+      "support": 100,
+      "accuracy": 0.94,
+      "macro_f1": 0.9396396396396396
+    }
+  },
+  "accuracy_ci95": [
+    0.96,
+    0.985
+  ],
+  "macro_f1_ci95": [
+    0.9600970335437373,
+    0.9850150955872713
+  ],
+  "ece": null,
+  "brier_score": null,
+  "latency_p50_ms": 230.77060600007826,
+  "latency_p95_ms": 1073.2934194999414,
+  "latency_by_provider": {
+    "hybrid": {
+      "support": 600,
+      "p50_ms": 230.77060600007826,
+      "p95_ms": 1073.2934194999414
+    }
+  },
+  "usage_input_tokens_total": 237784,
+  "usage_output_tokens_total": 23988,
+  "usage_records_fraction": 1.0,
+  "reported_credits_total": null,
+  "cost_usd_known_total": 0.01067063,
+  "cost_usd_total": 0.01067063,
+  "cost_usd_per_1000": 0.017784383333333334,
+  "cost_priced_fraction": 1.0
+}

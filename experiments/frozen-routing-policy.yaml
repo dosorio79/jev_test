@@ -1,5 +1,6 @@
-status: frozen_for_final_test
+status: evaluated_on_locked_test
 frozen_at: 2026-10-20
+evaluated_at: 2026-10-20
 source_split: validation
 decision_provider:
   provider: jev
@@ -22,8 +23,20 @@ authorization_gate:
   maximum_provider_requests: 1800
   maximum_estimated_cost_usd: 2.00
   concurrency: 1
-  paid_calls_authorized: false
+  paid_calls_authorized: true
 evidence:
   offline_study: runs/2026-10-20T20-55-19.316181Z-routing-study-offline/study.json
   controlled_pilot: runs/2026-10-20T21-06-34.457502Z-routing-study-live/benchmark.json
   decision_report: runs/2026-10-20T21-06-34.457502Z-routing-study-live/report.html
+  final_report: ../docs/results/cx-sentiment-routing/index.html
+final_evaluation:
+  records: 600
+  fallback_records: 42
+  fallback_fraction: 0.07
+  hybrid_macro_f1: 0.9732442658923848
+  hybrid_latency_p50_ms: 230.77060600007826
+  hybrid_latency_p95_ms: 1073.2934194999414
+  hybrid_cost_usd_per_1000: 0.017784383333333334
+  total_known_estimated_spend_usd: 0.02335843
+  unresolved_records: 0
+  retuned_after_evaluation: false

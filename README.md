@@ -13,8 +13,37 @@ Project code is MIT licensed; dataset redistribution rights are **unresolved**.
 Read [dataset provenance and rights](docs/DATA_LICENSE.md) before redistributing
 bundled data or publishing artifacts containing source text. This is a research
 toolkit, with synthetic-data and historical-measurement limitations described below.
-The repository is currently private; visibility changes and public publication
-are separate release steps.
+Repository visibility, report publication, and dataset redistribution are
+separate release decisions.
+
+## Final experiment result
+
+[![Main results from the routing experiment](docs/assets/cx-sentiment-routing-linkedin-v2.png)](docs/results/cx-sentiment-routing/index.html)
+
+The frozen Jev 1.13.0 → GPT-6 Luna policy was evaluated once on the held-out
+600-record synthetic test set. It accepted Jev predictions at maximum class
+probability 0.72 and sent the remaining 42 records (7%) to GPT-6 Luna.
+
+| Strategy | Macro F1 | P50 latency | P95 latency | Estimated USD / 1,000 |
+| --- | ---: | ---: | ---: | ---: |
+| Jev 1.13.0 | 0.966 | 229 ms | 281 ms | $0.01617 |
+| GPT-6 Luna | 0.968 | 885 ms | 1,333 ms | $0.02273 |
+| Jev 1.13.0 → GPT-6 Luna | **0.973** | **231 ms** | **1,073 ms** | **$0.01778** |
+
+The hybrid met every predefined acceptance criterion. Its paired macro-F1
+difference from GPT-6 Luna was +0.50 percentage points (95% bootstrap interval
+−0.17 to +1.30 points), so the result supports the routing policy but does not
+prove that it is universally better. Hybrid latency is derived from matched
+fresh stage timings; fallback requests necessarily pay for both stages.
+
+Read the [shareable final report](docs/results/cx-sentiment-routing/index.html)
+for methods, language-level results, limitations, and interpretation. The next
+useful investment is validation on privacy-reviewed, human-labeled real customer
+feedback—not further optimization against this synthetic test set.
+
+This is an independent personal project created for learning and enjoyment. I
+am not affiliated with, employed by, endorsed by, or a shareholder of Jev,
+TypeSafe, or OpenAI.
 
 ## Install and verify
 
@@ -297,7 +326,8 @@ Read the report in this order:
 5. **Read disagreements:** check which provider matches the reference label.
    Agreement can include shared mistakes and does not imply correctness.
 
-The first live smoke readout on **2026-10-16** was:
+For historical context, the first five-record live smoke readout on
+**2026-10-16** was:
 
 | Provider | Correct | Coverage | P50 | P95 | Estimated USD total |
 | --- | --- | --- | --- | --- | --- |
@@ -435,13 +465,12 @@ creates a separate result; the normal runner has no automatic recollection loop.
 
 Threshold selection belongs exclusively on the generated validation set. Cache both providers' validation predictions once, then simulate thresholds from cached results. Freeze the prompt version, model IDs, routing signal, and chosen threshold before the one-time test evaluation. See [METHODS.md](docs/METHODS.md) for the protocol and limitations.
 
-The current validation-selected policy is recorded in
+The validation-selected policy is recorded in
 `experiments/frozen-routing-policy.yaml`: Jev 1.13.0 first, using maximum class
 probability at threshold 0.72, with GPT-6 Luna as fallback. The file also pins
-the prompt versions and locked-test hash. Its authorization section is a preview
-only: paid calls remain disabled until the user explicitly approves the stated
-request and USD caps. After the one-time locked-test evaluation, do not retune
-the policy from those results.
+the prompt versions and locked-test hash. Its one-time final evaluation is now
+complete; the file records that status and links to the curated aggregate report.
+Do not retune the policy from the held-out results.
 
 After live validation prediction files exist, select and persist the policy without making new API calls:
 

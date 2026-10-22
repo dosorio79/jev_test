@@ -20,7 +20,7 @@ separate release decisions.
 
 ## Final experiment result
 
-[![Main results from the routing experiment](docs/assets/cx-sentiment-routing-linkedin-v2.png)](docs/results/cx-sentiment-routing/index.html)
+[![Main results from the routing experiment](docs/assets/cx-sentiment-routing-linkedin-v2.png)](https://dosorio79.github.io/jev_test/results/cx-sentiment-routing/)
 
 The frozen Jev 1.13.0 → GPT-6 Luna policy was evaluated once on the held-out
 600-record synthetic test set. It accepted Jev predictions at maximum class
@@ -38,7 +38,7 @@ difference from GPT-6 Luna was +0.50 percentage points (95% bootstrap interval
 prove that it is universally better. Hybrid latency is derived from matched
 fresh stage timings; fallback requests necessarily pay for both stages.
 
-Read the [shareable final report](docs/results/cx-sentiment-routing/index.html)
+Read the [shareable final report](https://dosorio79.github.io/jev_test/results/cx-sentiment-routing/)
 for methods, language-level results, limitations, and interpretation. The next
 useful investment is validation on privacy-reviewed, human-labeled real customer
 feedback—not further optimization against this synthetic test set.

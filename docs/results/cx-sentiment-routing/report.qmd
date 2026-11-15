@@ -1,0 +1,432 @@
+---
+title: "Multilingual CX Sentiment Routing"
+subtitle: "Evaluation of a Jev 1.13.0 → GPT-6 Luna selective-routing policy"
+date: "21 October 2026"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: true
+    html-math-method: plain
+    code-fold: false
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  daemon: false
+---
+
+```{python}
+import json
+from pathlib import Path
+
+import plotly.express as px
+import polars as pl
+from great_tables import GT
+from IPython.display import display
+
+metrics = {
+    name: json.loads((Path(name) / "metrics.json").read_text(encoding="utf-8"))
+    for name in ("jev", "gpt", "hybrid")
+}
+validation_study = json.loads(
+    Path("validation-study.json").read_text(encoding="utf-8")
+)
+exploratory_models = json.loads(
+    Path("exploratory-models.json").read_text(encoding="utf-8")
+)
+names = {
+    "jev": "Jev 1.13.0",
+    "gpt": "GPT-6 Luna",
+    "hybrid": "Jev 1.13.0 → GPT-6 Luna",
+}
+
+
+def show(frame, formats=()):
+    table = GT(frame)
+    for columns, decimals in formats:
+        table = table.fmt_number(columns=list(columns), decimals=decimals)
+    display(table)
+
+
+comparison = pl.DataFrame([
+    {
+        "Model or policy": names[name],
+        "Accuracy": value["accuracy"],
+        "Macro F1": value["macro_f1"],
+        "P50 latency (ms)": value["latency_p50_ms"],
+        "P95 latency (ms)": value["latency_p95_ms"],
+        "Estimated USD / 1,000": value["cost_usd_per_1000"],
+    }
+    for name, value in metrics.items()
+])
+
+thresholds = pl.DataFrame([
+    {
+        "Threshold": point["threshold"],
+        "Macro F1": point["macro_f1"],
+        "F1 difference (points)": 100 * point["macro_f1_delta_from_openai"],
+        "Fallback rate (%)": 100 * point["fallback_fraction"],
+        "Jev coverage (%)": 100 * point["jev_coverage"],
+        "Estimated USD / 1,000": point["cost_usd_per_1000"],
+        "Candidate": point["threshold"] in validation_study["candidate_thresholds"],
+    }
+    for point in validation_study["thresholds"]
+])
+```
+
+## Executive summary
+
+This experiment evaluated whether a fast first-stage classifier could reduce
+latency and cost while preserving the classification quality of an LLM-only
+baseline across six languages.
+
+The tested policy sends each message to **Jev 1.13.0** and accepts the result
+when its maximum class probability is at least **0.72**. Lower-confidence or
+invalid results fall back to **GPT-6 Luna**.
+
+On a held-out 600-record multilingual test set, the hybrid achieved **0.973
+macro F1**, compared with **0.968** for GPT-6 Luna alone. It reduced median
+latency by approximately **74%**, reduced estimated cost per 1,000
+classifications by approximately **22%**, and used GPT fallback for **7%** of
+records. All predefined overall and language-level quality guardrails were met.
+
+**Conclusion:** the results support the selective-routing approach and justify
+advancing it to evaluation on representative real customer feedback. They do
+not, by themselves, establish production performance because the benchmark data
+are synthetic.
+
+## Research question and decision criteria
+
+The primary question was:
+
+> Can Jev-first selective routing retain GPT-6 Luna-level sentiment quality
+> while materially reducing response latency and cost?
+
+The policy was evaluated against criteria defined before the held-out test was
+run.
+
+```{python}
+criteria = pl.DataFrame([
+    {
+        "Criterion": "Overall macro F1",
+        "Target": "Within 1 percentage point of GPT-6 Luna",
+        "Observed": "+0.50 points; paired 95% CI −0.17 to +1.30",
+        "Result": "Met",
+    },
+    {
+        "Criterion": "Median latency",
+        "Target": "At least 30% lower",
+        "Observed": "Approximately 74% lower",
+        "Result": "Met",
+    },
+    {
+        "Criterion": "P95 latency",
+        "Target": "No worse than GPT-6 Luna",
+        "Observed": "Approximately 20% lower",
+        "Result": "Met",
+    },
+    {
+        "Criterion": "Estimated cost",
+        "Target": "Below GPT-6 Luna",
+        "Observed": "Approximately 22% lower per 1,000",
+        "Result": "Met",
+    },
+    {
+        "Criterion": "Language-level macro F1",
+        "Target": "No language more than 3 points below baseline",
+        "Observed": "Largest decrease: 0.99 points",
+        "Result": "Met",
+    },
+])
+show(criteria)
+```
+
+## Experiment design
+
+Threshold selection and final evaluation were separated to reduce optimistic
+bias. The routing threshold was chosen using a 600-record validation set and
+then frozen at 0.72. The final policy was evaluated once on a separate,
+previously untouched 600-record test set containing 100 records in each of
+German, English, Spanish, French, Italian, and Portuguese. Each sentiment class
+had 200 test records.
+
+All strategies were evaluated on the same records. Quality differences were
+therefore assessed with paired comparisons. Uncertainty for the overall
+macro-F1 difference was estimated using 5,000 record-level bootstrap resamples.
+The analysis emphasized effect sizes and predefined practical margins rather
+than null-hypothesis significance testing.
+
+## What the benchmark comments look like
+
+The following are exact examples from the synthetic held-out benchmark—not
+newly invented substitutes. One short record is shown per language. This limited
+excerpt helps readers understand the task, but it does not release the dataset;
+the original corpus source and redistribution license remain unverified.
+
+```{python}
+examples = pl.DataFrame([
+    {
+        "Language": "German",
+        "Benchmark comment": "Insgesamt: der Zinssatz ist viel zu hoch.",
+        "Reference sentiment": "negative",
+    },
+    {
+        "Language": "English",
+        "Benchmark comment": "The adviser called about the documents!",
+        "Reference sentiment": "neutral",
+    },
+    {
+        "Language": "Spanish",
+        "Benchmark comment": "En general, la atención al cliente fue amable y eficaz.",
+        "Reference sentiment": "positive",
+    },
+    {
+        "Language": "French",
+        "Benchmark comment": "D’après mon expérience, le service client ne répond jamais!",
+        "Reference sentiment": "negative",
+    },
+    {
+        "Language": "Italian",
+        "Benchmark comment": "Sinceramente, la richiesta online è stata semplice!",
+        "Reference sentiment": "positive",
+    },
+    {
+        "Language": "Portuguese",
+        "Benchmark comment": "O gestor ligou por causa dos documentos.",
+        "Reference sentiment": "neutral",
+    },
+])
+show(examples)
+```
+
+These examples also expose an important limitation: the sentences are short,
+clean, and templated. Real support messages are likely to contain more ambiguity,
+misspellings, mixed sentiment, and product-specific context.
+
+## Why the routing threshold is 0.72
+
+The threshold was selected using the separate 600-record validation set. The
+offline sweep evaluated every threshold from 0.40 through 0.99 using cached Jev
+and GPT-6 Luna predictions, so this stage made no additional provider calls.
+The chart below reports the hybrid-minus-GPT macro-F1 difference; the dotted
+line marks the predefined maximum acceptable degradation of one percentage
+point.
+
+```{python}
+quality_chart = px.line(
+    thresholds,
+    x="Threshold",
+    y="F1 difference (points)",
+    markers=True,
+    title="Validation quality difference versus GPT-6 Luna",
+    color_discrete_sequence=["#2F5597"],
+)
+quality_chart.add_hline(y=0, line_color="#444444", line_width=1)
+quality_chart.add_hline(y=-1, line_color="#C55A11", line_dash="dot")
+quality_chart.add_vline(x=0.72, line_color="#2F5597", line_dash="dash")
+quality_chart.show(renderer="notebook")
+```
+
+Higher thresholds defer more records to GPT-6 Luna. This increases fallback
+cost and tail latency, but it can protect quality by reserving Jev for more
+confident cases.
+
+```{python}
+fallback_chart = px.line(
+    thresholds,
+    x="Threshold",
+    y="Fallback rate (%)",
+    markers=True,
+    title="Validation fallback rate across thresholds",
+    color_discrete_sequence=["#C55A11"],
+)
+fallback_chart.add_vline(x=0.72, line_color="#2F5597", line_dash="dash")
+fallback_chart.show(renderer="notebook")
+```
+
+Eight validation thresholds satisfied the quality and language guardrails and
+were non-dominated within the measured quality–cost trade-off. The selected
+0.72 policy matched GPT-6 Luna's validation macro F1, routed 9.2% of validation
+records, and kept the fallback rate below 10%. It was frozen before the held-out
+test was opened; 0.72 should be understood as the selected operating point for
+this experiment, not a universal optimum.
+
+```{python}
+candidate_thresholds = thresholds.filter(pl.col("Candidate")).select(
+    "Threshold",
+    "Macro F1",
+    "Fallback rate (%)",
+    "Jev coverage (%)",
+    "Estimated USD / 1,000",
+)
+show(
+    candidate_thresholds,
+    formats=(
+        (("Threshold", "Macro F1"), 3),
+        (("Fallback rate (%)", "Jev coverage (%)"), 1),
+        (("Estimated USD / 1,000",), 5),
+    ),
+)
+```
+
+## Overall results
+
+```{python}
+show(
+    comparison,
+    formats=(
+        (("Accuracy", "Macro F1"), 3),
+        (("P50 latency (ms)", "P95 latency (ms)"), 1),
+        (("Estimated USD / 1,000",), 5),
+    ),
+)
+```
+
+The hybrid correctly classified 97.3% of test records and produced no
+unresolved predictions. Its macro-F1 advantage over GPT-6 Luna was 0.50
+percentage points. The paired 95% bootstrap interval ranged from −0.17 to +1.30
+points, remaining well inside the predefined one-point maximum degradation.
+
+The hybrid accepted 558 Jev results and routed 42 records to GPT-6 Luna. One
+invalid Jev output was recollected once under the predefined collection policy;
+the fresh response was valid. There were no unknown-cost attempts.
+
+```{python}
+latency = comparison.select(
+    "Model or policy", "P50 latency (ms)", "P95 latency (ms)"
+).unpivot(
+    index="Model or policy", variable_name="Percentile", value_name="Latency (ms)"
+)
+px.bar(
+    latency,
+    x="Model or policy",
+    y="Latency (ms)",
+    color="Percentile",
+    barmode="group",
+    title="End-to-end latency comparison",
+).show(renderer="notebook")
+```
+
+Median hybrid latency was 231 ms, compared with 885 ms for GPT-6 Luna. Hybrid
+P95 was 1,073 ms, compared with 1,333 ms. The paired bootstrap intervals for
+the hybrid-minus-GPT difference were −666 to −640 ms at P50 and −726 to −187
+ms at P95.
+
+The final-test hybrid latency is derived from fresh matched Jev timings plus the
+fresh GPT stage time on routed fallbacks. An earlier controlled sequential pilot
+directly timed the hybrid and supported the same operational conclusion.
+
+## Performance by language
+
+```{python}
+languages = pl.DataFrame([
+    {
+        "Language": language.upper(),
+        "Hybrid macro F1": values["macro_f1"],
+        "GPT-6 Luna macro F1": metrics["gpt"]["by_language"][language]["macro_f1"],
+        "Difference": values["macro_f1"] - metrics["gpt"]["by_language"][language]["macro_f1"],
+    }
+    for language, values in metrics["hybrid"]["by_language"].items()
+])
+show(
+    languages,
+    formats=((
+        ("Hybrid macro F1", "GPT-6 Luna macro F1", "Difference"), 3
+    ),),
+)
+```
+
+Quality was equal to or higher than GPT-6 Luna in German, English, Spanish,
+French, and Portuguese. Italian macro F1 was 0.99 percentage points lower,
+remaining within the predefined three-point language guardrail. Each language
+result is based on 100 records and should be interpreted as a guardrail rather
+than a precise production estimate.
+
+## Cost and operational implications
+
+Estimated policy cost was **$0.01778 per 1,000 classifications**, compared with
+**$0.02273** for GPT-6 Luna alone. These values are model-usage estimates, not
+invoices, and may change with pricing or traffic mix.
+
+The 7% fallback rate is the main source of the result: most messages receive the
+faster Jev-only path, while GPT-6 Luna is reserved for lower-confidence cases.
+Fallback requests necessarily incur both stages, which explains why hybrid tail
+latency remains much higher than its median.
+
+## Interpretation
+
+The experiment provides consistent evidence that selective routing can preserve
+sentiment-classification quality while improving typical response time and cost.
+The conclusion is supported by:
+
+- a threshold selected before the held-out evaluation;
+- paired comparisons on identical records;
+- an uncertainty interval tied to a practical quality margin;
+- consistent overall, latency, cost, and language-level results; and
+- complete coverage with no unresolved classifications.
+
+Additional significance tests would add little to this decision. The main
+remaining uncertainty is external validity—not sampling precision within this
+synthetic benchmark.
+
+## Limitations and recommended next step
+
+The dataset is synthetic and may not reproduce real customer language,
+misspellings, mixed sentiment, topic distribution, channel effects, message
+length, class imbalance, or changes over time. The language slices are also too
+small for detailed subgroup claims. P99 latency and concurrent-load behavior
+were outside the scope of this experiment.
+
+The recommended next investment is a privacy-reviewed and human-labeled sample
+of real customer feedback reflecting the intended deployment environment. The
+frozen 0.72 policy should be evaluated without retuning, with particular
+attention to domain-specific errors, language coverage, fallback rate, latency,
+and cost. This would test whether the observed benefit generalizes to production
+traffic.
+
+## Final conclusion
+
+For this multilingual benchmark, **Jev 1.13.0 with GPT-6 Luna fallback below a
+0.72 maximum-probability threshold met every predefined acceptance criterion**.
+The policy matched or exceeded the LLM-only baseline in overall quality while
+reducing median latency and estimated cost. The evidence supports moving from
+synthetic benchmarking to a real-world validation study.
+
+## Appendix: preliminary multi-model validation
+
+Before the frozen test, five configurations were compared on the same 600
+validation records. These runs helped frame the routing decision, but they are
+not part of the final held-out claim. Provider timings were collected in
+separate historical runs and may include cached original measurements, so the
+latency columns are exploratory rather than a controlled speed ranking.
+
+```{python}
+exploratory = pl.DataFrame(exploratory_models)
+show(
+    exploratory,
+    formats=(
+        (("Accuracy", "Macro F1"), 3),
+        (("P50 latency (ms)", "P95 latency (ms)"), 1),
+    ),
+)
+```
+
+The validation comparison suggested that GPT-6 Luna offered similar quality to
+the more expensive GPT-5.4 Mini configuration, while Jev supplied the faster
+first stage needed for selective routing. The local Qwen result demonstrates a
+private, offline baseline, not a direct cost comparison: its provider-style USD
+cost was unavailable and the recorded $0.007 figure was only an electricity
+assumption for that 600-record run.
+
+## Project disclosure
+
+This is an independent personal project created for learning and enjoyment. The
+author is not affiliated with, employed by, endorsed by, or a shareholder of
+Jev, TypeSafe, or OpenAI. Product and company names identify the evaluated
+services; they do not imply sponsorship or endorsement.
+
+Apart from the six short examples identified above, the report publishes
+aggregate experiment results only. The underlying synthetic corpus is not
+redistributed through this report because its original source and license have
+not been verified.

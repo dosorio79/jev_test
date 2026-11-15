@@ -71,7 +71,8 @@ chose YAML experiment configuration.
 ## Data, evaluation, and paid calls
 
 - Preserve `negative=0`, `neutral=1`, `positive=2` and the six supported languages.
-- Never rewrite the locked `data/cx_sentiment_test_600.csv`. Select prompts,
+- The research corpus is local and gitignored. Never rewrite a locally supplied
+  locked `data/cx_sentiment_test_600.csv`. Select prompts,
   calibration, and routing thresholds using validation data only; follow
   docs/METHODS.md before a final test evaluation.
 - Keep sampling deterministic and preserve source indices, hashes, and overlap

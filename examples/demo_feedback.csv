@@ -1,0 +1,19 @@
+sample_id,source_split,source_row_index_zero_based,language,text,sentiment,label
+demo_pt_neg,validation,0,pt,O custo ficou acima do esperado.,negative,0
+demo_pt_neu,validation,1,pt,O gestor pediu documentos adicionais.,neutral,1
+demo_pt_pos,validation,2,pt,O atendimento resolveu o problema rapidamente.,positive,2
+demo_en_neg,validation,3,en,The fee was higher than expected.,negative,0
+demo_en_neu,validation,4,en,The adviser requested another document.,neutral,1
+demo_en_pos,validation,5,en,The support team resolved the issue quickly.,positive,2
+demo_es_neg,validation,6,es,La comisión fue más alta de lo esperado.,negative,0
+demo_es_neu,validation,7,es,El asesor solicitó otro documento.,neutral,1
+demo_es_pos,validation,8,es,El equipo resolvió el problema rápidamente.,positive,2
+demo_fr_neg,validation,9,fr,Les frais étaient plus élevés que prévu.,negative,0
+demo_fr_neu,validation,10,fr,Le conseiller a demandé un autre document.,neutral,1
+demo_fr_pos,validation,11,fr,Le service a résolu le problème rapidement.,positive,2
+demo_de_neg,validation,12,de,Die Gebühr war höher als erwartet.,negative,0
+demo_de_neu,validation,13,de,Der Berater bat um ein weiteres Dokument.,neutral,1
+demo_de_pos,validation,14,de,Das Team löste das Problem schnell.,positive,2
+demo_it_neg,validation,15,it,La commissione era più alta del previsto.,negative,0
+demo_it_neu,validation,16,it,Il consulente ha richiesto un altro documento.,neutral,1
+demo_it_pos,validation,17,it,Il team ha risolto rapidamente il problema.,positive,2

@@ -1,0 +1,42 @@
+[
+  {
+    "Model or policy": "GPT-5.4 Mini",
+    "Accuracy": 0.965,
+    "Macro F1": 0.9650355945464205,
+    "P50 latency (ms)": 913.2394564994684,
+    "P95 latency (ms)": 1680.4521847500364,
+    "Cost note": "$0.18224 / 1,000"
+  },
+  {
+    "Model or policy": "Jev 1.13.0",
+    "Accuracy": 0.9583333333333334,
+    "Macro F1": 0.95839462168151,
+    "P50 latency (ms)": 318.7880934997338,
+    "P95 latency (ms)": 431.1148402994602,
+    "Cost note": "$0.01624 / 1,000"
+  },
+  {
+    "Model or policy": "GPT-6 Luna",
+    "Accuracy": 0.98,
+    "Macro F1": 0.9799022655559684,
+    "P50 latency (ms)": 892.0973080000749,
+    "P95 latency (ms)": 1885.0713859999807,
+    "Cost note": "$0.02288 / 1,000"
+  },
+  {
+    "Model or policy": "Jev 1.13.0 → GPT-6 Luna",
+    "Accuracy": 0.98,
+    "Macro F1": 0.9799022655559684,
+    "P50 latency (ms)": 264.7734429999673,
+    "P95 latency (ms)": 1284.6156571500608,
+    "Cost note": "$0.01825 / 1,000"
+  },
+  {
+    "Model or policy": "Local Qwen 3.5 4B",
+    "Accuracy": 0.8883333333333333,
+    "Macro F1": 0.8892079514920382,
+    "P50 latency (ms)": 1947.3663189996842,
+    "P95 latency (ms)": 2690.067136199877,
+    "Cost note": "USD unavailable; $0.007 electricity assumption / 600"
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "support": 600,
+  "accuracy": 0.9666666666666667,
+  "macro_f1": 0.9663641509511732,
+  "operational_coverage": 1.0,
+  "confusion_matrix": [
+    [
+      200,
+      0,
+      0
+    ],
+    [
+      15,
+      181,
+      4
+    ],
+    [
+      0,
+      1,
+      199
+    ]
+  ],
+  "per_class": {
+    "negative": {
+      "precision": 0.9302325581395349,
+      "recall": 1.0,
+      "f1": 0.963855421686747,
+      "support": 200
+    },
+    "neutral": {
+      "precision": 0.9945054945054945,
+      "recall": 0.905,
+      "f1": 0.9476439790575917,
+      "support": 200
+    },
+    "positive": {
+      "precision": 0.9802955665024631,
+      "recall": 0.995,
+      "f1": 0.9875930521091811,
+      "support": 200
+    }
+  },
+  "by_language": {
+    "de": {
+      "support": 100,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "en": {
+      "support": 100,
+      "accuracy": 0.99,
+      "macro_f1": 0.990049751243781
+    },
+    "es": {
+      "support": 100,
+      "accuracy": 0.96,
+      "macro_f1": 0.9594470046082949
+    },
+    "fr": {
+      "support": 100,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "it": {
+      "support": 100,
+      "accuracy": 0.89,
+      "macro_f1": 0.8846614252526294
+    },
+    "pt": {
+      "support": 100,
+      "accuracy": 0.96,
+      "macro_f1": 0.9599761051373954
+    }
+  },
+  "accuracy_ci95": [
+    0.9516666666666667,
+    0.98
+  ],
+  "macro_f1_ci95": [
+    0.950970157089058,
+    0.9796115775315781
+  ],
+  "ece": 0.030133333333333318,
+  "brier_score": 0.049276333333333325,
+  "latency_p50_ms": 228.60296599947105,
+  "latency_p95_ms": 280.91682190001836,
+  "latency_by_provider": {
+    "jev": {
+      "support": 600,
+      "p50_ms": 228.60296599947105,
+      "p95_ms": 280.91682190001836
+    }
+  },
+  "usage_input_tokens_total": 231065,
+  "usage_output_tokens_total": 23400,
+  "usage_records_fraction": 1.0,
+  "reported_credits_total": null,
+  "cost_usd_known_total": 0.00970473,
+  "cost_usd_total": 0.00970473,
+  "cost_usd_per_1000": 0.01617455,
+  "cost_priced_fraction": 1.0
+}

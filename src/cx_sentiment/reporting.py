@@ -7,9 +7,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import asdict
 from importlib.resources import files
+from io import StringIO
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,7 @@ from cx_sentiment.metrics import EvaluationMetrics
 from cx_sentiment.models import Prediction
 from cx_sentiment.routing import ThresholdSelection
 from cx_sentiment.runner import RunAccounting
+from cx_sentiment.study import OfflineStudyResult
 
 
 def write_report(
@@ -196,5 +198,51 @@ def write_comparison_report(output_dir: Path, comparison: dict[str, Any]) -> Non
     source = output_dir / "report.qmd"
     source.write_text(
         files("cx_sentiment").joinpath("reports/comparison.qmd").read_text(), encoding="utf-8"
+    )
+    render_quarto(source)
+
+
+def _csv_text(rows: Sequence[Mapping[str, object]], fields: list[str]) -> str:
+    buffer = StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=fields)
+    writer.writeheader()
+    writer.writerows(dict(row) for row in rows)
+    return buffer.getvalue()
+
+
+def write_study_report(output_dir: Path, study: OfflineStudyResult) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    atomic_write(output_dir / "study.json", study.model_dump_json(indent=2) + "\n")
+    threshold_rows = [
+        point.model_dump(exclude={"by_language", "macro_f1_delta_ci95"})
+        | {
+            "macro_f1_delta_ci95_low": (
+                point.macro_f1_delta_ci95[0] if point.macro_f1_delta_ci95 else None
+            ),
+            "macro_f1_delta_ci95_high": (
+                point.macro_f1_delta_ci95[1] if point.macro_f1_delta_ci95 else None
+            ),
+        }
+        for point in study.thresholds
+    ]
+    threshold_fields = list(threshold_rows[0]) if threshold_rows else ["threshold"]
+    atomic_write(
+        output_dir / "thresholds.csv", _csv_text(threshold_rows, threshold_fields)
+    )
+    language_rows = [
+        {"threshold": point.threshold, **language.model_dump()}
+        for point in study.thresholds
+        for language in point.by_language
+    ]
+    language_fields = (
+        list(language_rows[0])
+        if language_rows
+        else ["threshold", "language", "support", "macro_f1", "openai_macro_f1", "jev_coverage"]
+    )
+    atomic_write(output_dir / "languages.csv", _csv_text(language_rows, language_fields))
+    source = output_dir / "report.qmd"
+    source.write_text(
+        files("cx_sentiment").joinpath("reports/performance_study.qmd").read_text(),
+        encoding="utf-8",
     )
     render_quarto(source)

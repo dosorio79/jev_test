@@ -13,6 +13,8 @@ import polars as pl
 from cx_sentiment.comparison import dataset_fingerprint
 from cx_sentiment.providers.base import SentimentProvider, provider_settings
 
+STUDY_FORMAT_VERSION = 1
+
 
 def code_version() -> dict[str, object]:
     try:

@@ -18,11 +18,18 @@ Provider failures remain in the denominator. Routing falls back on decision-prov
 
 ## Threshold selection
 
-Sweep thresholds from 0.50 through 0.99 on cached validation predictions. A score equal to the threshold is accepted by the decision provider. Select the lowest expected-cost policy whose macro F1 is no more than 0.02 below the cached OpenAI-only baseline. If none qualifies, record no selected threshold. Freeze the selected policy and configuration before final test evaluation.
+Sweep thresholds from 0.40 through 0.99 on cached validation predictions. A score equal to the threshold is accepted by the decision provider. Shortlist non-dominated policies whose macro F1 is within the configured quality tolerance, initially 0.01, of the cached OpenAI-only baseline and whose per-language macro F1 is within 0.03. Missing costs do not become zero and prevent categorical Pareto ranking. Freeze one policy and its configuration before final test evaluation.
 
 ## Metrics
 
 Report accuracy, macro and per-class precision/recall/F1, support, confusion matrices, language breakdowns, and operational coverage. Use deterministic 95% bootstrap intervals over sample IDs. Report expected calibration error and multiclass Brier score only when every record has a valid three-class probability vector. Report latency P50/P95, fallback fraction, token usage, separately reported credits when present, and USD per 1,000 records from dated official or user-supplied rate cards. Point estimates alone are not evidence of statistical significance.
+
+The routing performance study uses the measurement contract in
+[`PERFORMANCE_STUDY.md`](PERFORMANCE_STUDY.md). Historical adapter timings and
+cached original timings are exploratory; controlled acceptance comparisons use
+paired, interleaved operation-level wall time collected on the same validation
+records. Thresholds remain validation-only, and the locked test set is not used
+until a policy has been frozen.
 
 ## Spend and privacy
 

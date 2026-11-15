@@ -19,7 +19,7 @@ from cx_sentiment.models import Prediction, SentimentLabel
 
 @pytest.fixture
 def saved_runs(tmp_path: Path) -> Path:
-    source = Path("data/cx_sentiment_test_600.csv").resolve()
+    source = Path("examples/demo_feedback.csv").resolve()
     frame = load_dataset(source).head(3)
     for name in ("first", "second"):
         run = tmp_path / name
@@ -74,7 +74,7 @@ def test_comparison_aligns_predictions_and_recalculates_metrics(saved_runs: Path
     assert result["runs"][1]["metrics"]["accuracy"] == pytest.approx(2 / 3)
     assert len(result["disagreements"]) == 1
     disagreement = result["disagreements"][0]
-    reference = load_dataset(Path("data/cx_sentiment_test_600.csv"))
+    reference = load_dataset(Path("examples/demo_feedback.csv"))
     expected = reference.filter(pl.col("sample_id") == disagreement["sample_id"])["text"][0]
     assert disagreement["verbatim"] == expected
     assert result["warnings"] == []
@@ -168,7 +168,7 @@ def test_comparison_rejects_invalid_prediction_ids(saved_runs: Path, change: str
 
 def test_comparison_rejects_changed_source_data(saved_runs: Path) -> None:
     run = saved_runs.parent / "second"
-    frame = load_dataset(Path("data/cx_sentiment_test_600.csv")).head(3)
+    frame = load_dataset(Path("examples/demo_feedback.csv")).head(3)
     altered = frame.with_columns(pl.lit("Changed input").alias("text"))
     source = saved_runs.parent / "changed.csv"
     altered.write_csv(source)
@@ -243,7 +243,7 @@ def test_compare_cli_renders_without_providers(
     )
     # Keep source feedback exact, including Unicode, newlines, and HTML-like text.
     verbatim = "Feedback <script>alert('verbatim')</script>\nSecond line — ação"
-    frame = load_dataset(Path("data/cx_sentiment_test_600.csv")).head(3)
+    frame = load_dataset(Path("examples/demo_feedback.csv")).head(3)
     frame = frame.with_columns(
         pl.when(pl.col("sample_id") == frame["sample_id"][0])
         .then(pl.lit(verbatim))

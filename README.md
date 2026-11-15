@@ -9,12 +9,45 @@ An offline-first BYOK (bring your own key) research toolkit for comparing multil
 
 The dataset boundary uses Polars and Dataframely, so schema, nullability, uniqueness, categorical values, and the label/sentiment relationship are validated as dataframe operations. Pydantic is reserved for provider predictions and configuration.
 
-Project code is MIT licensed; dataset redistribution rights are **unresolved**.
-Read [dataset provenance and rights](docs/DATA_LICENSE.md) before redistributing
-bundled data or publishing artifacts containing source text. This is a research
-toolkit, with synthetic-data and historical-measurement limitations described below.
-The repository is currently private; visibility changes and public publication
-are separate release steps.
+Project code is MIT licensed. The research corpus and source archives are
+intentionally excluded from Git because their redistribution rights are
+**unresolved**. Read [dataset provenance and rights](docs/DATA_LICENSE.md) before
+publishing locally supplied data or artifacts containing source text. This is a
+research toolkit, with synthetic-data and historical-measurement limitations
+described below.
+Repository visibility, report publication, and dataset redistribution are
+separate release decisions.
+
+## Final experiment result
+
+[![Main results from the routing experiment](docs/assets/cx-sentiment-routing-linkedin-v2.png)](https://dosorio79.github.io/jev_test/results/cx-sentiment-routing/)
+
+The frozen Jev 1.13.0 → GPT-6 Luna policy was evaluated once on the held-out
+600-record synthetic test set. It accepted Jev predictions at maximum class
+probability 0.72 and sent the remaining 42 records (7%) to GPT-6 Luna.
+
+| Strategy | Macro F1 | P50 latency | P95 latency | Estimated USD / 1,000 |
+| --- | ---: | ---: | ---: | ---: |
+| Jev 1.13.0 | 0.966 | 229 ms | 281 ms | $0.01617 |
+| GPT-6 Luna | 0.968 | 885 ms | 1,333 ms | $0.02273 |
+| Jev 1.13.0 → GPT-6 Luna | **0.973** | **231 ms** | **1,073 ms** | **$0.01778** |
+
+The hybrid met every predefined acceptance criterion. Its paired macro-F1
+difference from GPT-6 Luna was +0.50 percentage points (95% bootstrap interval
+−0.17 to +1.30 points), so the result supports the routing policy but does not
+prove that it is universally better. Hybrid latency is derived from matched
+fresh stage timings; fallback requests necessarily pay for both stages.
+
+Read the [shareable final report](https://dosorio79.github.io/jev_test/results/cx-sentiment-routing/)
+for methods, language-level results, limitations, and interpretation. The next
+useful investment is validation on privacy-reviewed, human-labeled real customer
+feedback—not further optimization against this synthetic test set.
+See [sharing the experiment](docs/SHARING.md) for the recommended public report
+URL and GitHub Pages setup.
+
+This is an independent personal project created for learning and enjoyment. I
+am not affiliated with, employed by, endorsed by, or a shareholder of Jev,
+TypeSafe, or OpenAI.
 
 ## Install and verify
 
@@ -46,7 +79,7 @@ and re-render saved reports without provider calls.
 
 ```yaml
 provider: mock  # mock, openai, or jev
-input: ../data/cx_sentiment_test_600.csv
+input: ../examples/demo_feedback.csv
 output_dir: runs
 limit: 5
 ```
@@ -90,12 +123,13 @@ fallback predictions to select a validation threshold without extra API calls.
 Two configs process the same first five validation records, with separate dated run
 folders and a USD 0.05 budget per provider (USD 0.01 reserved per new request).
 Use these for an initial pipeline check; five records cannot establish model quality.
-On a fresh checkout, generate the ignored validation CSV from the bundled source
-archive (the locked test CSV remains unchanged):
+The research dataset is not included. If you have a rights-cleared source archive,
+generate the ignored validation CSV from your local copy (the locked test CSV
+remains unchanged):
 
 ```bash
 uv run cx-sentiment sample-validation \
-  --archive data/raw/financial_sentiment_hf_v2.zip \
+  --archive /path/to/financial_sentiment_hf_v2.zip \
   --output-dir data
 ```
 
@@ -215,6 +249,34 @@ cannot be verified. Five-record smoke results check the pipeline, not model qual
 See [comparison configuration and reports](docs/REPORTING.md#compare-saved-runs)
 for the YAML format and re-rendering instructions.
 
+## Optimize selective routing
+
+The routing study reuses complete Jev and OpenAI validation runs. It aligns their
+saved predictions, evaluates thresholds from 0.40 through 0.99, and writes an
+offline quality–coverage–cost report without credentials or provider calls:
+
+```bash
+uv run cx-sentiment study experiments/routing-study.yaml
+```
+
+The report separates historical exploratory timing from offline simulations and
+controlled measurements. Candidate thresholds are selected on validation data;
+the locked test set remains untouched until one policy is frozen.
+
+A live study YAML adds `sample_size`, `repetitions`, `concurrency`,
+`routing_threshold`, `max_requests`, `budget_usd`, and
+`cost_per_request_usd`. Run it without `--live` first to produce a zero-call
+request and cost preview:
+
+```bash
+uv run cx-sentiment study experiments/my-live-routing-study.yaml
+```
+
+Do not add `--live` until the exact sample, repetitions, threshold, maximum
+requests, and maximum USD budget have been reviewed and explicitly authorized.
+The first authorized pilot is concurrency one; concurrency 5/10 and the locked
+test set are separate gates. See [the performance-study protocol](docs/PERFORMANCE_STUDY.md).
+
 ## Metrics and how to read them
 
 Quality and coverage run from 0 to 1; for example, `0.80` means 80%. Latency is
@@ -269,7 +331,8 @@ Read the report in this order:
 5. **Read disagreements:** check which provider matches the reference label.
    Agreement can include shared mistakes and does not imply correctness.
 
-The first live smoke readout on **2026-10-16** was:
+For historical context, the first five-record live smoke readout on
+**2026-10-16** was:
 
 | Provider | Correct | Coverage | P50 | P95 | Estimated USD total |
 | --- | --- | --- | --- | --- | --- |
@@ -281,17 +344,25 @@ these five records; this sample does not establish a general quality or speed
 advantage. Both runs predate dataset fingerprints and show historical-input
 warnings in the comparison report.
 
-## Validation sample
+## Local validation sample
 
-The source archive is available and its SHA256 matches the starter manifest. The generated validation sample is balanced at 600 records with no normalized exact cross-split overlap. Regenerate it with:
+The experiment used a source archive whose SHA256 was recorded in the private
+research evidence. Neither the archive nor its derived samples are distributed
+in this repository. With a rights-cleared local copy, regenerate the validation
+sample with:
 
 ```bash
 uv run cx-sentiment sample-validation \
-  --archive data/raw/financial_sentiment_hf_v2.zip \
+  --archive /path/to/financial_sentiment_hf_v2.zip \
   --output-dir data
 ```
 
 This creates a deterministic balanced `data/validation_600.csv` with seed `20261016` and a manifest containing the archive SHA256 and all selected source indices. It reads only `validation.csv` for the sample and checks normalized exact overlap against the archive's train and test splits. The locked test CSV is never rewritten.
+
+The `data/` directory is gitignored. The included
+[`examples/demo_feedback.csv`](examples/demo_feedback.csv) is a small,
+project-authored pipeline fixture, not part of the evaluated corpus and not
+evidence of model quality.
 
 ## Provider configuration
 
@@ -406,6 +477,13 @@ creates a separate result; the normal runner has no automatic recollection loop.
 ## Scientific boundary
 
 Threshold selection belongs exclusively on the generated validation set. Cache both providers' validation predictions once, then simulate thresholds from cached results. Freeze the prompt version, model IDs, routing signal, and chosen threshold before the one-time test evaluation. See [METHODS.md](docs/METHODS.md) for the protocol and limitations.
+
+The validation-selected policy is recorded in
+`experiments/frozen-routing-policy.yaml`: Jev 1.13.0 first, using maximum class
+probability at threshold 0.72, with GPT-6 Luna as fallback. The file also pins
+the prompt versions and locked-test hash. Its one-time final evaluation is now
+complete; the file records that status and links to the curated aggregate report.
+Do not retune the policy from the held-out results.
 
 After live validation prediction files exist, select and persist the policy without making new API calls:
 

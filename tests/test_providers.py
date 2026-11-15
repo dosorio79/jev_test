@@ -4,6 +4,7 @@ import json
 from types import SimpleNamespace
 
 import httpx
+import httpx2
 import pytest
 
 from cx_sentiment.budget import PriceCard
@@ -295,15 +296,15 @@ def test_openai_disables_injected_sdk_retries_and_does_not_copy_endpoint_secrets
 
     calls = []
 
-    def handler(request: httpx.Request) -> httpx.Response:
+    def handler(request: httpx2.Request) -> httpx2.Response:
         calls.append(request)
-        return httpx.Response(429, json={"error": {"message": "private", "type": "rate_limit"}})
+        return httpx2.Response(429, json={"error": {"message": "private", "type": "rate_limit"}})
 
     client = OpenAI(
         api_key="test",
         max_retries=3,
         base_url="https://example.test/custom/private-path?secret=private-value",
-        http_client=httpx.Client(transport=httpx.MockTransport(handler)),
+        http_client=httpx2.Client(transport=httpx2.MockTransport(handler)),
     )
     provider = OpenAIProvider(client=client, model="test-model")
     with pytest.raises(ProviderError):
@@ -319,12 +320,12 @@ def test_openai_disables_injected_sdk_retries_and_does_not_copy_endpoint_secrets
 def test_openai_sdk_malformed_label_retains_response_measurements() -> None:
     from openai import OpenAI
 
-    def handler(request: httpx.Request) -> httpx.Response:
+    def handler(request: httpx2.Request) -> httpx2.Response:
         payload = json.loads(request.content)
         assert payload["text"]["format"]["type"] == "json_schema"
         assert payload["text"]["format"]["strict"] is True
         assert payload["text"]["format"]["schema"]["additionalProperties"] is False
-        return httpx.Response(
+        return httpx2.Response(
             200,
             json={
                 "id": "resp-test",
@@ -352,7 +353,7 @@ def test_openai_sdk_malformed_label_retains_response_measurements() -> None:
         )
 
     client = OpenAI(
-        api_key="test", http_client=httpx.Client(transport=httpx.MockTransport(handler))
+        api_key="test", http_client=httpx2.Client(transport=httpx2.MockTransport(handler))
     )
     provider = OpenAIProvider(
         client=client,
